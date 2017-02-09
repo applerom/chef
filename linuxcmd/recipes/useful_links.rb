@@ -20,7 +20,7 @@
 Chef::Log.info("my-log = #{node.default['my']['log']}")
 
 ["/var/www", "/etc", "/usr/local/src", "/usr", "/var/log", "/var/log/#{node.default['my']['log']}"].each do |mylink|
-    link mylink do
-      to node.default['my']['home']
+    link node.default['my']['home'] do
+      to mylink
     end
 end
