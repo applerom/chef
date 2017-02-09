@@ -41,4 +41,4 @@ template bashrc do
 end
 #unless bashrc_orig.grep(/myprompt/)
 
-Chef::Log.info("bashrc_orig.grep(/myprompt/) = #{bashrc_orig.grep(/myprompt/)}")
+Chef::Log.info("bashrc_orig.grep(/myprompt/) = #{bashrc_orig.scan(/myprompt/)}")
