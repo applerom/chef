@@ -1,6 +1,6 @@
 #
 # Cookbook:: linuxcmd
-# Recipe:: useful_packets
+# Recipe:: set_myprompt
 #
 # Copyright:: 2017, apple_rom
 #
