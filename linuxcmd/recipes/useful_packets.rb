@@ -16,9 +16,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+myuser="admin"
+myhome="/home/admin"
 
-%w(mc ftp bzip2 zip nano lynx wget curl telnet git).each do |mypackage|
-    package mypackage do
-        action :install
+node['etc']['passwd'].each do |user, data|
+    if data['dir'].start_with?("/home/")
+        myuser=user
+        myhome=data['dir']
     end
 end
+
+bashrc = myhome + "/.bashrc"
+
+bashrc_orig = File.read(bashrc)
+
+template bashrc do
+    source "bashrc.erb"
+    variables({
+        bashrc_orig_content: bashrc_orig
+    })
+end unless File.open(bashrc).grep(/myprompt/)
