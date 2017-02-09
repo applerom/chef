@@ -29,18 +29,30 @@ end
 default['my']['user'] = myuser
 default['my']['home'] = myhome
 
+default['my']['log'] =
+  case node['platform_family']
+  when 'debian'
+    'syslog'
+  when 'suse'
+    'syslog'
+  when 'rhel'
+    'messages'
+  else
+    'syslog'
+  end
+  
 =begin
-default['myuser'] =
+default['my']['log'] =
   case node['platform_family']
   when 'debian'
     case node['platform']
     when 'ubuntu'
       if node['platform_version'].to_f >= 14.04
-        'event'
+        'syslog'
       elsif node['platform_version'].to_f >= 12.04
-        'worker'
+        'syslog'
       else
-        'prefork'
+        'syslog'
       end
     when 'debian'
       node['platform_version'].to_f >= 7.0 ? 'worker' : 'prefork'
