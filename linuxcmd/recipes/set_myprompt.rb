@@ -16,19 +16,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-myuser="admin"
-myhome="/home/admin"
 
-node['etc']['passwd'].each do |user, data|
-    if data['dir'].start_with?("/home/")
-        myuser=user
-        myhome=data['dir']
-    end
-end
-Chef::Log.info("myuser = #{myuser}, myhome = #{myhome}")
 Chef::Log.info("my-user = #{node.default['my']['user']}, my-home = #{node.default['my']['home']}")
 
-[myhome + "/.bashrc", "/root/.bashrc"].each do |bashrc|
+["#{node.default['my']['home']}/.bashrc", "/root/.bashrc"].each do |bashrc|
     Chef::Log.info("bashrc = #{bashrc}")
     
     bashrc_orig = File.read(bashrc)
