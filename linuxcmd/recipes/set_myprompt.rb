@@ -37,6 +37,7 @@ template bashrc do
     variables({
         bashrc_orig_content: bashrc_orig
     })
-end unless File.open(bashrc).grep(/myprompt/)
+end
+#unless bashrc_orig.grep(/myprompt/)
 
 Chef::Log.info("grep = #{File.open(bashrc).grep(/myprompt/)}")
