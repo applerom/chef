@@ -31,6 +31,7 @@ bashrc = myhome + "/.bashrc"
 Chef::Log.info("bashrc = #{bashrc}, myhome = #{myhome}")
 
 bashrc_orig = File.read(bashrc)
+Chef::Log.info("bashrc_orig = #{bashrc_orig}")
 
 template bashrc do
     source "bashrc.erb"
@@ -40,4 +41,4 @@ template bashrc do
 end
 #unless bashrc_orig.grep(/myprompt/)
 
-Chef::Log.info("grep = #{File.open(bashrc).grep(/myprompt/)}")
+Chef::Log.info("bashrc_orig.grep(/myprompt/) = #{bashrc_orig.grep(/myprompt/)}")
