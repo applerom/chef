@@ -33,7 +33,7 @@ Chef::Log.info("myuser = #{myuser}, myhome = #{myhome}")
     bashrc_orig = File.read(bashrc)
     Chef::Log.info("bashrc_orig.scan(/myprompt/) = #{bashrc_orig.scan(/myprompt/)}, bashrc_orig.scan(/myprompt/).length = #{bashrc_orig.scan(/myprompt/).length}")
     
-    unless bashrc_orig.scan(/myprompt/).length
+    if bashrc_orig.scan(/myprompt/).length == 0
         Chef::Log.info("bashrc_orig = #{bashrc_orig}")
         
         template bashrc do
@@ -41,6 +41,6 @@ Chef::Log.info("myuser = #{myuser}, myhome = #{myhome}")
             variables({
                 :bashrc_orig_content => bashrc_orig
             })
-        end 
+        end
     end
 end
