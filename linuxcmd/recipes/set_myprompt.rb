@@ -26,7 +26,7 @@ node['etc']['passwd'].each do |user, data|
     end
 end
 Chef::Log.info("myuser = #{myuser}, myhome = #{myhome}")
-Chef::Log.info("my-user = #{default['my']['user']}, my-home = #{default['my']['home']}")
+Chef::Log.info("my-user = #{node.default['my']['user']}, my-home = #{node.default['my']['home']}")
 
 [myhome + "/.bashrc", "/root/.bashrc"].each do |bashrc|
     Chef::Log.info("bashrc = #{bashrc}")
