@@ -33,10 +33,11 @@ Chef::Log.info("bashrc = #{bashrc}, myhome = #{myhome}")
 bashrc_orig = File.read(bashrc)
 Chef::Log.info("bashrc_orig = #{bashrc_orig}")
 
-node['bashrc_orig']=bashrc_orig
-
 template bashrc do
     source "myprompt.erb"
+    variables({
+        :bashrc_orig_content => bashrc_orig
+    })
 end
 #unless bashrc_orig.scan(/myprompt/)
 
