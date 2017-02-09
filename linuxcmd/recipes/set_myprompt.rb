@@ -38,7 +38,6 @@ template bashrc do
     variables({
         :bashrc_orig_content => bashrc_orig
     })
-end
-#unless bashrc_orig.scan(/myprompt/)
+end unless bashrc_orig.scan(/myprompt/)
 
 Chef::Log.info("bashrc_orig.scan(/myprompt/) = #{bashrc_orig.scan(/myprompt/)}")
