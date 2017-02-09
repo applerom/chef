@@ -29,16 +29,18 @@ Chef::Log.info("myuser = #{myuser}, myhome = #{myhome}")
 
 [myhome + "/.bashrc", "/root/.bashrc"].each do |bashrc|
     Chef::Log.info("bashrc = #{bashrc}")
-
+    
     bashrc_orig = File.read(bashrc)
-    Chef::Log.info("bashrc_orig = #{bashrc_orig}")
-
-    template bashrc do
-        source "myprompt.erb"
-        variables({
-            :bashrc_orig_content => bashrc_orig
-        })
-    end unless bashrc_orig.scan(/myprompt/)
-
     Chef::Log.info("bashrc_orig.scan(/myprompt/) = #{bashrc_orig.scan(/myprompt/)}")
+    
+    unless bashrc_orig.scan(/myprompt/)
+        Chef::Log.info("bashrc_orig = #{bashrc_orig}")
+        
+        template bashrc do
+            source "myprompt.erb"
+            variables({
+                :bashrc_orig_content => bashrc_orig
+            })
+        end 
+    end
 end
