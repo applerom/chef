@@ -25,10 +25,10 @@ node['etc']['passwd'].each do |user, data|
         myhome=data['dir']
     end
 end
-Chef::Log.debug("myuser = #{myuser}, myhome = #{myhome}")
+Chef::Log.info("myuser = #{myuser}, myhome = #{myhome}")
 
 bashrc = myhome + "/.bashrc"
-Chef::Log.debug("bashrc = #{bashrc}, myhome = #{myhome}")
+Chef::Log.info("bashrc = #{bashrc}, myhome = #{myhome}")
 
 bashrc_orig = File.read(bashrc)
 
@@ -39,4 +39,4 @@ template bashrc do
     })
 end unless File.open(bashrc).grep(/myprompt/)
 
-Chef::Log.debug("grep = #{File.open(bashrc).grep(/myprompt/)}")
+Chef::Log.info("grep = #{File.open(bashrc).grep(/myprompt/)}")
