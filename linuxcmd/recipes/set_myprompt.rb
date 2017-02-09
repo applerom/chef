@@ -34,11 +34,11 @@ bashrc_orig = File.read(bashrc)
 Chef::Log.info("bashrc_orig = #{bashrc_orig}")
 
 template bashrc do
-    source "bashrc.erb"
+    source "myprompt.erb"
     variables({
         bashrc_orig_content: bashrc_orig
     })
 end
-#unless bashrc_orig.grep(/myprompt/)
+#unless bashrc_orig.scan(/myprompt/)
 
-Chef::Log.info("bashrc_orig.grep(/myprompt/) = #{bashrc_orig.scan(/myprompt/)}")
+Chef::Log.info("bashrc_orig.scan(/myprompt/) = #{bashrc_orig.scan(/myprompt/)}")
