@@ -27,17 +27,18 @@ node['etc']['passwd'].each do |user, data|
 end
 Chef::Log.info("myuser = #{myuser}, myhome = #{myhome}")
 
-bashrc = myhome + "/.bashrc"
-Chef::Log.info("bashrc = #{bashrc}, myhome = #{myhome}")
+[myhome + "/.bashrc", "/root/.bashrc"].each do |bashrc|
+    Chef::Log.info("bashrc = #{bashrc}")
 
-bashrc_orig = File.read(bashrc)
-Chef::Log.info("bashrc_orig = #{bashrc_orig}")
+    bashrc_orig = File.read(bashrc)
+    Chef::Log.info("bashrc_orig = #{bashrc_orig}")
 
-template bashrc do
-    source "myprompt.erb"
-    variables({
-        :bashrc_orig_content => bashrc_orig
-    })
-end unless bashrc_orig.scan(/myprompt/)
+    template bashrc do
+        source "myprompt.erb"
+        variables({
+            :bashrc_orig_content => bashrc_orig
+        })
+    end unless bashrc_orig.scan(/myprompt/)
 
-Chef::Log.info("bashrc_orig.scan(/myprompt/) = #{bashrc_orig.scan(/myprompt/)}")
+    Chef::Log.info("bashrc_orig.scan(/myprompt/) = #{bashrc_orig.scan(/myprompt/)}")
+end
