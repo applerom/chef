@@ -22,7 +22,7 @@ Chef::Log.info("my-log = #{node.default['my']['log']}")
 directory '/var/www' do
 end
 
-mylinkdirs <<-EOF
+mylinkdirs = <<-EOF
 /var/www
 /etc
 /usr/local/src
