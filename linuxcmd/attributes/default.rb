@@ -31,17 +31,25 @@ default['my']['home'] = myhome
 default['my']['cert_dir'] = "/root/certs"
 
 default['my']['log'] =
-  case node['platform_family']
-  when 'debian'
-    'syslog'
-  when 'suse'
-    'syslog'
-  when 'rhel'
-    'messages'
-  else
-    'syslog'
-  end
-  
+    case node['platform_family']
+        when 'debian'
+            'syslog'
+        when 'suse'
+            'syslog'
+        when 'rhel'
+            'messages'
+        else
+            'syslog'
+    end
+
+default['my']['mc_xdg'] =
+    case node['platform']
+        when 'amazon'
+            ''
+        else
+            'config/'
+    end
+
 =begin
 default['my']['log'] =
   case node['platform_family']
