@@ -49,6 +49,7 @@ default['my']['mc_xdg'] =
         else
             'config/'
     end
+default['my']['mc_version']="mc some version"
 
 =begin
 default['my']['log'] =
