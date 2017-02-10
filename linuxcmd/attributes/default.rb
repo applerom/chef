@@ -28,6 +28,7 @@ node['etc']['passwd'].each do |user, data|
 end
 default['my']['user'] = myuser
 default['my']['home'] = myhome
+default['my']['cert_dir'] = "/root/certs"
 
 default['my']['log'] =
   case node['platform_family']
