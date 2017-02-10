@@ -28,7 +28,7 @@ ruby_block "mc_version" do
         Chef::Resource::RubyBlock.send(:include, Chef::Mixin::ShellOut)      
         command = 'mc -V'
         command_out = shell_out(command)
-        Chef::Log.info("command_out = #{command_out}")
+        Chef::Log.info("command_out = #{command_out.stdout}")
         node.default['my']['mc_version'] = command_out.stdout
     end
     action :create
