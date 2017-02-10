@@ -32,6 +32,7 @@ mylinks=[
 ]
 =begin
 bash 'create-useful-links-for-dirs' do # Chef does not support symlinks for dirs → use bash code for that
+                                       ## Support - but you have to set "dir + name", not only dir like in bash
     code <<-EOF
         for MYPATH in #{mylinkdirs}
         do
