@@ -33,8 +33,8 @@ bash 'create-useful-links-for-dirs' do # Chef does not support symlinks for dirs
 end
 
 
-["/var/log/#{node.default['my']['log']}"].each do |mylink| # symlinks for files
-    link node.default['my']['home'] do
-      to mylink
+#["/var/log/#{node.default['my']['log']}"].each do |mylink| # symlinks for files
+    link "#{node.default['my']['home']}/#{node.default['my']['log']}" do
+        to "/var/log/#{node.default['my']['log']}"
     end
-end
+#end
