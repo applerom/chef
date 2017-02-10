@@ -17,8 +17,8 @@
 # limitations under the License.
 #
 
-mycert_dir=node.default['my']['cert_dir']
-myhome=node.default['my']['home']
+mycert_dir="#{node.default['my']['cert_dir']}"
+myhome="#{node.default['my']['home']}"
 
 directory mycert_dir do
 end
