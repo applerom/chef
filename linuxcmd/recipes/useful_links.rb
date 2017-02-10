@@ -22,7 +22,14 @@ Chef::Log.info("my-log = #{node.default['my']['log']}")
 directory '/var/www' do
 end
 
-mylinks="/var/www /etc /usr/local/src /usr /var/log /var/log /var/log/#{node.default['my']['log']}"
+mylinks=[
+    "/var/www",
+    "/etc",
+    "/usr/local/src",
+    "/usr",
+    "/var/log",
+    "/var/log/#{node.default['my']['log']}"
+]
 =begin
 bash 'create-useful-links-for-dirs' do # Chef does not support symlinks for dirs → use bash code for that
     code <<-EOF
