@@ -22,16 +22,16 @@ Chef::Log.info("mc_xdg = #{mc_xdg}")
 Chef::Log.info("node['platform'] = #{node['platform']}")
 
 myhome="#{node.default['my']['home']}"
-
+mc_version = "bbb"
 ruby_block "mc_version" do
     block do
         Chef::Resource::RubyBlock.send(:include, Chef::Mixin::ShellOut)      
         command = 'mc -V'
         command_out = shell_out(command)
         Chef::Log.info("command_out = #{command_out.stdout}")
-        node.set['my']['mc_version'] = "#{command_out.stdout}"
+        mc_version = "#{command_out.stdout}"
     end
     action :create
 end
 
-Chef::Log.info("mc_version = #{node.default['my']['mc_version']}")
+Chef::Log.info("mc_version = #{mc_version}")
