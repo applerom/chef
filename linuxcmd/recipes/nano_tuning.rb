@@ -1,6 +1,6 @@
 #
 # Cookbook:: linuxcmd
-# Recipe:: certs_dir
+# Recipe:: nano_tuning
 #
 # Copyright:: 2017, apple_rom
 #
@@ -19,8 +19,6 @@
 
 mycert_dir="#{node.default['my']['cert_dir']}"
 myhome="#{node.default['my']['home']}"
-
-Chef::Log.info("mycert_dir = #{mycert_dir}")
 
 directory mycert_dir do
 end

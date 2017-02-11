@@ -1,6 +1,6 @@
 #
 # Cookbook:: linuxcmd
-# Recipe:: certs_dir
+# Library: linuxcmd_helper
 #
 # Copyright:: 2017, apple_rom
 #
@@ -17,21 +17,17 @@
 # limitations under the License.
 #
 
-mycert_dir="#{node.default['my']['cert_dir']}"
-myhome="#{node.default['my']['home']}"
+module Linuxcmd
+    module Helper
 
-Chef::Log.info("mycert_dir = #{mycert_dir}")
+        include Chef::Mixin::ShellOut
 
-directory mycert_dir do
-end
-
-
-unless mycert_dir.start_with?(myhome)
-    mylinkname=mycert_dir.scan(/\/([^\/]*)/).last.first
-    Chef::Log.info("mylinkname = #{mylinkname}")
-
-    mylinkpath = myhome + "/" + mylinkname
-    link mylinkpath do
-        to mycert_dir
+        def mc_47?
+            cmd = shell_out!('mc -V', {:returns => [0,2]})
+            Chef::Log.info("mc_47 command_out = #{command_out.stdout}")
+            command_out.stderr.empty? && (command_out.stdout =~ /Midnight Commander 4.7/)
+        end
     end
 end
+
+
