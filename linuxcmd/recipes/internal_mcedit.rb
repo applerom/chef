@@ -29,7 +29,7 @@ ruby_block "mc_version" do
         command = 'mc -V'
         command_out = shell_out(command)
         Chef::Log.info("command_out = #{command_out.stdout}")
-        node.run_state['my']['mc_version'] = "#{command_out.stdout}"
+        node.default.run_state['my']['mc_version'] = "#{command_out.stdout}"
     end
     action :create
 end
