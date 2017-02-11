@@ -35,3 +35,11 @@ ruby_block "mc_version" do
 end
 
 Chef::Log.info("mc_version = #{mc_version}")
+
+ohai "reload_ohai" do
+  action :reload
+end
+
+mc_version=node["package_version"]["mc"]
+Chef::Log.info("mc_version = #{mc_version}")
+
