@@ -2,7 +2,7 @@ Ohai.plugin(:PackageVersion) do
   provides "package_version"
 
   depends "platform_family"
-
+    Chef::Log.info("run Ohai.plugin(:PackageVersion)")
   collect_data do
     pckg_list = Hash.new
     case platform_family
