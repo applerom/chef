@@ -29,17 +29,17 @@ ruby_block "mc_version" do
         command = 'mc -V'
         command_out = shell_out(command)
         Chef::Log.info("command_out = #{command_out.stdout}")
-        mc_version = "#{command_out.stdout}"
+        node.run_state['my']['mc_version'] = "#{command_out.stdout}"
     end
     action :create
 end
 
+mc_version=node.default['my']['mc_version']
 Chef::Log.info("mc_version = #{mc_version}")
 
 ohai "reload_ohai" do
   action :reload
 end
-
-mc_version=node["package_version"]["mc"]
-Chef::Log.info("mc_version = #{mc_version}")
+mc_version=node.default['package_version']['mc']
+Chef::Log.info("mc_version package_version = #{mc_version}")
 
