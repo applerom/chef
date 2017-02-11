@@ -20,6 +20,7 @@
 mc_xdg="#{node.default['my']['mc_xdg']}"
 Chef::Log.info("mc_xdg = #{mc_xdg}")
 Chef::Log.info("node['platform'] = #{node['platform']}")
+Chef::Log.info("node['platform'] = #{node['platform']}")
 
 myhome="#{node.default['my']['home']}"
 
