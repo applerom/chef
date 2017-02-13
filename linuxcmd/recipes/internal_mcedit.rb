@@ -23,7 +23,7 @@ Chef::Log.info("node['platform'] = #{node['platform']}")
 
 myhome="#{node.default['my']['home']}"
 
-Chef::Resource::User.send(:include, Demo::Helper)
+Chef::Resource::User.send(:include, Linuxcmd::Helper)
 if mc_47?
     Chef::Log.info("mc is 4.7")
 else
