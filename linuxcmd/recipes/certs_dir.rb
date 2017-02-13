@@ -20,8 +20,6 @@
 mycert_dir="#{node.default['my']['cert_dir']}"
 myhome="#{node.default['my']['home']}"
 
-Chef::Log.info("mycert_dir = #{mycert_dir}")
-
 directory mycert_dir do
 end
 

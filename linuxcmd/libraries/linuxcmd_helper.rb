@@ -25,11 +25,6 @@ module Linuxcmd
         def mc_47?
             cmd = shell_out!('mc -V', {:returns => [0,2]})
             Chef::Log.info("mc_47 command_out = #{command_out.stdout}")
-            Chef::Log.info("mc_47 command_out = #{command_out.stdout}")
-            Chef::Log.info("mc_47 command_out = #{command_out.stdout}")
-            Chef::Log.info("mc_47 command_out = #{command_out.stdout}")
-            Chef::Log.info("mc_47 command_out = #{command_out.stdout}")
-            Chef::Log.info("mc_47 command_out = #{command_out.stdout}")
             command_out.stderr.empty? && (command_out.stdout =~ /Midnight Commander 4.7/)
         end
     end

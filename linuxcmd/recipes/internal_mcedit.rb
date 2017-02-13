@@ -23,16 +23,6 @@ Chef::Log.info("node['platform'] = #{node['platform']}")
 Chef::Log.info("node['platform'] = #{node['platform']}")
 
 myhome="#{node.default['my']['home']}"
-
-Chef::Resource::User.send(:include, Demo::Helper)
-if mc_47?
-    Chef::Log.info("mc is 4.7")
-else
-    Chef::Log.info("mc is not 4.7")
-end
-
-
-=begin
 mc_version = "bbb"
 ruby_block "mc_version" do
     block do
@@ -53,5 +43,4 @@ ohai "reload_ohai" do
 end
 mc_version=node.default['package_version']['mc']
 Chef::Log.info("mc_version package_version = #{mc_version}")
-=end
 
