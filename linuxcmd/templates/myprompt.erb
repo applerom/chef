@@ -47,5 +47,3 @@ myprompt()
                 printf " $(date +%T)"
 }
 PS1='$(myprompt)\n \[\e[0;36m\]\w \[\e[01;32m\]\$\[\e[00m\] '
-
-## EOF

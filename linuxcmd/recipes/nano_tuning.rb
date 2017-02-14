@@ -18,6 +18,7 @@
 #
 
 
+
 bash 'nano_tune' do
     ignore_failure = true
     code <<-EOF
@@ -32,5 +33,22 @@ bash 'nano_tune' do
         fi
     EOF
 end
+
+bashrc = "#{node.default['my']['home']}/.bashrc"
+
+bashrc_orig = File.read(bashrc)
+Chef::Log.info("bashrc_orig.scan(/EDITOR=nano/) = #{bashrc_orig.scan(/EDITOR=nano/)}, bashrc_orig.scan(/EDITOR=nano/).length = #{bashrc_orig.scan(/EDITOR=nano/).length}")
+
+if bashrc_orig.scan(/EDITOR=nano/).length == 0
+    Chef::Log.info("bashrc_orig = #{bashrc_orig}")
+    
+    template bashrc do
+        source "nano_editor.erb"
+        variables({
+            :bashrc_orig_content => bashrc_orig
+        })
+    end
+end
+
 
 

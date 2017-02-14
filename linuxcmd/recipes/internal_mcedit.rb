@@ -23,6 +23,7 @@ Chef::Log.info("node['platform'] = #{node['platform']}")
 
 myhome="#{node.default['my']['home']}"
 
+## todo: permissions for user!
 
 bash 'mc_47' do
     ignore_failure = true
