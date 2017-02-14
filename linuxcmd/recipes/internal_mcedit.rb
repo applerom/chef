@@ -24,7 +24,7 @@ Chef::Log.info("node['platform'] = #{node['platform']}")
 myhome="#{node.default['my']['home']}"
 
 
-bash cmd do
+bash 'mc_47' do
     ignore_failure = true
     code <<-EOF
         if mc -V | grep "Midnight Commander 4.7" ; then # directory for old mc version (to ex. in AMILinux)
