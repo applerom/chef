@@ -30,7 +30,7 @@ myhome="#{node.default['my']['home']}"
 
 
 #Chef::Resource::User.send(:include, Linuxcmd::Helper)
-include Linuxcmd::Helper
+include Linuxcmd::Helper::mc_47?
 
 if mc_47?
     Chef::Log.info("mc is 4.7")
