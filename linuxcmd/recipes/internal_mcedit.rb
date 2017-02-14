@@ -24,11 +24,38 @@ Chef::Log.info("node['platform'] = #{node['platform']}")
 myhome="#{node.default['my']['home']}"
 
 
+bash cmd do
+    ignore_failure = true
+    code <<-EOF
+        if mc -V | grep "Midnight Commander 4.7" ; then # directory for old mc version (to ex. in AMILinux)
+            MC_XDG=""
+        else
+            MC_XDG="config/" # 4.8+ use XDG-support path for config files
+        fi
+
+        if [ -f #{node.default['my']['home']}/.${MC_XDG}mc/ini ] ; then
+            sed -i "s|^use_internal_edit=.*|use_internal_edit=0|" #{node.default['my']['home']}/.${MC_XDG}mc/ini
+        else
+            mkdir -p #{node.default['my']['home']}/.${MC_XDG}mc > /dev/null 2> /dev/null
+            echo "[Midnight-Commander]" > #{node.default['my']['home']}/.${MC_XDG}mc/ini
+            echo "use_internal_edit=0" >> #{node.default['my']['home']}/.${MC_XDG}mc/ini
+        fi
+        if [ -f /root/.${MC_XDG}mc/ini ] ; then
+            sed -i "s|^use_internal_edit=.*|use_internal_edit=0|" /root/.${MC_XDG}mc/ini
+        else
+            mkdir -p /root/.${MC_XDG}mc > /dev/null 2> /dev/null
+            echo "[Midnight-Commander]" > /root/.${MC_XDG}mc/ini
+            echo "use_internal_edit=0" >> /root/.${MC_XDG}mc/ini
+        fi
+    EOF
+end
+
+
 
 #directory "#{node.default['my']['home']}/#{mc_xdg}mc" do
 #end
 
-
+=begin
 #Chef::Resource::User.send(:include, Linuxcmd::Helper)
 include Linuxcmd::Helper::mc_47?
 
@@ -37,7 +64,7 @@ if mc_47?
 else
     Chef::Log.info("mc is not 4.7")
 end
-
+=end
 
 =begin
 mc_version = "bbb"
