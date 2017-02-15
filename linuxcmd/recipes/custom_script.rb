@@ -18,5 +18,5 @@
 #
 
 file node.default['my']['sh'] do
-    content "df -k | awk '\$NF==\"/\"{printf \"Disk Usage: %s\n\", \$5}'"
+    content 'df -k | awk \'$NF=="/"{printf "Disk Usage: %s\n", $5}\''
 end
