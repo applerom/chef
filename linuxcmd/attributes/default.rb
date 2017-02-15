@@ -50,6 +50,8 @@ default['my']['mc_xdg'] =
             'config/'
     end
 default['my']['mc_version']="mc some version"
+default['my']['sh']="/etc/profile.d/my.sh" # file for execute custom script for interactive SSH-users
+
 
 =begin
 default['my']['log'] =

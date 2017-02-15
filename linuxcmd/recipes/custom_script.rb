@@ -1,6 +1,6 @@
 #
 # Cookbook:: linuxcmd
-# Recipe:: false_shells
+# Recipe:: custom_script
 #
 # Copyright:: 2017, apple_rom
 #
@@ -16,13 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-file_path = '/etc/shells'
-add_string = '/bin/false'
 
-file_content = File.read(file_path)
-Chef::Log.info("file_content.scan(/#{add_string}/) = #{file_content.scan(/#{add_string}/)}, file_content.scan(/#{add_string}/).length = #{file_content.scan(/#{add_string}/).length}")
-if file_content.scan(/#{add_string}/).length == 0
-    file file_path do
-        content file_content + add_string
-    end
+file_path = node.default['my']['sh']
+file node.default['my']['sh'] do
+    content "df -k | awk '\$NF==\"/\"{printf \"Disk Usage: %s\n\", \$5}'"
 end
