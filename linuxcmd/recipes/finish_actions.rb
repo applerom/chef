@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-myuser"#{node.default['my']['user']}"
+myuser="#{node.default['my']['user']}"
 myhome="#{node.default['my']['home']}"
 
 =begin
