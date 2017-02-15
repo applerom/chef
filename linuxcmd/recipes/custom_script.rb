@@ -17,7 +17,6 @@
 # limitations under the License.
 #
 
-file_path = node.default['my']['sh']
 file node.default['my']['sh'] do
     content "df -k | awk '\$NF==\"/\"{printf \"Disk Usage: %s\n\", \$5}'"
 end
