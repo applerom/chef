@@ -20,15 +20,15 @@
 myuser="#{node.default['my']['user']}"
 myhome="#{node.default['my']['home']}"
 
-=begin
 bash 'finish_actions' do
     ignore_failure = true
     code "chown -R #{myuser}:#{myuser} #{myhome}"
 end
-=end
 
+=begin
 directory myhome do
     owner myuser
     group myuser
     recursive true
 end
+=end
