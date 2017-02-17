@@ -18,9 +18,8 @@
 #
 
 myhome="#{node.default['my']['home']}"
-mycert_dir="#{node.default['my']['cert_dir']}"
-mc_xdg="#{node.default['my']['mc_xdg']}"
 myuser="#{node.default['my']['user']}"
+mycert_dir="#{node.default['my']['cert_dir']}"
 
 Chef::Log.info("node['platform'] = #{node['platform']}")
 
@@ -29,4 +28,13 @@ Chef::Log.info("node['platform'] = #{node['platform']}")
     package mypackage do
         action :install
     end
+end
+
+turnserver_git = '/usr/local/src/turnserver'
+git turnserver_git do
+  repository 'https://github.com/coturn/coturn.git'
+end
+
+link myhome + "/turnserver" do
+    to turnserver_git
 end
