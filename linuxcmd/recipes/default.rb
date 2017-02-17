@@ -93,7 +93,7 @@ Chef::Log.info("replace_vim_with_nano = #{node.default['my']['replace_vim_with_n
 Chef::Log.info("use_internal_editor_for_mc = #{node.default['my']['use_internal_editor_for_mc']}")
 
 bash 'nano_tune' do
-    only_if node.default['my']['nano_tune']
+    only_if { node.default['my']['nano_tune'] }
     ignore_failure = true
     code <<-EOF
         sed -i 's|color green|color brightgreen|' /usr/share/nano/xml.nanorc
@@ -109,7 +109,7 @@ bash 'nano_tune' do
 end
 
 bash 'vim_nano' do
-    only_if node.default['my']['replace_vim_with_nano']
+    only_if { node.default['my']['replace_vim_with_nano'] }
     ignore_failure = true
     code <<-EOF
         if [ -f /bin/vi_orig ] ; then # protect from repeated running
@@ -129,7 +129,7 @@ end
 Chef::Log.info("mc_xdg = #{mc_xdg}")
 
 bash 'mc_47' do
-    not_if node.default['my']['use_internal_editor_for_mc']
+    not_if { node.default['my']['use_internal_editor_for_mc'] }
     ignore_failure = true
     code <<-EOF
         if mc -V | grep "Midnight Commander 4.7" ; then # directory for old mc version (to ex. in AMILinux)
