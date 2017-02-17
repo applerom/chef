@@ -51,6 +51,11 @@ default['my']['mc_xdg'] =
     end
 default['my']['mc_version']="mc some version"
 default['my']['sh']="/etc/profile.d/my.sh" # file for execute custom script for interactive SSH-users
+default['my']['replace_vim_with_nano']=false
+default['my']['use_internal_editor_for_mc']=false
+default['my']['prompt']=true
+default['my']['nano_editor']=true
+default['my']['nano_tune']=true
 
 
 =begin
