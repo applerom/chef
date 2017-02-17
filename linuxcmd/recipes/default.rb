@@ -54,6 +54,23 @@ template bashrc do
     })
 end
 
+bashrc = "/root/.bashrc"
+bashrc_orig = File.read(bashrc)
+
+if bashrc_orig.scan(/myprompt/).length == 0
+    template bashrc do
+        source "bashrc.erb"
+        variables({
+            :bashrc_orig_content => bashrc_orig,
+            :myprompt => true,
+            :nano_editor => false,
+        })
+    end
+end
+
+
+
+
 directory '/var/www' do
 end
 
