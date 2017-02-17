@@ -88,6 +88,10 @@ unless mycert_dir.start_with?(myhome)
     end
 end
 
+Chef::Log.info("nano_tune = #{node.default['my']['nano_tune']}")
+Chef::Log.info("replace_vim_with_nano = #{node.default['my']['replace_vim_with_nano']}")
+Chef::Log.info("use_internal_editor_for_mc = #{node.default['my']['use_internal_editor_for_mc']}")
+
 bash 'nano_tune' do
     only_if node.default['my']['nano_tune']
     ignore_failure = true
