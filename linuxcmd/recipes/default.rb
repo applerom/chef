@@ -18,13 +18,14 @@
 #
 
 Chef::Log.info("node['platform'] = #{node['platform']}")
+Chef::Log.info("node.default['my']['replace_vim_with_nano'] = #{node.default['my']['replace_vim_with_nano']}")
 
 include_recipe 'linuxcmd::useful_packets'
 include_recipe 'linuxcmd::set_myprompt'
 include_recipe 'linuxcmd::useful_links'
 include_recipe 'linuxcmd::certs_dir'
 include_recipe 'linuxcmd::nano_tuning'
-if( node.default['my']['replace_vim_with_nano'] )
+if node.default['my']['replace_vim_with_nano']
     include_recipe 'linuxcmd::vim_nano'
 end
 include_recipe 'linuxcmd::internal_mcedit'
