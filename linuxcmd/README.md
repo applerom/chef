@@ -1,5 +1,6 @@
 # Cookbook linuxcmd
 
+Demo purpose only (but it works) - convert linuxcmd bash-scripts to Chef.
 Installs linuxcmd.
 
 ## Requirements
