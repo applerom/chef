@@ -19,6 +19,8 @@
 
 Chef::Log.info("nano_tune = #{node.default['my']['nano_tune']}")
 
+myhome="#{node.default['my']['home']}"
+
 bash 'nano_tune' do
     only_if { node.default['my']['nano_tune'] }
     ignore_failure = true
