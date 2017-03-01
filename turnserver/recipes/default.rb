@@ -38,3 +38,30 @@ end
 link myhome + "/turnserver-src" do
     to turnserver_src_dir
 end
+
+bash 'make coturn' do
+    ignore_failure = true
+    code <<-EOF
+        ./configure
+        make
+        make install
+
+        ldconfig
+    EOF
+end
+
+template '/etc/turnserver.conf' do
+    source 'turnserver.conf.erb'
+    owner 'root'
+    group 'root'
+    mode '0755'
+end
+
+template '/etc/init.d/turnserver' do
+    source 'init.d-turnserver.erb'
+    owner 'root'
+    group 'root'
+    mode '0755'
+end
+
+

@@ -1,0 +1,22 @@
+#!/bin/sh
+
+case "$1" in
+    start)
+        echo "Starting TURN server..."
+        ##rm -rf /var/log/turn_*
+        LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH} /usr/local/bin/turnserver -o -v
+        ;;
+    stop)
+        pkill -SIGINT turnserver
+        echo "Stopping TURN server..."
+        ;;
+    restart)
+        echo "Restarting TURN server..."
+        pkill -SIGINT turnserver
+        sleep 1
+        LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH} /usr/local/bin/turnserver -o -v
+        ;;
+    *)
+        echo "Please use start or stop or restart as first argument"
+        ;;
+esac
