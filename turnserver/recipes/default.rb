@@ -1,6 +1,6 @@
 #
-# Cookbook:: linuxcmd
-# Recipe:: turn_server
+# Cookbook:: turnserver
+# Recipe:: default
 #
 # Copyright:: 2017, apple_rom
 #
@@ -30,11 +30,11 @@ Chef::Log.info("node['platform'] = #{node['platform']}")
     end
 end
 
-turnserver_git = '/usr/local/src/turnserver'
-git turnserver_git do
+turnserver_src_dir = '/usr/local/src/turnserver'
+git turnserver_src_dir do
   repository 'https://github.com/coturn/coturn.git'
 end
 
-link myhome + "/turnserver" do
-    to turnserver_git
+link myhome + "/turnserver-src" do
+    to turnserver_src_dir
 end

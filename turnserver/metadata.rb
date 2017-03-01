@@ -1,10 +1,10 @@
-name 'linuxcmd'
+name 'turnserver'
 maintainer 'apple_rom'
 maintainer_email 'bios@rom.by'
 license 'Apache 2.0'
-description 'Installs linuxcmd'
+description 'Installs turnserver'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version '1.0.3'
+version '0.1'
 
 %w(debian ubuntu arch redhat centos fedora scientific oracle amazon suse opensuse opensuseleap).each do |os|
   supports os

@@ -1,8 +1,6 @@
-# Cookbook linuxcmd
+# Cookbook turnserver
 
-Installs linuxcmd.
-
-It's also a (working) demo how to convert bash-scripts to Chef recipes.
+Installs turnserver.
 
 ## Requirements
 
@@ -28,7 +26,7 @@ None.
 
 ## Usage
 
-Put recipe[linuxcmd] in a run list, or include_recipe 'linuxcmd' to ensure that linuxcmd is installed on your systems.
+Put recipe[turnserver] in a run list, or include_recipe 'turnserver' to ensure that turnserver is installed on your systems.
 
 ## License and Author
 
