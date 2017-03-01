@@ -41,6 +41,7 @@ end
 
 bash 'make coturn' do
     ignore_failure = true
+    cwd turnserver_src_dir
     code <<-EOF
         ./configure
         make
@@ -64,4 +65,8 @@ template '/etc/init.d/turnserver' do
     mode '0755'
 end
 
+service 'turnserver' do
+    supports :start => true, :stop => true, :restart => true
+    action [ :enable, :start ]
+end
 
