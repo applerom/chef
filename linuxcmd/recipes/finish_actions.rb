@@ -1,6 +1,6 @@
 #
 # Cookbook:: linuxcmd
-# Recipe:: default
+# Recipe:: finish_actions
 #
 # Copyright:: 2017, apple_rom
 #
@@ -17,18 +17,18 @@
 # limitations under the License.
 #
 
-Chef::Log.info("node['platform'] = #{node['platform']}")
+myuser="#{node.default['my']['user']}"
+myhome="#{node.default['my']['home']}"
 
-include_recipe 'linuxcmd::useful_packets'
-include_recipe 'linuxcmd::set_myprompt'
-include_recipe 'linuxcmd::useful_links'
-include_recipe 'linuxcmd::certs_dir'
-include_recipe 'linuxcmd::nano_tuning'
-if( node.default['my']['replace_vim_with_nano'] )
-    include_recipe 'linuxcmd::vim_nano'
+bash 'finish_actions' do
+    ignore_failure = true
+    code "chown -R #{myuser}:#{myuser} #{myhome}"
 end
-include_recipe 'linuxcmd::internal_mcedit'
-include_recipe 'linuxcmd::false_shells'
-include_recipe 'linuxcmd::custom_script'
-include_recipe 'linuxcmd::finish_actions'
 
+=begin
+directory myhome do
+    owner myuser
+    group myuser
+    recursive true
+end
+=end

@@ -1,6 +1,6 @@
 #
 # Cookbook:: linuxcmd
-# Recipe:: default
+# Recipe:: false_shells
 #
 # Copyright:: 2017, apple_rom
 #
@@ -16,19 +16,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+file_path = '/etc/shells'
+add_string = '/bin/false'
 
-Chef::Log.info("node['platform'] = #{node['platform']}")
+file_content = File.read(file_path)
+Chef::Log.info("file_content.scan(/#{add_string}/) = #{file_content.scan(/#{add_string}/)}, file_content.scan(/#{add_string}/).length = #{file_content.scan(/#{add_string}/).length}")
 
-include_recipe 'linuxcmd::useful_packets'
-include_recipe 'linuxcmd::set_myprompt'
-include_recipe 'linuxcmd::useful_links'
-include_recipe 'linuxcmd::certs_dir'
-include_recipe 'linuxcmd::nano_tuning'
-if( node.default['my']['replace_vim_with_nano'] )
-    include_recipe 'linuxcmd::vim_nano'
+if file_content.scan(/#{add_string}/).length == 0
+    file file_path do
+        content file_content + add_string
+    end
 end
-include_recipe 'linuxcmd::internal_mcedit'
-include_recipe 'linuxcmd::false_shells'
-include_recipe 'linuxcmd::custom_script'
-include_recipe 'linuxcmd::finish_actions'
-

@@ -1,6 +1,6 @@
 #
 # Cookbook:: linuxcmd
-# Recipe:: default
+# Recipe:: certs_dir
 #
 # Copyright:: 2017, apple_rom
 #
@@ -17,18 +17,19 @@
 # limitations under the License.
 #
 
-Chef::Log.info("node['platform'] = #{node['platform']}")
+mycert_dir="#{node.default['my']['cert_dir']}"
+myhome="#{node.default['my']['home']}"
 
-include_recipe 'linuxcmd::useful_packets'
-include_recipe 'linuxcmd::set_myprompt'
-include_recipe 'linuxcmd::useful_links'
-include_recipe 'linuxcmd::certs_dir'
-include_recipe 'linuxcmd::nano_tuning'
-if( node.default['my']['replace_vim_with_nano'] )
-    include_recipe 'linuxcmd::vim_nano'
+directory mycert_dir do
 end
-include_recipe 'linuxcmd::internal_mcedit'
-include_recipe 'linuxcmd::false_shells'
-include_recipe 'linuxcmd::custom_script'
-include_recipe 'linuxcmd::finish_actions'
 
+
+unless mycert_dir.start_with?(myhome)
+    mylinkname=mycert_dir.scan(/\/([^\/]*)/).last.first
+    Chef::Log.info("mylinkname = #{mylinkname}")
+
+    mylinkpath = myhome + "/" + mylinkname
+    link mylinkpath do
+        to mycert_dir
+    end
+end

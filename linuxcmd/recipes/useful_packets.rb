@@ -1,6 +1,6 @@
 #
 # Cookbook:: linuxcmd
-# Recipe:: default
+# Recipe:: useful_packets
 #
 # Copyright:: 2017, apple_rom
 #
@@ -17,18 +17,8 @@
 # limitations under the License.
 #
 
-Chef::Log.info("node['platform'] = #{node['platform']}")
-
-include_recipe 'linuxcmd::useful_packets'
-include_recipe 'linuxcmd::set_myprompt'
-include_recipe 'linuxcmd::useful_links'
-include_recipe 'linuxcmd::certs_dir'
-include_recipe 'linuxcmd::nano_tuning'
-if( node.default['my']['replace_vim_with_nano'] )
-    include_recipe 'linuxcmd::vim_nano'
+%w(mc ftp bzip2 zip nano lynx wget curl telnet git).each do |mypackage|
+    package mypackage do
+        action :install
+    end
 end
-include_recipe 'linuxcmd::internal_mcedit'
-include_recipe 'linuxcmd::false_shells'
-include_recipe 'linuxcmd::custom_script'
-include_recipe 'linuxcmd::finish_actions'
-
