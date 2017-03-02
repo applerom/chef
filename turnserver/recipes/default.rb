@@ -21,6 +21,11 @@ myhome="#{node.default['my']['home']}"
 myuser="#{node.default['my']['user']}"
 mycert_dir="#{node.default['my']['cert_dir']}"
 
+mycert='wild16.secrom.com.and.gd_bundle.crt'
+##cert=/root/certs/wild16.secrom.com.crt
+mycert_key='wild16.secrom.com.key.pem'
+mys3_files='s3://nist/files'
+
 Chef::Log.info("node['platform'] = #{node['platform']}")
 
 
@@ -56,6 +61,11 @@ template '/etc/turnserver.conf' do
     owner 'root'
     group 'root'
     mode '0755'
+    variables({
+        :bashrc_orig_content => bashrc_orig,
+        :myprompt => true,
+        :nano_editor => false,
+    })
 end
 
 template '/etc/init.d/turnserver' do
@@ -65,8 +75,22 @@ template '/etc/init.d/turnserver' do
     mode '0755'
 end
 
+bash 'get certs from s3' do
+    ignore_failure = true
+    code <<-EOF
+        S3_FILES=#{mys3_files}      ## S3 files directory
+        CERT_DIR=#{mycert_dir}      ## local certs directory
+
+        CERT_KEY=#{mycert_key}      ## private key
+        CERT_BUNDLE=#{mycert}       ## bundle for nginx
+
+        aws s3 cp $S3_FILES/certs/$CERT_KEY 	$CERT_DIR/$CERT_KEY		## download private key
+        aws s3 cp $S3_FILES/certs/$CERT_BUNDLE	$CERT_DIR/$CERT_BUNDLE	## download bundle for nginx
+    EOF
+end
+
 service 'turnserver' do
     supports :start => true, :stop => true, :restart => true
-    action [ :enable, :start ]
+    action [ :enable, :restart ]
 end
 
