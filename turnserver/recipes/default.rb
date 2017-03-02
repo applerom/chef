@@ -62,9 +62,9 @@ template '/etc/turnserver.conf' do
     group 'root'
     mode '0755'
     variables({
-        :bashrc_orig_content => bashrc_orig,
-        :myprompt => true,
-        :nano_editor => false,
+        :mycert_dir => mycert_dir,
+        :mycert => mycert,
+        :mycert_key => mycert_key,
     })
 end
 
