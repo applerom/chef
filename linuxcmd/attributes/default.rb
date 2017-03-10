@@ -29,6 +29,7 @@ end
 default['my']['user'] = myuser
 default['my']['home'] = myhome
 default['my']['cert_dir'] = "/root/certs"
+default['my']['site'] = "linux.cmd"
 
 default['my']['log'] =
     case node['platform_family']

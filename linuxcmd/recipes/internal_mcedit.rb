@@ -24,7 +24,7 @@ Chef::Log.info("mc_xdg = #{mc_xdg}")
 
 myhome="#{node.default['my']['home']}"
 
-bash 'mc_47' do
+bash 'test for mc 4.7' do
     not_if { node.default['my']['use_internal_editor_for_mc'] }
     ignore_failure = true
     code <<-EOF
@@ -52,41 +52,4 @@ bash 'mc_47' do
 end
 
 
-
-#directory "#{node.default['my']['home']}/#{mc_xdg}mc" do
-#end
-
-=begin
-#Chef::Resource::User.send(:include, Linuxcmd::Helper)
-include Linuxcmd::Helper::mc_47?
-
-if mc_47?
-    Chef::Log.info("mc is 4.7")
-else
-    Chef::Log.info("mc is not 4.7")
-end
-=end
-
-=begin
-mc_version = "bbb"
-ruby_block "mc_version" do
-    block do
-        Chef::Resource::RubyBlock.send(:include, Chef::Mixin::ShellOut)      
-        command = 'mc -V'
-        command_out = shell_out(command)
-        Chef::Log.info("command_out = #{command_out.stdout}")
-        node.default.run_state['my']['mc_version'] = "#{command_out.stdout}"
-    end
-    action :create
-end
-
-mc_version=node.default['my']['mc_version']
-Chef::Log.info("mc_version = #{mc_version}")
-
-ohai "reload_ohai" do
-  action :reload
-end
-mc_version=node.default['package_version']['mc']
-Chef::Log.info("mc_version package_version = #{mc_version}")
-=end
 

@@ -1,6 +1,6 @@
 #
 # Cookbook:: linuxcmd
-# Recipe:: custom_script
+# Recipe:: hostname
 #
 # Copyright:: 2017, apple_rom
 #
@@ -16,13 +16,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+my_site = "#{node.default['my']['site']}"
+file_path='/etc/sysconfig/network'
 
 if node.attribute?('ec2')
-    Chef::Log.info("It's ec2") # for EC2 use recipe hostname in the Configure stage because of it changes after any stop/start (not reboot)
-else
-    my_hostname = "sudo hostname #{node.default['my']['site']}" # only for non-EC2 servers - set in the interactive session
-end
-
-file node.default['my']['sh'] do
-    content 'df -k | awk \'$NF=="/"{printf "Disk Usage: %s\n", $5}\'' + "\n#{my_hostname}"
+    Chef::Log.info("It's EC2")
+    case node['platform']
+        when 'amazon'
+            Chef::Log.info("It's AMI Linux")
+            bash 'set hostname in /etc/sysconfig/network' do
+                ignore_failure = true
+                code <<-EOF
+                    MY_SITE="#{my_site}"
+                    sed -i "s|^HOSTNAME=.*|HOSTNAME=${MY_SITE}|" #{file_path}
+                    sudo hostname $MY_SITE
+                EOF
+            end
+        else
+            Chef::Log.info("It's other Linux")
+    end
 end

@@ -75,6 +75,10 @@ template '/etc/init.d/turnserver' do
     mode '0755'
 end
 
+link myhome + "/turnserver-conf" do
+    to '/etc/turnserver.conf'
+end
+
 bash 'get certs from s3' do
     ignore_failure = true
     code <<-EOF
