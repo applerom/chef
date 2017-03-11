@@ -41,11 +41,13 @@ file_path = '/etc/hosts'
 add_string = my_site
 
 file_content = File.read(file_path)
-Chef::Log.info("file_content.match?(/#{add_string}/) = #{file_content.match?(/#{add_string}/)}")
 
 #if file_content.match?(/#{add_string}/) # only in Ruby 2.4
 if file_content =~ /#{add_string}/
+    Chef::Log.info("file_content =~ /#{add_string}/) = true")
     file file_path do
         content file_content.gsub!(/^127.0.0.1(.*)/, "127.0.0.1 #{add_string} \\1")
     end
+else
+    Chef::Log.info("file_content =~ /#{add_string}/) = false")
 end
