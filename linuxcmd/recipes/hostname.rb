@@ -19,35 +19,62 @@
 my_site = "#{node.default['my']['site']}"
 file_path='/etc/sysconfig/network'
 
+bash 'set hostname for current process' do
+    ignore_failure = true
+    code <<-EOF
+        sudo hostname "#{my_site}"
+    EOF
+end
+
+Chef::Log.info("node[:my][:site] = #{node[:my][:site]}")
+Chef::Log.info("node.default['my']['site'] = #{node.default['my']['site']}")
+
 if node.attribute?('ec2')
     Chef::Log.info("It's EC2")
+    
+    Chef::Log.info("File.exist? = #{ File.exist?(file_path) }")
+    
+    file_path='/etc/sysconfig/network'
+    
+    if File.exist?(file_path)
+        file_content = File.read(file_path)
+        
+        file file_path do
+            content file_content.gsub!(/^HOSTNAME=.*/, "HOSTNAME=#{my_site}")
+        end
+    end
+    
+    file_path = '/etc/hosts'
+    add_string = my_site
+
+    file_content = File.read(file_path)
+
+    #if file_content.match?(/#{add_string}/) # only in Ruby 2.4
+    unless file_content =~ /#{add_string}/
+        Chef::Log.info("Add /#{add_string}/) to #{file_path}.")
+        file file_path do
+            content file_content.gsub!(/^127.0.0.1(.*)/, "127.0.0.1 #{add_string} \\1")
+        end
+    else
+        Chef::Log.info("There is /#{add_string}/) in #{file_path} yet.")
+    end
+    
+    template '/etc/profile.d/hostname.sh' do
+        source "hostname.erb"
+    end
+else
+    template '/etc/profile.d/hostname.sh' do
+        source "hostname.erb"
+    end
+end
+    
+=begin
     case node['platform']
         when 'amazon'
             Chef::Log.info("It's AMI Linux")
-            bash 'set hostname in /etc/sysconfig/network' do
-                ignore_failure = true
-                code <<-EOF
-                    MY_SITE="#{my_site}"
-                    sed -i "s|^HOSTNAME=.*|HOSTNAME=${MY_SITE}|" #{file_path}
-                    sudo hostname $MY_SITE
-                EOF
-            end
         else
             Chef::Log.info("It's other Linux")
     end
-end
+=end
 
-file_path = '/etc/hosts'
-add_string = my_site
 
-file_content = File.read(file_path)
-
-#if file_content.match?(/#{add_string}/) # only in Ruby 2.4
-unless file_content =~ /#{add_string}/
-    Chef::Log.info("Add /#{add_string}/) to #{file_path}.")
-    file file_path do
-        content file_content.gsub!(/^127.0.0.1(.*)/, "127.0.0.1 #{add_string} \\1")
-    end
-else
-    Chef::Log.info("There is /#{add_string}/) in #{file_path} yet.")
-end
