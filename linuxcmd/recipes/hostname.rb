@@ -43,11 +43,11 @@ add_string = my_site
 file_content = File.read(file_path)
 
 #if file_content.match?(/#{add_string}/) # only in Ruby 2.4
-if file_content =~ /#{add_string}/
-    Chef::Log.info("file_content =~ /#{add_string}/) = true")
+unless file_content =~ /#{add_string}/
+    Chef::Log.info("Add /#{add_string}/) to #{file_path}.")
     file file_path do
         content file_content.gsub!(/^127.0.0.1(.*)/, "127.0.0.1 #{add_string} \\1")
     end
 else
-    Chef::Log.info("file_content =~ /#{add_string}/) = false")
+    Chef::Log.info("There is /#{add_string}/) in #{file_path} yet.")
 end
