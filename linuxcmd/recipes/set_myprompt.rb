@@ -35,7 +35,7 @@ bashrc_orig = File.read(bashrc)
 end
 
 template bashrc do
-    only_if { node['my']['prompt'] && node['my']['nano_editor'] }
+    #only_if { node['my']['prompt'] && node['my']['nano_editor'] }
     source "bashrc.erb"
     variables({
         :bashrc_orig_content => bashrc_orig,
