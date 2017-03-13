@@ -30,7 +30,7 @@ bashrc_orig = File.read(bashrc)
     if bashrc_orig =~ /#{key}/
         Chef::Log.info("set #{key}")
     else
-        node['my'][value] = false
+        node.default['my'][value] = false
     end
 end
 
