@@ -39,8 +39,8 @@ template bashrc do
     source "bashrc.erb"
     variables({
         :bashrc_orig_content => bashrc_orig,
-        :myprompt => false,
-        :nano_editor => false,
+        :myprompt => node.default['my']['prompt'],
+        :nano_editor => node.default['my']['nano_editor'],
     })
 end
 
