@@ -40,7 +40,7 @@ template bashrc do
     variables({
         :bashrc_orig_content => bashrc_orig,
         :myprompt => node.default['my']['prompt'],
-        :nano_editor => node.default['my']['nano_editor'],
+        :nano_editor => false,
     })
 end
 
