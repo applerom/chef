@@ -21,7 +21,7 @@
 # and if we do it in separate stages .bashrc will be like in last change.
 
 bashrc = "#{node['my']['home']}/.bashrc"
-bashrc_orig = File.read(bashrc)
+bashrc_orig = File.read(bashrc).force_encoding('UTF-8')
 
 {
 "myprompt"      => "prompt",
