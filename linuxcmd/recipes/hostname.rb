@@ -16,7 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-my_site = "#{node.default['my']['site']}"
+my_site = "#{node['my']['site']}"
 
 bash 'set hostname for current process' do
     ignore_failure = true
