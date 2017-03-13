@@ -17,10 +17,9 @@
 # limitations under the License.
 #
 
-default['chef_client']['locale'] = 'en_US.UTF-8'
-Encoding.default_external = Encoding::UTF_8
-ENV['LC_ALL'] = 'en_US.UTF-8'
-
+#default['chef_client']['locale'] = 'en_US.UTF-8'
+#Encoding.default_external = Encoding::UTF_8
+#ENV['LC_ALL'] = 'en_US.UTF-8'
 
 myuser="admin"
 myhome="/home/admin"

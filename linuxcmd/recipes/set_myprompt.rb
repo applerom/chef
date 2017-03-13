@@ -21,7 +21,7 @@
 # and if we do it in separate stages .bashrc will be like in last change.
 
 bashrc = "#{node['my']['home']}/.bashrc"
-bashrc_orig = File.read(bashrc).force_encoding('UTF-8')
+bashrc_orig = File.read(bashrc)
 
 {
 "myprompt"      => "prompt",
@@ -30,17 +30,17 @@ bashrc_orig = File.read(bashrc).force_encoding('UTF-8')
     if bashrc_orig =~ /#{key}/
         Chef::Log.info("set #{key}")
     else
-        node.default['my'][value] = false
+        node['my'][value] = false
     end
 end
 
 template bashrc do
-    #only_if { node['my']['prompt'] && node['my']['nano_editor'] }
+    only_if { node['my']['prompt'] && node['my']['nano_editor'] }
     source "bashrc.erb"
     variables({
         :bashrc_orig_content => bashrc_orig,
-        :myprompt => true,
-        :nano_editor => false,
+        :myprompt => node['my']['prompt'],
+        :nano_editor => node['my']['nano_editor'],
     })
 end
 
