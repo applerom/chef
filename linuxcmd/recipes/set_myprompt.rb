@@ -30,7 +30,7 @@ bashrc_orig = File.read(bashrc)
     if bashrc_orig =~ /#{key}/
         Chef::Log.info("set #{key}")
     else
-        node['my'][value] = false
+        node.default['my'][value] = false
     end
 end
 
@@ -39,8 +39,8 @@ template bashrc do
     source "bashrc.erb"
     variables({
         :bashrc_orig_content => bashrc_orig,
-        :myprompt => node['my']['prompt'],
-        :nano_editor => node['my']['nano_editor'],
+        :myprompt => node.default['my']['prompt'],
+        :nano_editor => node.default['my']['nano_editor'],
     })
 end
 
