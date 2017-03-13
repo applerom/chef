@@ -1,5 +1,5 @@
 <%= @bashrc_orig_content %>
-<% if @myprompt %>
+<% if @myprompt -%>
 myprompt()
 {
         if [ $? = 0 ]; then
@@ -47,10 +47,10 @@ myprompt()
                 printf " $(date +%T)"
 }
 PS1='$(myprompt)\n \[\e[0;36m\]\w \[\e[01;32m\]\$\[\e[00m\] '
-<% end %>
-<% if @nano_editor %>
+<% end -%>
+<% if @nano_editor -%>
 alias sudo='sudo -E -H'
 alias mc='EDITOR=nano mc'
 export VISUAL=nano
 export EDITOR=nano
-<% end %>
+<% end -%>
