@@ -17,11 +17,11 @@ myprompt()
 
         if [ $LASTOPER == "GOOD" ]; then
                 tput setaf 2
-                printf " ✓ "
+                printf " \342\234\223 "
         else
                 tput setaf 1
                 tput bold
-                printf " ✗ "
+                printf " \342\234\227 "
         fi
 
         tput sgr0
