@@ -20,41 +20,39 @@
 # Add here part of "EDITOR=nano" because it must be in .bashrc
 # and if we do it in separate stages .bashrc will be like in last change.
 
-myhome="#{node.default['my']['home']}"
-
-bashrc = "#{myhome}/.bashrc"
+bashrc = "#{node['my']['home']}/.bashrc"
 bashrc_orig = File.read(bashrc)
 
 {
 "myprompt"      => "prompt",
 "EDITOR=nano"   => "nano_editor"
 }.each do |key, value|
-    if bashrc_orig.scan(/#{key}/).length == 0
+    if bashrc_orig =~ /#{key}/
         Chef::Log.info("set #{key}")
     else
-        node.default['my'][value] = false
+        node['my'][value] = false
     end
 end
 
 template bashrc do
+    only_if { node['my']['prompt'] && node['my']['nano_editor'] }
     source "bashrc.erb"
     variables({
         :bashrc_orig_content => bashrc_orig,
-        :myprompt => node.default['my']['prompt'],
-        :nano_editor => node.default['my']['nano_editor'],
+        :myprompt => node['my']['prompt'],
+        :nano_editor => node['my']['nano_editor'],
     })
 end
 
 bashrc = "/root/.bashrc"
 bashrc_orig = File.read(bashrc)
 
-if bashrc_orig.scan(/myprompt/).length == 0
-    template bashrc do
-        source "bashrc.erb"
-        variables({
-            :bashrc_orig_content => bashrc_orig,
-            :myprompt => true,
-            :nano_editor => false,
-        })
-    end
+template bashrc do
+    not_if { bashrc_orig =~ /myprompt/ }
+    source "bashrc.erb"
+    variables({
+        :bashrc_orig_content => bashrc_orig,
+        :myprompt => true,
+        :nano_editor => false,
+    })
 end

@@ -17,12 +17,6 @@
 # limitations under the License.
 #
 
-if node.attribute?('ec2')
-    Chef::Log.info("It's ec2") # for EC2 use recipe hostname in the Configure stage because of it changes after any stop/start (not reboot)
-else
-    my_hostname = "sudo hostname #{node.default['my']['site']}" # only for non-EC2 servers - set in the interactive session
-end
-
-file node.default['my']['sh'] do
-    content 'df -k | awk \'$NF=="/"{printf "Disk Usage: %s\n", $5}\'' + "\n#{my_hostname}"
+template node['my']['sh'] do
+    source "my_sh.erb"
 end

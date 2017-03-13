@@ -1,0 +1,3 @@
+df -k | awk '$NF=="/"{printf "Disk Usage: %s\n", $5}'
+sudo hostname <%= node[:my][:site] %>
+#sysctl kernel.hostname <%= node[:my][:site] %>
