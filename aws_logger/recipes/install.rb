@@ -2,6 +2,8 @@ directory node["cloudwatchlogs"]["home_dir"] do
   recursive true
 end
 
+log_path = '/var/log/turn.log'
+
 stack = search("aws_opsworks_stack").first
 cur_region = stack['region']
 stack_name = stack['name']
@@ -18,7 +20,8 @@ template node["cloudwatchlogs"]["config_file"] do
     :state_file => node["cloudwatchlogs"]["state_file"],
 ##    :cloudwatchlogs => node["opsworks"]["cloud_watch_logs_configurations"],
 ##    :hostname => node["opsworks"]["instance"]["hostname"]
-    :hostname => cur_hostname
+    :hostname => cur_hostname,
+    :log_path => log_path,
   })
   owner "root"
   group "root"

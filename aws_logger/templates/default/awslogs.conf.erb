@@ -4,13 +4,6 @@ state_file = <%= @state_file %>
 [<%= @stack_name %>]
 datetime_format = [%Y-%m-%d %H:%M:%S]
 log_group_name = <%= @stack_name.gsub(' ','_') %>
-<%      if log["file"] == "AGENT"
-          log_path = node["cloudwatchlogs"]["AGENT_LOGS"]
-        elsif log["file"] == "CHEF"
-          log_path = node["cloudwatchlogs"]["CHEF_LOGS"]
-        else
-          log_path = log["file"]
-        end %>
-file = <%= log_path %>
+file = <%= @log_path %>
 log_stream_name = <%= @hostname %> - <%= log_path %>
 initial_position = start_of_file
