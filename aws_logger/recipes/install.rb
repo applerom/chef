@@ -6,7 +6,7 @@ template node["cloudwatchlogs"]["config_file"] do
   source "awslogs.conf.erb"
   variables({
     :state_file => node["cloudwatchlogs"]["state_file"],
-    :cloudwatchlogs => node["opsworks"]["cloud_watch_logs_configurations"],
+##    :cloudwatchlogs => node["opsworks"]["cloud_watch_logs_configurations"],
     :hostname => node["opsworks"]["instance"]["hostname"]
   })
   owner "root"
