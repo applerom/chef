@@ -2,12 +2,16 @@ directory node["cloudwatchlogs"]["home_dir"] do
   recursive true
 end
 
+instance = search("aws_opsworks_instance").first
+Chef::Log.info("********** The instance's hostname is '#{instance['hostname']}' **********")
+
 template node["cloudwatchlogs"]["config_file"] do
   source "awslogs.conf.erb"
   variables({
     :state_file => node["cloudwatchlogs"]["state_file"],
 ##    :cloudwatchlogs => node["opsworks"]["cloud_watch_logs_configurations"],
-    :hostname => node["opsworks"]["instance"]["hostname"]
+##    :hostname => node["opsworks"]["instance"]["hostname"]
+    :hostname => instance['hostname']
   })
   owner "root"
   group "root"
