@@ -1,9 +1,9 @@
 [general]
 state_file = <%= @state_file %>
 
-[<%= node[:opsworks][:stack][:name] %>]
+[<%= @stack_name %>]
 datetime_format = [%Y-%m-%d %H:%M:%S]
-log_group_name = <%= node[:opsworks][:stack][:name].gsub(' ','_') %>
+log_group_name = <%= @stack_name.gsub(' ','_') %>
 <%      if log["file"] == "AGENT"
           log_path = node["cloudwatchlogs"]["AGENT_LOGS"]
         elsif log["file"] == "CHEF"

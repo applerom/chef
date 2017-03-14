@@ -4,7 +4,8 @@ end
 
 stack = search("aws_opsworks_stack").first
 cur_region = stack['region']
-Chef::Log.info("********** The stack's name is '#{stack['name']}', region = '#{cur_region}' **********")
+stack_name = stack['name']
+Chef::Log.info("********** The stack's name is '#{stack_name}', region = '#{cur_region}' **********")
 
 instance = search("aws_opsworks_instance", "self:true").first
 cur_hostname = instance['hostname']
@@ -13,10 +14,11 @@ Chef::Log.info("********** The instance's hostname is '#{cur_hostname}' ********
 template node["cloudwatchlogs"]["config_file"] do
   source "awslogs.conf.erb"
   variables({
+    :stack_name => stack_name,
     :state_file => node["cloudwatchlogs"]["state_file"],
 ##    :cloudwatchlogs => node["opsworks"]["cloud_watch_logs_configurations"],
 ##    :hostname => node["opsworks"]["instance"]["hostname"]
-    :hostname => instance['hostname']
+    :hostname => cur_hostname
   })
   owner "root"
   group "root"
