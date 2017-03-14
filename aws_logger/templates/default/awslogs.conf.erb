@@ -5,5 +5,5 @@ state_file = <%= @state_file %>
 datetime_format = [%Y-%m-%d %H:%M:%S]
 log_group_name = <%= @stack_name.gsub(' ','_') %>
 file = <%= @log_path %>
-log_stream_name = <%= @hostname %> - <%= log_path %>
+log_stream_name = <%= @hostname %> - <%= @log_path %>
 initial_position = start_of_file
