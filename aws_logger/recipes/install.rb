@@ -2,8 +2,13 @@ directory node["cloudwatchlogs"]["home_dir"] do
   recursive true
 end
 
-instance = search("aws_opsworks_instance").first
-Chef::Log.info("********** The instance's hostname is '#{instance['hostname']}' **********")
+stack = search("aws_opsworks_stack").first
+cur_region = stack['region']
+Chef::Log.info("********** The stack's name is '#{stack['name']}', region = '#{cur_region}' **********")
+
+instance = search("aws_opsworks_instance", "self:true").first
+cur_hostname = instance['hostname']
+Chef::Log.info("********** The instance's hostname is '#{cur_hostname}' **********")
 
 template node["cloudwatchlogs"]["config_file"] do
   source "awslogs.conf.erb"
@@ -26,7 +31,8 @@ if platform?("amazon")
 
   template "#{node['cloudwatchlogs']['home_dir']}/awscli.conf" do
     source "awscli.conf.erb"
-    variables :region => node["opsworks"]["instance"]["region"]
+##    variables :region => node["opsworks"]["instance"]["region"]
+    variables :region => cur_region
   end
 else
   directory "/opt/aws/cloudwatch" do
@@ -45,8 +51,9 @@ else
   end
 
   execute "Install CloudWatch Logs agent" do
-    command "/opt/aws/cloudwatch/awslogs-agent-setup.py -n -r '#{node['opsworks']['instance']['region']}' -c '#{node['cloudwatchlogs']['config_file']}'"
-    not_if { File.exists?(node["cloudwatchlogs"]["state_file"]) }
+    command "/opt/aws/cloudwatch/awslogs-agent-setup.py -n -r '#{cur_region}' -c '#{node['cloudwatchlogs']['config_file']}'"
+##    not_if { File.exists?(node["cloudwatchlogs"]["state_file"]) }
+    not_if { File.exist?(node["cloudwatchlogs"]["state_file"]) }
   end
 end
 
