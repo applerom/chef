@@ -8,7 +8,7 @@ if defined?(node['awslogs_conf'])
 end
 
 if awslogs_conf_data.nil?
-    Chef::Log.info("*** node['awslogs_conf'] defined is not defined ***")
+    Chef::Log.info("*** node['awslogs_conf'] is nil ***")
     awslogs_conf_data =
     {
         "default_aws_log": {
