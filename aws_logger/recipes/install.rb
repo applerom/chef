@@ -2,7 +2,9 @@ directory node["cloudwatchlogs"]["home_dir"] do
   recursive true
 end
 
+Chef::Log.info("*** node['pls']['log_path'] = '#{node['pls']['log_path']}' ***")
 log_path = '/var/log/turn.log'
+Chef::Log.info("*** log_path = '#{log_path}' ***")
 
 stack = search("aws_opsworks_stack").first
 cur_region = stack['region']
