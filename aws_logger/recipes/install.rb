@@ -72,5 +72,6 @@ end
 
 service "awslogs" do
   supports :status => true, :restart => true
-  action [:enable, :start]
+##  action [:enable, :start]
+  action [:enable, :restart]
 end
