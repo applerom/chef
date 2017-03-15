@@ -2,7 +2,7 @@ directory node["aws_logger"]["home_dir"] do
   recursive true
 end
 
-if defined?(node['awslogs_conf']) && not (node['awslogs_conf'].nil?)
+if defined?(node['awslogs_conf']) && not (node['awslogs_conf']).nil?
     Chef::Log.info("*** node['awslogs_conf'] defined and is '#{node['awslogs_conf']}' ***")
     awslogs_conf_data = node['awslogs_conf']
 else
