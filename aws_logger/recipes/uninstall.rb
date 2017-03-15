@@ -2,7 +2,7 @@ service "awslogs" do
   action :stop
 end
 
-directory node["cloudwatchlogs"]["home_dir"] do
+directory node["aws_logger"]["home_dir"] do
   action :delete
   recursive true
 end

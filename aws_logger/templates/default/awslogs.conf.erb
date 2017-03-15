@@ -1,7 +1,7 @@
 [general]
 state_file = <%= @state_file %>
 
-<% @aws_logger.each do |log_conf_name, cur_log| %>
+<% @awslogs_conf_data.each do |log_conf_name, cur_log| %>
 [<%= log_conf_name %> ]
 datetime_format     = <%= cur_log[:datetime_format] %>
 file                = <%= cur_log[:file] %>

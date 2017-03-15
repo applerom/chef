@@ -1,16 +1,6 @@
-directory node["cloudwatchlogs"]["home_dir"] do
+directory node["aws_logger"]["home_dir"] do
   recursive true
 end
-
-if defined?(node['pls']['log_path'])
-    Chef::Log.info("*** log_path (node['pls']['log_path']) defined and is '#{node['pls']['log_path']}' ***")
-    log_path = node['pls']['log_path']
-else
-    Chef::Log.info("*** node['pls']['log_path'] is not defined ***")
-    log_path = '/var/log/turn.log'
-end
-
-Chef::Log.info("*** log_path = '#{log_path}' ***")
 
 stack = search("aws_opsworks_stack").first
 cur_region = stack['region']
@@ -21,12 +11,12 @@ instance = search("aws_opsworks_instance", "self:true").first
 cur_hostname = instance['hostname']
 Chef::Log.info("********** The instance's hostname is '#{cur_hostname}' **********")
 
-template node["cloudwatchlogs"]["config_file"] do
+template node["aws_logger"]["config_file"] do
   source "awslogs.conf.erb"
   variables({
-    :aws_logger => node["aws_logger"],
-    :state_file => node["cloudwatchlogs"]["state_file"],
-##    :cloudwatchlogs => node["opsworks"]["cloud_watch_logs_configurations"],
+    :awslogs_conf_data => node["awslogs_conf"],
+    :state_file => node["aws_logger"]["state_file"],
+##    :aws_logger => node["opsworks"]["cloud_watch_logs_configurations"],
 ##    :hostname => node["opsworks"]["instance"]["hostname"]
 #    :hostname => cur_hostname,
 #    :log_path => log_path,
@@ -42,7 +32,7 @@ if platform?("amazon")
     retry_delay 5
   end
 
-  template "#{node['cloudwatchlogs']['home_dir']}/awscli.conf" do
+  template "#{node['aws_logger']['home_dir']}/awscli.conf" do
     source "awscli.conf.erb"
 ##    variables :region => node["opsworks"]["instance"]["region"]
     variables :region => cur_region
@@ -64,9 +54,9 @@ else
   end
 
   execute "Install CloudWatch Logs agent" do
-    command "/opt/aws/cloudwatch/awslogs-agent-setup.py -n -r '#{cur_region}' -c '#{node['cloudwatchlogs']['config_file']}'"
-##    not_if { File.exists?(node["cloudwatchlogs"]["state_file"]) }
-    not_if { File.exist?(node["cloudwatchlogs"]["state_file"]) }
+    command "/opt/aws/cloudwatch/awslogs-agent-setup.py -n -r '#{cur_region}' -c '#{node['aws_logger']['config_file']}'"
+##    not_if { File.exists?(node["aws_logger"]["state_file"]) }
+    not_if { File.exist?(node["aws_logger"]["state_file"]) }
   end
 end
 
