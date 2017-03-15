@@ -24,12 +24,12 @@ Chef::Log.info("********** The instance's hostname is '#{cur_hostname}' ********
 template node["cloudwatchlogs"]["config_file"] do
   source "awslogs.conf.erb"
   variables({
-    :stack_name => stack_name,
+    :stack_name => node["aws_logger"],
     :state_file => node["cloudwatchlogs"]["state_file"],
 ##    :cloudwatchlogs => node["opsworks"]["cloud_watch_logs_configurations"],
 ##    :hostname => node["opsworks"]["instance"]["hostname"]
-    :hostname => cur_hostname,
-    :log_path => log_path,
+#    :hostname => cur_hostname,
+#    :log_path => log_path,
   })
   owner "root"
   group "root"

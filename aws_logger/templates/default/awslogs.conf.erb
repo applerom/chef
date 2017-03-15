@@ -1,9 +1,13 @@
 [general]
 state_file = <%= @state_file %>
 
-[<%= @stack_name %>]
-datetime_format = [%Y-%m-%d %H:%M:%S]
-log_group_name = <%= @stack_name.gsub(' ','_') %>
-file = <%= @log_path %>
-log_stream_name = <%= @hostname %> - <%= @log_path %>
-initial_position = start_of_file
+<% @aws_logger.each do |log_conf_name, cur_log| %>
+[<%= log_conf_name %> ]
+datetime_format     = <%= cur_log[:datetime_format] %>
+file                = <%= cur_log[:file] %>
+buffer_duration     = <%= cur_log[:buffer_duration] %>
+log_stream_name     = <%= cur_log[:log_stream_name] %>
+initial_position    = <%= cur_log[:initial_position] %>
+log_group_name      = <%= cur_log[:log_group_name] %>
+
+<% end %>
