@@ -2,6 +2,28 @@ directory node["aws_logger"]["home_dir"] do
   recursive true
 end
 
+if defined?(node['awslogs_conf'])
+    Chef::Log.info("*** node['awslogs_conf'] defined and is '#{node['awslogs_conf']}' ***")
+    awslogs_conf_data = node['awslogs_conf']
+else
+    Chef::Log.info("*** node['awslogs_conf'] defined is not defined ***")
+    awslogs_conf_data =
+    {
+        "awslogs_conf": {
+            "SysLog": {
+                "datetime_format": "%b %d %H:%M:%S",
+                "file": "/var/log/syslog",
+                "buffer_duration": "5000",
+                "log_stream_name": "linuxcmd.secrom.com",
+                "initial_position": "start_of_file",
+                "log_group_name": "SysLog"
+            }
+        }
+    }
+end
+
+Chef::Log.info("*** awslogs_conf_data = '#{awslogs_conf_data}' ***")
+
 stack = search("aws_opsworks_stack").first
 cur_region = stack['region']
 stack_name = stack['name']
@@ -14,7 +36,7 @@ Chef::Log.info("********** The instance's hostname is '#{cur_hostname}' ********
 template node["aws_logger"]["config_file"] do
   source "awslogs.conf.erb"
   variables({
-    :awslogs_conf_data => node["awslogs_conf"],
+    :awslogs_conf_data => awslogs_conf_data,
     :state_file => node["aws_logger"]["state_file"],
 ##    :aws_logger => node["opsworks"]["cloud_watch_logs_configurations"],
 ##    :hostname => node["opsworks"]["instance"]["hostname"]

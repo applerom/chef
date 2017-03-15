@@ -24,21 +24,3 @@ syslog =
     end
 default['aws_logger']['syslog'] = "/var/log/#{syslog}"
 
-if defined?(node['awslogs_conf'])
-    Chef::Log.info("*** node['awslogs_conf'] defined and is '#{node['awslogs_conf']}' ***")
-else
-    Chef::Log.info("*** node['awslogs_conf'] defined is not defined ***")
-    default['awslogs_conf'] =
-    {
-        "awslogs_conf": {
-            "SysLog": {
-                "datetime_format": "%b %d %H:%M:%S",
-                "file": "/var/log/syslog",
-                "buffer_duration": "5000",
-                "log_stream_name": "linuxcmd.secrom.com",
-                "initial_position": "start_of_file",
-                "log_group_name": "SysLog"
-            }
-        }
-    }
-end
