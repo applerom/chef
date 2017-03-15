@@ -2,22 +2,20 @@ directory node["aws_logger"]["home_dir"] do
   recursive true
 end
 
-if (defined?(node['awslogs_conf'])) && (node['awslogs_conf'].length != 0)
+if defined?(node['awslogs_conf']) && !nil?(node['awslogs_conf'])
     Chef::Log.info("*** node['awslogs_conf'] defined and is '#{node['awslogs_conf']}' ***")
     awslogs_conf_data = node['awslogs_conf']
 else
     Chef::Log.info("*** node['awslogs_conf'] defined is not defined ***")
     awslogs_conf_data =
     {
-        "awslogs_conf": {
-            "SysLog": {
-                "datetime_format": "%b %d %H:%M:%S",
-                "file": "/var/log/syslog",
-                "buffer_duration": "5000",
-                "log_stream_name": "linuxcmd.secrom.com",
-                "initial_position": "start_of_file",
-                "log_group_name": "SysLog"
-            }
+        "default_aws_log": {
+            "datetime_format": "%b %d %H:%M:%S",
+            "file": "/var/log/syslog",
+            "buffer_duration": "5000",
+            "log_stream_name": "linuxcmd.secrom.com",
+            "initial_position": "start_of_file",
+            "log_group_name": "SysLog"
         }
     }
 end
