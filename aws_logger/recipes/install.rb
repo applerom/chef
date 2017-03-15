@@ -2,8 +2,15 @@ directory node["cloudwatchlogs"]["home_dir"] do
   recursive true
 end
 
+if defined?(node['pls']['log_path'])
+    log_path = node['pls']['log_path']
+    Chef::Log.info("*** log_path (node['pls']['log_path']) defined and is '#{log_path}' ***")
+else
+    log_path = '/var/log/turn.log'
+    Chef::Log.info("*** node['pls']['log_path'] is not defined ***")
+end
+
 Chef::Log.info("*** node['pls']['log_path'] = '#{node['pls']['log_path']}' ***")
-log_path = '/var/log/turn.log'
 Chef::Log.info("*** log_path = '#{log_path}' ***")
 
 stack = search("aws_opsworks_stack").first
