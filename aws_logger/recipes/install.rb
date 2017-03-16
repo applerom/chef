@@ -24,10 +24,10 @@ else
         default_aws_log.each do |key, value|
             if not defined?(node['awslogs_conf'][log_conf_name][key])
                 Chef::Log.info("*** #{log_conf_name}[#{key}] is not defined, set to '#{value}' ***")
-                node.default['awslogs_conf'][log_conf_name][key] = value
+                awslogs_conf_data[log_conf_name][key] = value
             elsif node['awslogs_conf'][log_conf_name][key].nil?
                 Chef::Log.info("*** #{log_conf_name}[#{key}] is nil, set to '#{value}' ***")
-                node.default['awslogs_conf'][log_conf_name][key] = value
+                awslogs_conf_data[log_conf_name][key] = value
             end    
         end
     end
