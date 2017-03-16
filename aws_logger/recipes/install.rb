@@ -5,6 +5,8 @@ end
 if defined?(node['awslogs_conf'])
     Chef::Log.info("*** node['awslogs_conf'] defined and is '#{node['awslogs_conf']}' ***")
     #awslogs_conf_data = Hash.new.merge(node['awslogs_conf'])
+    awslogs_conf_data = Marshal.load(Marshal.dump(node['awslogs_conf']))
+=begin
     awslogs_conf_data = {
         "SysLog": {
             "file": "/var/log/syslog",
@@ -18,6 +20,7 @@ if defined?(node['awslogs_conf'])
             "log_group_name": "FS_logs"
         }
     }
+=end
 end
 
 
