@@ -4,8 +4,23 @@ end
 
 if defined?(node['awslogs_conf'])
     Chef::Log.info("*** node['awslogs_conf'] defined and is '#{node['awslogs_conf']}' ***")
-    awslogs_conf_data = Hash.new.merge(node['awslogs_conf'])
+    #awslogs_conf_data = Hash.new.merge(node['awslogs_conf'])
+    awslogs_conf_data = {
+        "SysLog": {
+            "file": "/var/log/syslog",
+            "log_stream_name": "turn3.secrom.com",
+            "log_group_name": "SysLog"
+        },
+        "FS_logs": {
+            "file": "/var/log/turn.log",
+            "log_stream_name": "turn3.secrom.com",
+            "initial_position": "start_of_file",
+            "log_group_name": "FS_logs"
+        }
+    }
 end
+
+
 
 default_aws_log = {
     "datetime_format": "%b %d %H:%M:%S",
