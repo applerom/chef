@@ -7,20 +7,26 @@ if defined?(node['awslogs_conf'])
     awslogs_conf_data = node['awslogs_conf']
 end
 
+default_aws_log = {
+    "datetime_format": "%b %d %H:%M:%S",
+    "file": "/var/log/syslog",
+    "buffer_duration": "5000",
+    "log_stream_name": "linuxcmd.secrom.com",
+    "initial_position": "start_of_file",
+    "log_group_name": "SysLog"
+}
 if awslogs_conf_data.nil?
     Chef::Log.info("*** node['awslogs_conf'] is nil ***")
-    awslogs_conf_data =
-    {
-        "default_aws_log": {
-            "datetime_format": "%b %d %H:%M:%S",
-            "file": "/var/log/syslog",
-            "buffer_duration": "5000",
-            "log_stream_name": "linuxcmd.secrom.com",
-            "initial_position": "start_of_file",
-            "log_group_name": "SysLog"
-        }
-    }
+    awslogs_conf_data = { 'default_aws_log': default_aws_log}
+else
+    awslogs_conf_data.each do |log_conf_name, cur_log|
+        default_aws_log.each do |key, value|
+            cur_log[key] ||= value
+        end
+    end
 end
+
+
 
 Chef::Log.info("*** awslogs_conf_data = '#{awslogs_conf_data}' ***")
 
