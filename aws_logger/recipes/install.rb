@@ -4,7 +4,7 @@ end
 
 if defined?(node['awslogs_conf'])
     Chef::Log.info("*** node['awslogs_conf'] defined and is '#{node['awslogs_conf']}' ***")
-    awslogs_conf_data = deep_copy(node['awslogs_conf'])
+    awslogs_conf_data = Hash.new.merge(node['awslogs_conf'])
 end
 
 default_aws_log = {
