@@ -1,23 +1,23 @@
 service "awslogs" do
-  action :stop
+    action :stop
 end
 
 directory node["aws_logger"]["home_dir"] do
-  action :delete
-  recursive true
+    action :delete
+    recursive true
 end
 
 if platform?("amazon")
-  package "awslogs" do
-    action :remove
-  end
+    package "awslogs" do
+        action :remove
+    end
 else
-  directory "/opt/aws/cloudwatch" do
-    action :delete
-    recursive true
-  end
+    directory "/opt/aws/cloudwatch" do
+        action :delete
+        recursive true
+    end
 
-  file "/etc/init.d/awslogs" do
-    action :delete
-  end
+    file "/etc/init.d/awslogs" do
+        action :delete
+    end
 end

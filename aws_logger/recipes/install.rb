@@ -1,29 +1,18 @@
 directory node["aws_logger"]["home_dir"] do
-  recursive true
+    recursive true
 end
 
 if defined?(node['awslogs_conf'])
     Chef::Log.info("*** node['awslogs_conf'] defined and is '#{node['awslogs_conf']}' ***")
-    #awslogs_conf_data = Hash.new.merge(node['awslogs_conf'])
-    #awslogs_conf_data = Marshal.load(Marshal.dump(node['awslogs_conf']))
+    #awslogs_conf_data = node['awslogs_conf'].clone # does not work
+    #awslogs_conf_data = node['awslogs_conf'].dup # does not work
+    #awslogs_conf_data = Hash.new.merge(node['awslogs_conf']) # does not work
+    #awslogs_conf_data = Marshal.load(Marshal.dump(node['awslogs_conf'])) # does not work - error "can't dump hash with default proc"
     awslogs_conf_data = JSON.parse(JSON.generate(node['awslogs_conf']))
-=begin
-    awslogs_conf_data = {
-        "SysLog": {
-            "file": "/var/log/syslog",
-            "log_stream_name": "turn3.secrom.com",
-            "log_group_name": "SysLog"
-        },
-        "FS_logs": {
-            "file": "/var/log/turn.log",
-            "log_stream_name": "turn3.secrom.com",
-            "initial_position": "start_of_file",
-            "log_group_name": "FS_logs"
-        }
-    }
-=end
+else
+    Chef::Log.info("*** node['awslogs_conf'] is not defined - set awslogs_conf_data to default ***")
+    awslogs_conf_data = { 'default_aws_log': default_aws_log}
 end
-
 
 
 default_aws_log = {
@@ -35,7 +24,7 @@ default_aws_log = {
     "log_group_name": "SysLog"
 }
 if awslogs_conf_data.nil?
-    Chef::Log.info("*** node['awslogs_conf'] is nil ***")
+    Chef::Log.info("*** node['awslogs_conf'] is nil - set awslogs_conf_data to default ***")
     awslogs_conf_data = { 'default_aws_log': default_aws_log}
 else
     Chef::Log.info("*** check awslogs_conf_data = '#{awslogs_conf_data}' ***")
@@ -52,8 +41,6 @@ else
     end
 end
 
-
-
 Chef::Log.info("*** awslogs_conf_data = '#{awslogs_conf_data}' ***")
 
 stack = search("aws_opsworks_stack").first
@@ -66,56 +53,50 @@ cur_hostname = instance['hostname']
 Chef::Log.info("********** The instance's hostname is '#{cur_hostname}' **********")
 
 template node["aws_logger"]["config_file"] do
-  source "awslogs.conf.erb"
-  variables({
-    :awslogs_conf_data => awslogs_conf_data,
-    :state_file => node["aws_logger"]["state_file"],
-##    :aws_logger => node["opsworks"]["cloud_watch_logs_configurations"],
-##    :hostname => node["opsworks"]["instance"]["hostname"]
-#    :hostname => cur_hostname,
-#    :log_path => log_path,
-  })
-  owner "root"
-  group "root"
-  mode 0644
+    source "awslogs.conf.erb"
+    variables({
+        :awslogs_conf_data => awslogs_conf_data,
+        :state_file => node["aws_logger"]["state_file"],
+    })
+    owner "root"
+    group "root"
+    mode 0644
 end
 
 if platform?("amazon")
-  package "awslogs" do
-    retries 3
-    retry_delay 5
-  end
+    package "awslogs" do
+        retries 3
+        retry_delay 5
+    end
 
-  template "#{node['aws_logger']['home_dir']}/awscli.conf" do
-    source "awscli.conf.erb"
-##    variables :region => node["opsworks"]["instance"]["region"]
-    variables :region => cur_region
-  end
+    template "#{node['aws_logger']['home_dir']}/awscli.conf" do
+        source "awscli.conf.erb"
+        variables :region => cur_region
+    end
 else
-  directory "/opt/aws/cloudwatch" do
-    recursive true
-  end
+    directory "/opt/aws/cloudwatch" do
+        recursive true
+    end
 
-  remote_file "/opt/aws/cloudwatch/awslogs-agent-setup.py" do
-    source "https://aws-cloudwatch.s3.amazonaws.com/downloads/latest/awslogs-agent-setup.py"
-    mode 0700
-    retries 3
-  end
+    remote_file "/opt/aws/cloudwatch/awslogs-agent-setup.py" do
+        source "https://aws-cloudwatch.s3.amazonaws.com/downloads/latest/awslogs-agent-setup.py"
+        mode 0700
+        retries 3
+    end
 
-  package "python" do
-    retries 3
-    retry_delay 5
-  end
+    package "python" do
+        retries 3
+        retry_delay 5
+    end
 
-  execute "Install CloudWatch Logs agent" do
-    command "/opt/aws/cloudwatch/awslogs-agent-setup.py -n -r '#{cur_region}' -c '#{node['aws_logger']['config_file']}'"
-##    not_if { File.exists?(node["aws_logger"]["state_file"]) }
-    not_if { File.exist?(node["aws_logger"]["state_file"]) }
-  end
+    execute "Install CloudWatch Logs agent" do
+        command "/opt/aws/cloudwatch/awslogs-agent-setup.py -n -r '#{cur_region}' -c '#{node['aws_logger']['config_file']}'"
+        not_if { File.exist?(node["aws_logger"]["state_file"]) }
+    end
 end
 
 service "awslogs" do
-  supports :status => true, :restart => true
-##  action [:enable, :start]
-  action [:enable, :restart]
+    supports :status => true, :restart => true
+    ##  action [:enable, :start]
+    action [:enable, :restart] # to restart service if you repeat recipe
 end

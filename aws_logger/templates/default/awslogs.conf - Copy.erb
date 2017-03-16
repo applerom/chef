@@ -42,6 +42,22 @@ file = <%= log_path %>
     }
 }
 
+{
+    "awslogs_conf": {
+        "SysLog": {
+            "file": "/var/log/syslog",
+            "log_stream_name": "turn3.secrom.com",
+            "log_group_name": "SysLog"
+        },
+        "FS_logs": {
+            "file": "/var/log/turn.log",
+            "log_stream_name": "turn3.secrom.com",
+            "initial_position": "start_of_file",
+            "log_group_name": "FS_logs"
+        }
+    }
+}
+
 datetime_format = %b %d %H:%M:%S
 file = /var/log/syslog
 buffer_duration = 5000
