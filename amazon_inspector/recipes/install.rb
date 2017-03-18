@@ -1,6 +1,6 @@
 #
-# Cookbook Name:: amazon-inspector
-# Recipe:: default
+# Cookbook Name:: amazon_inspector
+# Recipe:: install
 #
 # The MIT License (MIT)
 #
@@ -24,17 +24,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-tmp = Chef::Config[:file_cache_path]
+tmp = Chef::Config['file_cache_path']
 
 package 'gnupg2' # Used for cryptographic verification later on
 
 # Download and GPG verification key for Amazon Inspector binary
 remote_file "#{tmp}/inspector.gpg" do
-    source              node.default[:inspector][:gpgkey_url]
-    use_conditional_get true
-    mode                0440
-    action              :create
-    only_if             { node.normal[:inspector][:enabled] }
+    source              node['amazon_inspector']['gpgkey_url']
     notifies            :run, 'execute[import_key]', :immediately
 end
 
@@ -46,57 +42,26 @@ end
 
 # Download the PGP cryptographic signature for the AWS inspector binary
 remote_file "#{tmp}/install.sig" do
-    source              node.default[:inspector][:gpg_signature_url]
-    use_conditional_get true
-    mode                0440
+    source              node['inspector']['gpg_signature_url']
     action              :create_if_missing
-    only_if             { node.normal[:inspector][:enabled] }
 end
 
-##
 # Download AWS Inspector installer script
-#
 remote_file "#{tmp}/inspector" do
-  source              node.default[:inspector][:installer_url]
-  use_conditional_get true
-  mode                0440
-  action              :create
-  only_if             { node.normal[:inspector][:enabled] }
+    source              node['inspector']['installer_url']
 end
 
-##
-# Install the AWS inspector binary *if* the installer script can be
-# cryptographically verified to be from AWS
-#
+# Install the AWS inspector binary *if* the installer script can be cryptographically verified to be from AWS
 execute 'install-inspector' do
-  command "bash #{tmp}/inspector -u false"
-  only_if "/usr/bin/gpg2 --verify #{tmp}/install.sig #{tmp}/inspector"
-  only_if { node.normal[:inspector][:enabled] }
-  not_if do ::File.exist?('/opt/aws/awsagent/bin/awsagent') end
-  notifies :start, "service[awsagent]", :immediately
+    command "bash #{tmp}/inspector -u false"
+    only_if "/usr/bin/gpg2 --verify #{tmp}/install.sig #{tmp}/inspector"
+    not_if do ::File.exist?('/opt/aws/awsagent/bin/awsagent') end
+    notifies :start, "service[awsagent]", :immediately
 end
 
-##
-# Remove the AWS inspector package from the system if it's already
-# installed
-#
-package 'awsagent' do
-  case node[:platform]
-  when 'redhat', 'centos', 'amazon'
-    package_name 'AwsAgent'
-  when 'debian', 'ubuntu'
-    package_name 'awsagent'
-  end
-  action   :remove
-  notifies :stop, 'service[awsagent]', :immediately
-  not_if   { node.normal[:inspector][:enabled] }
-end
-
-##
 # AWS inspector service
-#
 service 'awsagent' do
-  supports :start => true, :stop => true, :status => true
-  status_command '/opt/aws/awsagent/bin/awsagent status'
-  action :nothing
+    supports :start => true, :stop => true, :status => true
+    status_command '/opt/aws/awsagent/bin/awsagent status'
+    action :nothing
 end

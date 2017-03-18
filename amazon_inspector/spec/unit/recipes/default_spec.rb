@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: amazon-inspector
+# Cookbook Name:: amazon_inspector
 # Spec:: default
 #
 # The MIT License (MIT)
@@ -27,7 +27,7 @@
 
 require 'spec_helper'
 
-describe 'amazon-inspector::default' do
+describe 'amazon_inspector::default' do
   context 'When all attributes are default, on an unspecified platform' do
     let(:chef_run) do
       runner = ChefSpec::ServerRunner.new

@@ -58,6 +58,18 @@ file = <%= log_path %>
     }
 }
 
+{
+    "awslogs_conf_default": {
+        "datetime_format": "%b %d %H:%M:%S",
+        "file": "/var/log/turn.log",
+        "buffer_duration": "5000",
+        "log_stream_name": "turn3.secrom.com",
+        "initial_position": "start_of_file",
+        "log_group_name": "FS_logs",
+        "encoding": "utf-8"
+    }
+}
+
 datetime_format = %b %d %H:%M:%S
 file = /var/log/syslog
 buffer_duration = 5000

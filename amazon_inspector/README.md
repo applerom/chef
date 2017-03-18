@@ -1,17 +1,17 @@
-# amazon-inspector
+# amazon_inspector
 
 Install and manage Amazon Inspector agent.
 
 ## Usage
 
-Add the recipe to the node or the role files where you want Amazon Inspector installed. If you want to remove amazon-inspector from a particular node, set inspector.enabled attribute to false in the node file and it will be removed.
+Add the recipe to the node or the role files where you want Amazon Inspector installed. If you want to remove amazon_inspector from a particular node, set inspector.enabled attribute to false in the node file and it will be removed.
 
     ```
     {
-        "name": "amazon-inspector.test",
+        "name": "amazon_inspector.test",
         "chef_environment": "testing",
         "run_list": [
-            "recipe[amazon-inspector]"
+            "recipe[amazon_inspector]"
         ],
         "normal": {
             "inspector": {

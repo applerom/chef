@@ -1,6 +1,6 @@
 #
-# Cookbook Name:: amazon-inspector
-# Spec:: default
+# Cookbook Name:: amazon_inspector
+# Recipe:: uninstall
 #
 # The MIT License (MIT)
 #
@@ -24,18 +24,22 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-
-require 'spec_helper'
-
-describe 'amazon-inspector::install' do
-  context 'When all attributes are default, on an unspecified platform' do
-    let(:chef_run) do
-      runner = ChefSpec::ServerRunner.new
-      runner.converge(described_recipe)
+# Remove the AWS inspector package from the system if it's already
+# installed
+package 'awsagent' do
+    case node[:platform]
+        when 'redhat', 'centos', 'amazon'
+            package_name 'AwsAgent'
+        when 'debian', 'ubuntu'
+            package_name 'awsagent'
     end
+    action   :remove
+    notifies :stop, 'service[awsagent]', :immediately
+end
 
-    it 'converges successfully' do
-      expect { chef_run }.to_not raise_error
-    end
-  end
+# AWS inspector service
+service 'awsagent' do
+    supports :start => true, :stop => true, :status => true
+    status_command '/opt/aws/awsagent/bin/awsagent status'
+    action :nothing
 end

@@ -1,6 +1,6 @@
 # # encoding: utf-8
 
-# Inspec test for recipe amazon-inspector::install
+# Inspec test for recipe amazon_inspector::default
 
 # The Inspec reference, with examples and extensive documentation, can be
 # found at https://docs.chef.io/inspec_reference.html

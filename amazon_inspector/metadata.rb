@@ -1,4 +1,4 @@
-name 'amazon-inspector'
+name 'amazon_inspector'
 maintainer 'apple_rom'
 maintainer_email 'applerom@gmail.com'
 license 'mit'
@@ -8,11 +8,11 @@ version '0.1.0'
 
 # If you upload to Supermarket you should set this so your cookbook
 # gets a `View Issues` link
-issues_url 'https://github.com/applerom/chef/amazon-inspector/issues' if respond_to?(:issues_url)
+issues_url 'https://github.com/applerom/chef/amazon_inspector/issues' if respond_to?(:issues_url)
 
 # If you upload to Supermarket you should set this so your cookbook
 # gets a `View Source` link
-source_url 'https://github.com/applerom/chef/amazon-inspector' if respond_to?(:source_url)
+source_url 'https://github.com/applerom/chef/amazon_inspector' if respond_to?(:source_url)
 
 ##
 #
