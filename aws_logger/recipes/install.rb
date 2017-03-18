@@ -2,6 +2,8 @@ directory node["aws_logger"]["home_dir"] do
     recursive true
 end
 
+default_aws_log = node['awslogs_conf_default']
+
 if defined?(node['awslogs_conf'])
     Chef::Log.info("*** node['awslogs_conf'] defined and is '#{node['awslogs_conf']}' ***")
     #awslogs_conf_data = node['awslogs_conf'].clone # does not work
@@ -15,7 +17,6 @@ else
 end
 
 
-default_aws_log = node['awslogs_conf_default']
 if awslogs_conf_data.nil?
     Chef::Log.info("*** node['awslogs_conf'] is nil - set awslogs_conf_data to default ***")
     awslogs_conf_data = { 'default_aws_log': default_aws_log}
@@ -23,10 +24,10 @@ else
     Chef::Log.info("*** check awslogs_conf_data = '#{awslogs_conf_data}' ***")
     awslogs_conf_data.each do |log_conf_name, cur_log|
         default_aws_log.each do |key, value|
-            if not defined?(default_aws_log[log_conf_name][key])
+            if not defined?(awslogs_conf_data[log_conf_name][key])
                 Chef::Log.info("*** #{log_conf_name}[#{key}] is not defined, set to '#{value}' ***")
                 awslogs_conf_data[log_conf_name][key] = value
-            elsif default_aws_log[log_conf_name][key].nil?
+            elsif awslogs_conf_data[log_conf_name][key].nil?
                 Chef::Log.info("*** #{log_conf_name}[#{key}] is nil, set to '#{value}' ***")
                 awslogs_conf_data[log_conf_name][key] = value
             end    
