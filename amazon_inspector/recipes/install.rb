@@ -40,26 +40,26 @@ execute 'import_key' do
   action :nothing
 end
 
-# Download the PGP cryptographic signature for the AWS inspector binary
+# Download the PGP cryptographic signature for the Amazon Inspector binary
 remote_file "#{tmp}/install.sig" do
-    source              node['inspector']['gpg_signature_url']
+    source              node['amazon_inspector']['gpg_signature_url']
     action              :create_if_missing
 end
 
-# Download AWS Inspector installer script
+# Download Amazon Inspector installer script
 remote_file "#{tmp}/inspector" do
-    source              node['inspector']['installer_url']
+    source              node['amazon_inspector']['installer_url']
 end
 
-# Install the AWS inspector binary *if* the installer script can be cryptographically verified to be from AWS
-execute 'install-inspector' do
+# Install the Amazon Inspector binary *if* the installer script can be cryptographically verified to be from AWS
+execute 'install Amazon Inspector' do
     command "bash #{tmp}/inspector -u false"
     only_if "/usr/bin/gpg2 --verify #{tmp}/install.sig #{tmp}/inspector"
     not_if do ::File.exist?('/opt/aws/awsagent/bin/awsagent') end
     notifies :start, "service[awsagent]", :immediately
 end
 
-# AWS inspector service
+# Amazon Inspector service
 service 'awsagent' do
     supports :start => true, :stop => true, :status => true
     status_command '/opt/aws/awsagent/bin/awsagent status'
