@@ -6,16 +6,11 @@ default_aws_log = node['awslogs_conf_default']
 
 if defined?(node['awslogs_conf'])
     Chef::Log.info("*** node['awslogs_conf'] defined and is '#{node['awslogs_conf']}' ***")
-    #awslogs_conf_data = node['awslogs_conf'].clone # does not work
-    #awslogs_conf_data = node['awslogs_conf'].dup # does not work
-    #awslogs_conf_data = Hash.new.merge(node['awslogs_conf']) # does not work
-    #awslogs_conf_data = Marshal.load(Marshal.dump(node['awslogs_conf'])) # does not work - error "can't dump hash with default proc"
     awslogs_conf_data = JSON.parse(JSON.generate(node['awslogs_conf']))
 else
     Chef::Log.info("*** node['awslogs_conf'] is not defined - set awslogs_conf_data to default ***")
     awslogs_conf_data = { 'default_aws_log': default_aws_log}
 end
-
 
 if awslogs_conf_data.nil?
     Chef::Log.info("*** node['awslogs_conf'] is nil - set awslogs_conf_data to default ***")
