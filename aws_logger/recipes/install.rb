@@ -15,14 +15,7 @@ else
 end
 
 
-default_aws_log = {
-    "datetime_format": "%b %d %H:%M:%S",
-    "file": "/var/log/syslog",
-    "buffer_duration": "5000",
-    "log_stream_name": "linuxcmd.secrom.com",
-    "initial_position": "start_of_file",
-    "log_group_name": "SysLog"
-}
+default_aws_log = node['awslogs_conf_default']
 if awslogs_conf_data.nil?
     Chef::Log.info("*** node['awslogs_conf'] is nil - set awslogs_conf_data to default ***")
     awslogs_conf_data = { 'default_aws_log': default_aws_log}
