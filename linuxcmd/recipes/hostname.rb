@@ -27,6 +27,7 @@
 =end
 
 my_site = "#{node['my']['site']}"
+Chef::Log.info("node['my']['site'] = #{my_site}")
 
 bash 'set hostname for current process' do
     ignore_failure = true
@@ -35,40 +36,23 @@ bash 'set hostname for current process' do
     EOF
 end
 
-Chef::Log.info("node['my']['site'] = #{node['my']['site']}")
+file_pathes={
+'/etc/sysconfig/network':   'file_content.gsub!(/^HOSTNAME=.*/, "HOSTNAME=#{my_site}")',
+'/etc/hostname':            'my_site',
+node['my']['sh']:           'file_content.gsub!(/^sudo hostname.*/, "sudo hostname #{my_site}")'
+}
+file_pathes.each do |file_path,code_string|
+    Chef::Log.info("#{file_path} File.exist? = #{ File.exist?(file_path) }")
 
-file_path='/etc/sysconfig/network'
-Chef::Log.info("#{file_path} File.exist? = #{ File.exist?(file_path) }")
-
-if File.exist?(file_path)
-    file_content = File.read(file_path)
-    
-    file file_path do
-        content file_content.gsub!(/^HOSTNAME=.*/, "HOSTNAME=#{my_site}")
+    if File.exist?(file_path)
+        file_content = File.read(file_path)
+        
+        file file_path do
+            content eval code_string
+        end
     end
 end
 
-file_path='/etc/hostname'
-Chef::Log.info("#{file_path} File.exist? = #{ File.exist?(file_path) }")
-
-if File.exist?(file_path)
-    file_content = File.read(file_path)
-    
-    file file_path do
-        content my_site
-    end
-end
-
-file_path="#{node['my']['sh']}"
-Chef::Log.info("#{file_path} File.exist? = #{ File.exist?(file_path) }")
-
-if File.exist?(file_path)
-    file_content = File.read(file_path)
-    
-    file file_path do
-        content file_content.gsub!(/^sudo hostname.*/, "sudo hostname #{my_site}")
-    end
-end
 
 file_path = '/etc/hosts'
 file_content = File.read(file_path)
