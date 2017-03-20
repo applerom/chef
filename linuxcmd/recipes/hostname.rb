@@ -16,6 +16,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+=begin
+{
+    "my": {
+        "site": "turn03.secrom.com",
+        "prompt": true
+    }
+}
+=end
+
 my_site = "#{node['my']['site']}"
 
 bash 'set hostname for current process' do
@@ -28,7 +38,7 @@ end
 Chef::Log.info("node['my']['site'] = #{node['my']['site']}")
 
 file_path='/etc/sysconfig/network'
-Chef::Log.info("File.exist? = #{ File.exist?(file_path) }")
+Chef::Log.info("#{file_path} File.exist? = #{ File.exist?(file_path) }")
 
 if File.exist?(file_path)
     file_content = File.read(file_path)
@@ -39,13 +49,24 @@ if File.exist?(file_path)
 end
 
 file_path='/etc/hostname'
-Chef::Log.info("File.exist? = #{ File.exist?(file_path) }")
+Chef::Log.info("#{file_path} File.exist? = #{ File.exist?(file_path) }")
 
 if File.exist?(file_path)
     file_content = File.read(file_path)
     
     file file_path do
         content my_site
+    end
+end
+
+file_path="#{node['my']['sh']}"
+Chef::Log.info("#{file_path} File.exist? = #{ File.exist?(file_path) }")
+
+if File.exist?(file_path)
+    file_content = File.read(file_path)
+    
+    file file_path do
+        content file_content.gsub!(/^sudo hostname.*/, "sudo hostname #{my_site}")
     end
 end
 
@@ -61,3 +82,5 @@ unless file_content =~ /#{my_site}/
 else
     Chef::Log.info("There is /#{my_site}/) in #{file_path} yet.")
 end
+
+
