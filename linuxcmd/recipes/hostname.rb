@@ -44,7 +44,8 @@ file_pathes={
 }
 Chef::Log.info("file_pathes = #{file_pathes}")
 
-file_pathes.each do |file_path,code_string|
+file_pathes.each do |file_path_cur,code_string|
+    file_path = file_path_cur.to_s
     Chef::Log.info("#{file_path} File.exist? = #{ File.exist?(file_path) }")
 
     if File.exist?(file_path)
