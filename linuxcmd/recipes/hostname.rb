@@ -38,14 +38,13 @@ end
 
 file_pathes={
 '/etc/sysconfig/network':   'file_content.gsub!(/^HOSTNAME=.*/, "HOSTNAME=#{my_site}")',
-'/etc/hostname':            'my_site'
-#,
-#"#{node['my']['sh']}":      'file_content.gsub!(/^sudo hostname.*/, "sudo hostname #{my_site}")'
+'/etc/hostname':            'my_site',
+"#{node['my']['sh']}":      'file_content.gsub!(/^sudo hostname.*/, "sudo hostname #{my_site}")'
 }
 Chef::Log.info("file_pathes = #{file_pathes}")
 
 file_pathes.each do |file_path_cur,code_string|
-    file_path = file_path_cur.to_s
+    file_path = file_path_cur.to_s # without to_s ---> TypeError: no implicit conversion of Symbol into String
     Chef::Log.info("#{file_path} File.exist? = #{ File.exist?(file_path) }")
 
     if File.exist?(file_path)
@@ -56,7 +55,6 @@ file_pathes.each do |file_path_cur,code_string|
         end
     end
 end
-
 
 file_path = '/etc/hosts'
 file_content = File.read(file_path)
