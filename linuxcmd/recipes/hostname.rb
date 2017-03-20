@@ -38,9 +38,12 @@ end
 
 file_pathes={
 '/etc/sysconfig/network':   'file_content.gsub!(/^HOSTNAME=.*/, "HOSTNAME=#{my_site}")',
-'/etc/hostname':            'my_site',
-"#{node['my']['sh']}":      'file_content.gsub!(/^sudo hostname.*/, "sudo hostname #{my_site}")'
+'/etc/hostname':            'my_site'
+#,
+#"#{node['my']['sh']}":      'file_content.gsub!(/^sudo hostname.*/, "sudo hostname #{my_site}")'
 }
+Chef::Log.info("file_pathes = #{file_pathes}")
+
 file_pathes.each do |file_path,code_string|
     Chef::Log.info("#{file_path} File.exist? = #{ File.exist?(file_path) }")
 
