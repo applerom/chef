@@ -1,4 +1,4 @@
-my_site = node['my']['site1']
+my_site = node['my']['site']
 Chef::Log.info("*** my_site = '#{my_site}' ***")
 
 default_aws_log = node['awslogs_conf_default']
