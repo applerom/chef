@@ -25,7 +25,8 @@ else
                 Chef::Log.info("*** #{log_conf_name}[#{key}] is nil, set to '#{value}' ***")
                 awslogs_conf_data[log_conf_name][key] = value
             end    
-            if key == "log_stream_name" && my_site != ''
+            if key == "log_stream_name" && !my_site.nil?
+                Chef::Log.info("*** change log_stream_name to '#{my_site}' ***")
                 awslogs_conf_data[log_conf_name][key] = my_site
             end
         end
