@@ -2,6 +2,9 @@ directory node["aws_logger"]["home_dir"] do
     recursive true
 end
 
+my_site = node['my']['site1']
+Chef::Log.info("*** my_site = '#{my_site}' ***")
+
 default_aws_log = node['awslogs_conf_default']
 
 if defined?(node['awslogs_conf'])
@@ -26,6 +29,9 @@ else
                 Chef::Log.info("*** #{log_conf_name}[#{key}] is nil, set to '#{value}' ***")
                 awslogs_conf_data[log_conf_name][key] = value
             end    
+            if key == "log_stream_name" && my_site != ''
+                awslogs_conf_data[log_conf_name][key] = my_site
+            end
         end
     end
 end
