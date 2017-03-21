@@ -36,14 +36,12 @@ bash 'set hostname for current process' do
     EOF
 end
 
-file_pathes={
+
+{ # 'string of file path':  'string of ruby code'
 '/etc/sysconfig/network':   'file_content.gsub!(/^HOSTNAME=.*/, "HOSTNAME=#{my_site}")',
 '/etc/hostname':            'my_site',
 "#{node['my']['sh']}":      'file_content.gsub!(/^sudo hostname.*/, "sudo hostname #{my_site}")'
-}
-Chef::Log.info("file_pathes = #{file_pathes}")
-
-file_pathes.each do |file_path_cur,code_string|
+}.each do |file_path_cur,code_string|
     file_path = file_path_cur.to_s # without to_s ---> TypeError: no implicit conversion of Symbol into String
     Chef::Log.info("#{file_path} File.exist? = #{ File.exist?(file_path) }")
 
@@ -51,7 +49,7 @@ file_pathes.each do |file_path_cur,code_string|
         file_content = File.read(file_path)
         
         file file_path do
-            content eval code_string
+            content eval code_string # eval code_string = run code in code_string
         end
     end
 end

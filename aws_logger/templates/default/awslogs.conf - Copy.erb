@@ -43,32 +43,33 @@ file = <%= log_path %>
 }
 
 {
+    "my": {
+        "site": "turn4.secrom.com",
+        "prompt": true
+    },
     "awslogs_conf": {
         "SysLog": {
-            "file": "/var/log/syslog",
-            "log_stream_name": "turn3.secrom.com",
+            "file": "/var/log/messages",
             "log_group_name": "SysLog"
         },
         "FS_logs": {
             "file": "/var/log/turn.log",
-            "log_stream_name": "turn3.secrom.com",
-            "initial_position": "start_of_file",
             "log_group_name": "FS_logs"
         }
-    }
-}
-
-{
+    },
     "awslogs_conf_default": {
         "datetime_format": "%b %d %H:%M:%S",
         "file": "/var/log/turn.log",
         "buffer_duration": "5000",
-        "log_stream_name": "turn3.secrom.com",
+        "log_stream_name": "turn4.secrom.com",
         "initial_position": "start_of_file",
         "log_group_name": "FS_logs",
         "encoding": "utf-8"
     }
 }
+
+
+
 
 datetime_format = %b %d %H:%M:%S
 file = /var/log/syslog
