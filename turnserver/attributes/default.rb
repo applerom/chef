@@ -57,6 +57,7 @@ default['turn']['realm']='my.domain'
 default['turn']['log']='/var/log/turn.log'
 
 =begin
+#Custom JSON to insert:
 {
     "my": {
         "cert": "wild16.secrom.com.and.gd_bundle.crt",
