@@ -32,7 +32,26 @@ node['etc']['passwd'].each do |user, data|
 end
 default['my']['user'] = myuser
 default['my']['home'] = myhome
-default['my']['cert_dir'] = "/root/certs"
+
+default['my']['cert_dir']       = "/root/certs"
+default['my']['s3_cert_dir']    = '' # s3://cert/dir
+default['my']['cert']           = '' # my_cert.crt
+default['my']['cert_key']       = '' # my_cert_key.pem
+
+=begin
+#Custom JSON to insert:
+{
+    "my": {
+        "site": "linux.cmd",
+        "prompt": true,
+        "s3_cert_dir": "s3://nist/files",
+        "cert": "wild16.secrom.com.and.gd_bundle.crt",
+        "cert_key": "wild16.secrom.com.key.pem",
+        "cert_dir": "/root/certs"
+    }
+}
+=end
+
 default['my']['site'] = "linux.cmd"
 
 default['my']['log'] =
@@ -61,6 +80,9 @@ default['my']['use_internal_editor_for_mc'] = false
 default['my']['prompt'] = true
 default['my']['nano_editor'] = true
 default['my']['nano_tune'] = true
+
+
+
 
 
 =begin

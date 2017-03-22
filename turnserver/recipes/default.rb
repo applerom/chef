@@ -17,30 +17,16 @@
 # limitations under the License.
 #
 
-myhome="#{node['my']['home']}"
-myuser="#{node['my']['user']}"
-mycert="#{node['my']['cert']}"
-mycert_key="#{node['my']['cert_key']}"
-mycert_dir="#{node['my']['cert_dir']}"
-mys3_files="#{node['my']['s3_files']}"
-
-
-Chef::Log.info("node['platform'] = #{node['platform']}")
-
 %w(gcc-c++ libevent-devel openssl-devel).each do |mypackage|
     package mypackage do
         action :install
     end
 end
 
-turnserver_src_dir = '/usr/local/src/turnserver'
-git turnserver_src_dir do
-  repository 'https://github.com/coturn/coturn.git'
+git node['turn']['src_dir'] do
+    repository 'https://github.com/coturn/coturn.git'
 end
 
-link myhome + "/turnserver-src" do
-    to turnserver_src_dir
-end
 
 bash 'make coturn' do
     ignore_failure = true
@@ -49,7 +35,6 @@ bash 'make coturn' do
         ./configure
         make
         make install
-
         ldconfig
     EOF
 end
@@ -59,11 +44,6 @@ template '/etc/turnserver.conf' do
     owner 'root'
     group 'root'
     mode '0755'
-    variables({
-        :mycert_dir => mycert_dir,
-        :mycert => mycert,
-        :mycert_key => mycert_key,
-    })
 end
 
 template '/etc/init.d/turnserver' do
@@ -73,22 +53,18 @@ template '/etc/init.d/turnserver' do
     mode '0755'
 end
 
-link myhome + "/turnserver-conf" do
-    to '/etc/turnserver.conf'
-end
-
-bash 'get certs from s3' do
-    ignore_failure = true
-    code <<-EOF
-        S3_FILES=#{mys3_files}      ## S3 files directory
-        CERT_DIR=#{mycert_dir}      ## local certs directory
-
-        CERT_KEY=#{mycert_key}      ## private key
-        CERT_BUNDLE=#{mycert}       ## bundle for nginx
-
-        aws s3 cp $S3_FILES/certs/$CERT_KEY 	$CERT_DIR/$CERT_KEY		## download private key
-        aws s3 cp $S3_FILES/certs/$CERT_BUNDLE	$CERT_DIR/$CERT_BUNDLE	## download bundle for nginx
-    EOF
+if node['turn']['symlinks_in_home']
+    node['etc']['passwd'].each do |user, data|
+        if data['dir'].start_with?("/home/")
+            myhome=data['dir']
+        end
+    end
+    link myhome + "/turnserver-src" do
+        to turnserver_src_dir
+    end
+    link myhome + "/turnserver-conf" do
+        to '/etc/turnserver.conf'
+    end
 end
 
 service 'turnserver' do

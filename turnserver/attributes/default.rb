@@ -17,34 +17,10 @@
 # limitations under the License.
 #
 
-myuser="admin"
-myhome="/home/admin"
+default['turn']['src_dir']='/usr/local/src/turnserver'
 
-node['etc']['passwd'].each do |user, data|
-    if data['dir'].start_with?("/home/")
-        myuser=user
-        myhome=data['dir']
-    end
-end
-default['my']['user'] = myuser
-default['my']['home'] = myhome
-default['my']['cert_dir'] = "/root/certs"
-
-default['my']['log'] =
-    case node['platform_family']
-        when 'debian'
-            'syslog'
-        when 'suse'
-            'syslog'
-        when 'rhel'
-            'messages'
-        else
-            'syslog'
-    end
-
-default['my']['cert']='cert_name.crt'
-default['my']['cert_key']='cert_name.key.pem'
-default['my']['s3_files']='s3://cert_files_dir'
+default['turn']['cert']='cert_name_here.crt'
+default['turn']['cert_key']='cert_name_key_here.pem'
 
 default['turn']['min-port']='16384'
 default['turn']['max-port']='32768'
@@ -56,16 +32,14 @@ default['turn']['realm']='my.domain'
 
 default['turn']['log']='/var/log/turn.log'
 
+default['turn']['symlinks_in_home']=true
+
 =begin
 #Custom JSON to insert:
 {
-    "my": {
+    "turn": {
         "cert": "wild16.secrom.com.and.gd_bundle.crt",
         "cert_key": "wild16.secrom.com.key.pem",
-        "s3_files": "s3://nist/files",
-        "cert_dir": "/root/certs"
-    },
-    "turn": {
         "min-port": "16384",
         "max-port": "32768",
         "user": "turn18",
