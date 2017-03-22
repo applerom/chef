@@ -17,17 +17,15 @@
 # limitations under the License.
 #
 
-myhome="#{node.default['my']['home']}"
-myuser="#{node.default['my']['user']}"
-mycert_dir="#{node.default['my']['cert_dir']}"
+myhome="#{node['my']['home']}"
+myuser="#{node['my']['user']}"
+mycert="#{node['my']['cert']}"
+mycert_key="#{node['my']['cert_key']}"
+mycert_dir="#{node['my']['cert_dir']}"
+mys3_files="#{node['my']['s3_files']}"
 
-mycert='wild16.secrom.com.and.gd_bundle.crt'
-##cert=/root/certs/wild16.secrom.com.crt
-mycert_key='wild16.secrom.com.key.pem'
-mys3_files='s3://nist/files'
 
 Chef::Log.info("node['platform'] = #{node['platform']}")
-
 
 %w(gcc-c++ libevent-devel openssl-devel).each do |mypackage|
     package mypackage do

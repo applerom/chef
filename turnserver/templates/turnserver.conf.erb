@@ -1,16 +1,16 @@
-min-port=16384
-max-port=32768
+min-port=<%= node['turn']['min-port'] %>
+max-port=<%= node['turn']['max-port'] %>
 #verbose
 
 lt-cred-mech
 ##no-auth
 
-user=secturn17:secturn17
+user=<%= node['turn']['user'] %>:<%= node['turn']['password'] %>
 
-realm=sp.secrom.com
+realm=<%= node['turn']['realm'] %>
 
-cert=<%= @mycert_dir %>/<%= @mycert %>
-pkey=<%= @mycert_dir %>/<%= @mycert_key %>
+cert=<%= node['turn']['cert_dir'] %>/<%= node['turn']['cert'] %>
+pkey=<%= node['turn']['cert_dir'] %>/<%= node['turn']['cert_key'] %>
 
 no-multicast-peers
 
@@ -18,4 +18,4 @@ no-multicast-peers
 
 no-stdout-log
 simple-log
-log-file=/var/log/turn.log
+log-file=<%= node['turn']['log'] %>
