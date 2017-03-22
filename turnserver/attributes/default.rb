@@ -42,17 +42,35 @@ default['my']['log'] =
             'syslog'
     end
 
-default['my']['cert']='wild16.secrom.com.and.gd_bundle.crt'
-default['my']['cert_key']='wild16.secrom.com.key.pem'
-default['my']['s3_files']='s3://nist/files'
+default['my']['cert']='cert_name.crt'
+default['my']['cert_key']='cert_name.key.pem'
+default['my']['s3_files']='s3://cert_files_dir'
 
 default['turn']['min-port']='16384'
 default['turn']['max-port']='32768'
 
-default['turn']['user']='secturn17'
-default['turn']['password']='secturn17'
+default['turn']['user']='static_user'
+default['turn']['password']='static_password'
 
-default['turn']['realm']='sp.secrom.com'
+default['turn']['realm']='my.domain'
 
 default['turn']['log']='/var/log/turn.log'
 
+=begin
+{
+    "my": {
+        "cert": "wild16.secrom.com.and.gd_bundle.crt",
+        "cert_key": "wild16.secrom.com.key.pem",
+        "s3_files": "s3://nist/files",
+        "cert_dir": "/root/certs"
+    },
+    "turn": {
+        "min-port": "16384",
+        "max-port": "32768",
+        "user": "secturn17",
+        "password": "secturn17",
+        "realm": "sp.secrom.com",
+        "log": "/var/log/turn.log"
+    }
+}
+=end
