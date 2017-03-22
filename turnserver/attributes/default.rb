@@ -68,8 +68,8 @@ default['turn']['log']='/var/log/turn.log'
     "turn": {
         "min-port": "16384",
         "max-port": "32768",
-        "user": "secturn17",
-        "password": "secturn17",
+        "user": "turn18",
+        "password": "turn18",
         "realm": "sp.secrom.com",
         "log": "/var/log/turn.log"
     }
