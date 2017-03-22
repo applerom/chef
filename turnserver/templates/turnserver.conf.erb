@@ -9,8 +9,8 @@ user=<%= node['turn']['user'] %>:<%= node['turn']['password'] %>
 
 realm=<%= node['turn']['realm'] %>
 
-cert=<%= node['turn']['cert_dir'] %>/<%= node['turn']['cert'] %>
-pkey=<%= node['turn']['cert_dir'] %>/<%= node['turn']['cert_key'] %>
+cert=<%= node['my']['cert_dir'] %>/<%= node['my']['cert'] %>
+pkey=<%= node['my']['cert_dir'] %>/<%= node['my']['cert_key'] %>
 
 no-multicast-peers
 
