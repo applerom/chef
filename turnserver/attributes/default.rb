@@ -17,6 +17,15 @@
 # limitations under the License.
 #
 
+myhome = '/home/admin'
+node['etc']['passwd'].each do |user, data|
+    if data['dir'].start_with?("/home/")
+        myhome = data['dir']
+    end
+end
+default['turn']['myhome'] = myhome
+
+# TURN-server variables
 default['turn']['src_dir']='/usr/local/src/turnserver'
 
 default['turn']['cert']='cert_name_here.crt'

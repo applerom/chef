@@ -17,6 +17,8 @@
 # limitations under the License.
 #
 
+myhome = node['turn']['myhome']
+
 %w(gcc-c++ libevent-devel openssl-devel).each do |mypackage|
     package mypackage do
         action :install
@@ -54,11 +56,6 @@ template '/etc/init.d/turnserver' do
 end
 
 if node['turn']['symlinks_in_home']
-    node['etc']['passwd'].each do |user, data|
-        if data['dir'].start_with?("/home/")
-            myhome=data['dir']
-        end
-    end
     link myhome + "/turnserver-src" do
         to node['turn']['src_dir']
     end
