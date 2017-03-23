@@ -22,6 +22,13 @@ mycert_key="#{node['my']['cert_key']}"
 mycert_dir="#{node['my']['cert_dir']}"
 mys3_files="#{node['my']['s3_cert_dir']}"
 
+Chef::Log.info("mycert = '#{mycert}'")
+Chef::Log.info("mycert_key = '#{mycert_key}'")
+Chef::Log.info("mycert_dir = '#{mycert_dir}'")
+Chef::Log.info("mys3_files = '#{mys3_files}'")
+Chef::Log.info("mys3_files.nil? = #{mys3_files.nil?}")
+
+
 bash 'get certs from s3' do
     not_if mys3_files.nil?
     ignore_failure = true
