@@ -30,7 +30,7 @@ end
 
 bash 'make coturn' do
     ignore_failure = true
-    cwd turnserver_src_dir
+    cwd node['turn']['src_dir']
     code <<-EOF
         ./configure
         make
@@ -60,7 +60,7 @@ if node['turn']['symlinks_in_home']
         end
     end
     link myhome + "/turnserver-src" do
-        to turnserver_src_dir
+        to node['turn']['src_dir']
     end
     link myhome + "/turnserver-conf" do
         to '/etc/turnserver.conf'
