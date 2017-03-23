@@ -44,9 +44,9 @@ default['my']['cert_key']       = '' # my_cert_key.pem
     "my": {
         "site": "linux.cmd",
         "prompt": true,
-        "s3_cert_dir": "s3://nist/files",
-        "cert": "wild16.secrom.com.and.gd_bundle.crt",
-        "cert_key": "wild16.secrom.com.key.pem",
+        "s3_cert_dir": "s3://some/dir",
+        "cert": "some.domain.com.and.mb.bundle.of.intermediate.in.the.end.crt",
+        "cert_key": "some.domain.com.key.pem",
         "cert_dir": "/root/certs"
     }
 }

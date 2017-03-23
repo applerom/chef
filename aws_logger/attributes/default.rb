@@ -27,7 +27,7 @@ default['aws_logger']['syslog'] = "/var/log/#{syslog}"
 default['awslogs_conf_default']['datetime_format'] = "%b %d %H:%M:%S"
 default['awslogs_conf_default']['file'] = "/var/log/syslog"
 default['awslogs_conf_default']['buffer_duration'] = "5000"
-default['awslogs_conf_default']['log_stream_name'] = "linuxcmd.secrom.com"
+default['awslogs_conf_default']['log_stream_name'] = "linux.cmd"
 default['awslogs_conf_default']['initial_position'] = "start_of_file"
 default['awslogs_conf_default']['log_group_name'] = "SysLog"
 

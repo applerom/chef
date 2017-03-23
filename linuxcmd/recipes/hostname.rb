@@ -20,7 +20,7 @@
 =begin
 {
     "my": {
-        "site": "turn03.secrom.com",
+        "site": "linux.cmd",
         "prompt": true
     }
 }

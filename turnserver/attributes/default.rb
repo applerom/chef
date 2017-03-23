@@ -47,13 +47,13 @@ default['turn']['symlinks_in_home']=true
 #Custom JSON to insert:
 {
     "turn": {
-        "cert": "wild16.secrom.com.and.gd_bundle.crt",
-        "cert_key": "wild16.secrom.com.key.pem",
+        "cert": "my.domain.here.and.may.by.bundle.of.intermediate.and.root.in.the.end.crt",
+        "cert_key": "my.domain.key.pem",
         "min-port": "16384",
         "max-port": "32768",
-        "user": "turn18",
-        "password": "turn18",
-        "realm": "sp.secrom.com",
+        "user": "my_persistent_user_here",
+        "password": "my_persistent_password_here",
+        "realm": "my.domain",
         "log": "/var/log/turn.log"
     }
 }
