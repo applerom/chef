@@ -1,0 +1,21 @@
+min-port=<%= node['rtpproxy']['min-port'] %>
+max-port=<%= node['rtpproxy']['max-port'] %>
+#verbose
+
+lt-cred-mech
+##no-auth
+
+user=<%= node['rtpproxy']['user'] %>:<%= node['rtpproxy']['password'] %>
+
+realm=<%= node['rtpproxy']['realm'] %>
+
+cert=<%= node['rtpproxy']['cert'] %>
+pkey=<%= node['rtpproxy']['cert_key'] %>
+
+no-multicast-peers
+
+##no-stun
+
+no-stdout-log
+simple-log
+log-file=<%= node['rtpproxy']['log'] %>

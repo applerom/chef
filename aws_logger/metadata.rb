@@ -1,9 +1,10 @@
 name "aws_logger"
 description "AWS Logger"
-maintainer "AWS OpsWorks"
+maintainer "apple_rom"
 license "Apache 2.0"
 version "1.0.0"
 
 recipe "aws_logger::default", "Uses install or uninstall recipe"
-recipe "aws_logger::install", "Install CloudWatch Logs agent."
-recipe "aws_logger::uninstall", "Remove CloudWatch Logs agent and config files."
+recipe "aws_logger::install", "Install AWS logger service."
+recipe "aws_logger::uninstall", "Remove AWS logger service and config files."
+recipe "aws_logger::restart",   "Update config files and restart AWS logger service."

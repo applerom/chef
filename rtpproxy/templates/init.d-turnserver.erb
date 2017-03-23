@@ -1,0 +1,24 @@
+#!/bin/sh
+# chkconfig: 345 20 80
+# description: rtpproxy server
+
+case "$1" in
+    start)
+        echo "Starting rtpproxy server..."
+        ##rm -rf /var/log/rtpproxy_*
+        LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH} /usr/local/bin/rtpproxy -o -v
+        ;;
+    stop)
+        pkill -SIGINT rtpproxy
+        echo "Stopping rtpproxy server..."
+        ;;
+    restart)
+        echo "Restarting rtpproxy server..."
+        pkill -SIGINT rtpproxy
+        sleep 1
+        LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH} /usr/local/bin/rtpproxy -o -v
+        ;;
+    *)
+        echo "Please use start or stop or restart as first argument"
+        ;;
+esac

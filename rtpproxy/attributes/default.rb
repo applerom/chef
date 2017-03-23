@@ -1,5 +1,5 @@
 #
-# Cookbook:: turnserver
+# Cookbook:: rtpproxy
 # Attributes:: default
 #
 # Copyright:: 2017, apple_rom
@@ -23,30 +23,30 @@ node['etc']['passwd'].each do |user, data|
         myhome = data['dir']
     end
 end
-default['turn']['myhome'] = myhome
+default['rtpproxy']['myhome'] = myhome
 
-# TURN-server variables - enter your values here or use custom JSON
-default['turn']['src_dir']='/usr/local/src/turnserver'
+# rtpproxy-server variables - enter your values here or use custom JSON
+default['rtpproxy']['src_dir']='/usr/local/src/rtpproxy'
 
-default['turn']['cert']='cert_name_here.crt'
-default['turn']['cert_key']='cert_name_key_here.pem'
+default['rtpproxy']['cert']='cert_name_here.crt'
+default['rtpproxy']['cert_key']='cert_name_key_here.pem'
 
-default['turn']['min-port']='16384'
-default['turn']['max-port']='32768'
+default['rtpproxy']['min-port']='16384'
+default['rtpproxy']['max-port']='32768'
 
-default['turn']['user']='static_user'
-default['turn']['password']='static_password'
+default['rtpproxy']['user']='static_user'
+default['rtpproxy']['password']='static_password'
 
-default['turn']['realm']='my.domain'
+default['rtpproxy']['realm']='my.domain'
 
-default['turn']['log']='/var/log/turn.log'
+default['rtpproxy']['log']='/var/log/rtpproxy.log'
 
-default['turn']['symlinks_in_home']=true
+default['rtpproxy']['symlinks_in_home']=true
 
 =begin
 #Custom JSON to insert:
 {
-    "turn": {
+    "rtpproxy": {
         "cert": "my.domain.here.and.may.by.bundle.of.intermediate.and.root.in.the.end.crt",
         "cert_key": "my.domain.key.pem",
         "min-port": "16384",
@@ -54,7 +54,7 @@ default['turn']['symlinks_in_home']=true
         "user": "my_persistent_user_here",
         "password": "my_persistent_password_here",
         "realm": "my.domain",
-        "log": "/var/log/turn.log"
+        "log": "/var/log/rtpproxy.log"
     }
 }
 =end

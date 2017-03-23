@@ -1,5 +1,5 @@
 #
-# Cookbook:: turnserver
+# Cookbook:: rtpproxy
 # Recipe:: default
 #
 # Copyright:: 2017, apple_rom
@@ -17,5 +17,5 @@
 # limitations under the License.
 #
 
-include_recipe 'turnserver::install'
+include_recipe 'rtpproxy::install'
 
