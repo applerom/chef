@@ -26,10 +26,6 @@ Chef::Log.info("mycert = '#{mycert}'")
 Chef::Log.info("mycert_key = '#{mycert_key}'")
 Chef::Log.info("mycert_dir = '#{mycert_dir}'")
 Chef::Log.info("mys3_files = '#{mys3_files}'")
-Chef::Log.info("mys3_files.nil? = #{mys3_files.nil?}")
-Chef::Log.info("mys3_files.empty? = #{mys3_files.empty?}")
-Chef::Log.info("mys3_files.blank? = #{mys3_files.blank?}")
-
 
 bash 'get certs from s3' do
     not_if mys3_files.empty?
