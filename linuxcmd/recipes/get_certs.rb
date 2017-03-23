@@ -28,7 +28,7 @@ Chef::Log.info("mycert_dir = '#{mycert_dir}'")
 Chef::Log.info("mys3_files = '#{mys3_files}'")
 
 bash 'get certs from s3' do
-    not_if mys3_files.empty?
+    not_if { mys3_files.empty? }
     ignore_failure = true
     code <<-EOF
         S3_FILES=#{mys3_files}      ## S3 files directory
