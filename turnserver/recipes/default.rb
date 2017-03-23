@@ -41,6 +41,12 @@ bash 'make coturn' do
     EOF
 end
 
+Chef::Log.info("node['turn']['user']        = '#{node['turn']['user']}'")
+Chef::Log.info("node['turn']['password']    = '#{node['turn']['password']}'")
+Chef::Log.info("node['turn']['realm']       = '#{node['turn']['realm']}'")
+Chef::Log.info("node['turn']['cert']        = '#{node['turn']['cert']}'")
+Chef::Log.info("node['turn']['pkey']        = '#{node['turn']['pkey']}'")
+
 template '/etc/turnserver.conf' do
     source 'turnserver.conf.erb'
     owner 'root'
