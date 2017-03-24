@@ -20,14 +20,32 @@
 =begin
 {
     "my": {
-        "site": "linux.cmd",
+        "domain": "secrom.com",
+        "autoname": "turn",
         "prompt": true
     }
 }
 =end
 
-my_site = "#{node['my']['site']}"
-Chef::Log.info("node['my']['site'] = #{my_site}")
+my_domain = "#{node['my']['domain']}"
+my_name = "#{node['my']['name']}"
+autoname = "#{node['my']['autoname']}"
+Chef::Log.info("node['my']['domain'] = '#{my_domain}'")
+Chef::Log.info("node['my']['name'] = '#{my_name}'")
+Chef::Log.info("node['my']['autoname'] = '#{autoname}'")
+
+
+if node['my']['name'].empty?
+    instance = search("aws_opsworks_instance", "self:true").first
+    cur_hostname = instance['hostname']
+    Chef::Log.info("*** cur_hostname is '#{cur_hostname}'")
+    private_ip = instance['private_ip']
+    Chef::Log.info("*** private_ip is '#{private_ip}'")
+    my_site = "#{autoname}#{private_ip.split('.')[2]}-#{private_ip.split('.')[3]}.#{my_domain}"
+else
+    my_site = my_domain.empty? ? "#{my_name}" : "#{my_name}.#{my_domain}"
+end
+Chef::Log.info("*** my_site = '#{my_site}'")
 
 bash 'set hostname for current process' do
     ignore_failure = true

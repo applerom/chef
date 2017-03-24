@@ -2,7 +2,30 @@ directory node["aws_logger"]["home_dir"] do
     recursive true
 end
 
-my_site = node['my']['site']
+syslog = 
+    case node['platform_family']
+        when 'debian'
+            'syslog'
+        when 'suse'
+            'syslog'
+        when 'rhel'
+            'messages'
+        else
+            'syslog'
+    end
+current_syslog = "/var/log/#{syslog}"
+
+stack = search("aws_opsworks_stack").first
+cur_region = stack['region']
+stack_name = stack['name']
+Chef::Log.info("********** The stack's name is '#{stack_name}', region = '#{cur_region}' **********")
+
+instance = search("aws_opsworks_instance", "self:true").first
+cur_hostname = instance['hostname']
+Chef::Log.info("********** The instance's hostname is '#{cur_hostname}' **********")
+
+
+my_site = node['my']['site'].to_s.empty? ? cur_hostname : node['my']['site']
 Chef::Log.info("*** my_site = '#{my_site}' ***")
 
 default_aws_log = node['awslogs_conf_default']
@@ -29,9 +52,13 @@ else
                 Chef::Log.info("*** #{log_conf_name}[#{key}] is nil, set to '#{value}' ***")
                 awslogs_conf_data[log_conf_name][key] = value
             end    
-            if key == "log_stream_name" && !my_site.nil?
-                Chef::Log.info("*** change log_stream_name to '#{my_site}' ***")
+            if key == "log_stream_name" && key == 'current_hostname'
+                Chef::Log.info("*** set log_stream_name to '#{my_site}' ***")
                 awslogs_conf_data[log_conf_name][key] = my_site
+            end
+            if key == "file" && key == 'current_syslog'
+                Chef::Log.info("*** set file to '#{current_syslog}' ***")
+                awslogs_conf_data[log_conf_name][key] = current_syslog
             end
         end
     end
@@ -39,14 +66,6 @@ end
 
 Chef::Log.info("*** awslogs_conf_data = '#{awslogs_conf_data}' ***")
 
-stack = search("aws_opsworks_stack").first
-cur_region = stack['region']
-stack_name = stack['name']
-Chef::Log.info("********** The stack's name is '#{stack_name}', region = '#{cur_region}' **********")
-
-instance = search("aws_opsworks_instance", "self:true").first
-cur_hostname = instance['hostname']
-Chef::Log.info("********** The instance's hostname is '#{cur_hostname}' **********")
 
 template node["aws_logger"]["config_file"] do
     source "awslogs.conf.erb"

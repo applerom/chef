@@ -42,7 +42,8 @@ default['my']['cert_key']       = '' # my_cert_key.pem
 #Custom JSON to insert:
 {
     "my": {
-        "site": "linux.cmd",
+        "domain": "linux.cmd",
+        "autoname": "linux.cmd",
         "prompt": true,
         "s3_cert_dir": "s3://some/dir",
         "cert": "some.domain.com.and.mb.bundle.of.intermediate.in.the.end.crt",
@@ -52,7 +53,9 @@ default['my']['cert_key']       = '' # my_cert_key.pem
 }
 =end
 
-default['my']['site'] = "linux.cmd"
+default['my']['domain'] = 'linux.cmd'   # yourdomainname.here
+default['my']['name'] = ''              # your-name-here for ['my']['domain']
+default['my']['autoname'] = 'myname'    # auto name for ['my']['domain'] if no ['my']['name']
 
 default['my']['log'] =
     case node['platform_family']
