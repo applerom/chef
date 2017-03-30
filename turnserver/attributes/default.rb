@@ -28,8 +28,8 @@ default['turn']['myhome'] = myhome
 # TURN-server variables - enter your values here or use custom JSON
 default['turn']['src_dir']='/usr/local/src/turnserver'
 
-default['turn']['cert']='cert_name_here.crt'
-default['turn']['cert_key']='cert_name_key_here.pem'
+default['turn']['cert']='/path/to/cert_name.crt'
+default['turn']['cert_key']='/path/to/cert_name_key.pem'
 
 default['turn']['min-port']='16384'
 default['turn']['max-port']='32768'
@@ -47,8 +47,8 @@ default['turn']['symlinks_in_home']=true
 #Custom JSON to insert:
 {
     "turn": {
-        "cert": "my.domain.here.and.may.by.bundle.of.intermediate.and.root.in.the.end.crt",
-        "cert_key": "my.domain.key.pem",
+        "cert": "/path/to/my.domain.and.may.by.bundle.of.intermediate.and.root.in.the.end.crt",
+        "cert_key": "/path/to/my.domain.key.pem",
         "min-port": "16384",
         "max-port": "32768",
         "user": "my_persistent_user_here",

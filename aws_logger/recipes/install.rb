@@ -2,46 +2,20 @@ directory node["aws_logger"]["home_dir"] do
     recursive true
 end
 
-syslog = 
-    case node['platform_family']
-        when 'debian'
-            'syslog'
-        when 'suse'
-            'syslog'
-        when 'rhel'
-            'messages'
-        else
-            'syslog'
-    end
-current_syslog = "/var/log/#{syslog}"
-
 stack = search("aws_opsworks_stack").first
 cur_region = stack['region']
 stack_name = stack['name']
 Chef::Log.info("********** The stack's name is '#{stack_name}', region = '#{cur_region}' **********")
 
-instance = search("aws_opsworks_instance", "self:true").first
-cur_hostname = instance['hostname']
-Chef::Log.info("********** The instance's hostname is '#{cur_hostname}' **********")
-
-
-my_site = node['my']['site'].to_s.empty? ? cur_hostname : node['my']['site']
-Chef::Log.info("*** my_site = '#{my_site}' ***")
-
 default_aws_log = node['awslogs_conf_default']
 
-if defined?(node['awslogs_conf'])
+if node['awslogs_conf'].to_s.empty?
+    Chef::Log.info("*** node['awslogs_conf'] is empty - set awslogs_conf_data to default ***")
+    awslogs_conf_data = { 'default_aws_log': default_aws_log}
+else
     Chef::Log.info("*** node['awslogs_conf'] defined and is '#{node['awslogs_conf']}' ***")
     awslogs_conf_data = JSON.parse(JSON.generate(node['awslogs_conf']))
-else
-    Chef::Log.info("*** node['awslogs_conf'] is not defined - set awslogs_conf_data to default ***")
-    awslogs_conf_data = { 'default_aws_log': default_aws_log}
-end
-
-if awslogs_conf_data.nil?
-    Chef::Log.info("*** node['awslogs_conf'] is nil - set awslogs_conf_data to default ***")
-    awslogs_conf_data = { 'default_aws_log': default_aws_log}
-else
+    
     Chef::Log.info("*** check awslogs_conf_data = '#{awslogs_conf_data}' ***")
     awslogs_conf_data.each do |log_conf_name, cur_log|
         default_aws_log.each do |key, value|
@@ -52,18 +26,9 @@ else
                 Chef::Log.info("*** #{log_conf_name}[#{key}] is nil, set to '#{value}' ***")
                 awslogs_conf_data[log_conf_name][key] = value
             end    
-            if key == "log_stream_name" && key == 'current_hostname'
-                Chef::Log.info("*** set log_stream_name to '#{my_site}' ***")
-                awslogs_conf_data[log_conf_name][key] = my_site
-            end
-            if key == "file" && key == 'current_syslog'
-                Chef::Log.info("*** set file to '#{current_syslog}' ***")
-                awslogs_conf_data[log_conf_name][key] = current_syslog
-            end
         end
     end
 end
-
 Chef::Log.info("*** awslogs_conf_data = '#{awslogs_conf_data}' ***")
 
 
