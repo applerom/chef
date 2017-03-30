@@ -7,6 +7,20 @@ cur_region = stack['region']
 stack_name = stack['name']
 Chef::Log.info("********** The stack's name is '#{stack_name}', region = '#{cur_region}' **********")
 
+instance = search("aws_opsworks_instance", "self:true").first
+instance_hostname = instance['hostname']
+Chef::Log.info("********** The instance's hostname is '#{instance_hostname}' **********")
+
+current_hostname = File.read('/root/current_hostname')
+if current_hostname.to_s.empty?
+    current_hostname = instance_hostname
+end
+Chef::Log.info("*** current_hostname = '#{current_hostname}' ***")
+
+if node['awslogs_conf_default']['log_stream_name'].to_s.empty?
+    node.default['awslogs_conf_default']['log_stream_name'] = current_hostname
+end
+
 default_aws_log = node['awslogs_conf_default']
 
 if node['awslogs_conf'].to_s.empty?

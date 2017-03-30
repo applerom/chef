@@ -24,21 +24,10 @@ syslog =
     end
 current_syslog = "/var/log/#{syslog}"
 
-instance = search("aws_opsworks_instance", "self:true").first
-instance_hostname = instance['hostname']
-Chef::Log.info("********** The instance's hostname is '#{instance_hostname}' **********")
-
-current_hostname = File.read('/root/current_hostname')
-if current_hostname.to_s.empty?
-    current_hostname = instance_hostname
-end
-Chef::Log.info("*** current_hostname = '#{current_hostname}' ***")
-
-
 default['awslogs_conf_default']['datetime_format'] = "%b %d %H:%M:%S"
 default['awslogs_conf_default']['file'] = current_syslog
 default['awslogs_conf_default']['buffer_duration'] = "5000"
-default['awslogs_conf_default']['log_stream_name'] = current_hostname
+##default['awslogs_conf_default']['log_stream_name'] = current_hostname ## set later because of cant use search in attribs
 default['awslogs_conf_default']['initial_position'] = "start_of_file"
 default['awslogs_conf_default']['log_group_name'] = "SysLog"
 
