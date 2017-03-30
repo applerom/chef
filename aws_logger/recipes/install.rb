@@ -11,7 +11,12 @@ instance = search("aws_opsworks_instance", "self:true").first
 instance_hostname = instance['hostname']
 Chef::Log.info("********** The instance's hostname is '#{instance_hostname}' **********")
 
-current_hostname = File.read('/root/current_hostname')
+
+file_path = '/root/current_hostname'
+if File.exist?(file_path)
+    current_hostname = File.read(file_path)
+end
+
 if current_hostname.to_s.empty?
     current_hostname = instance_hostname
 end
