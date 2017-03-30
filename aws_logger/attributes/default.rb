@@ -24,10 +24,15 @@ syslog =
     end
 current_syslog = "/var/log/#{syslog}"
 
+file_path = '/root/current_hostname'
+if File.exist?(file_path)
+    current_hostname = File.read(file_path)
+end
+
 default['awslogs_conf_default']['datetime_format'] = "%b %d %H:%M:%S"
 default['awslogs_conf_default']['file'] = current_syslog
 default['awslogs_conf_default']['buffer_duration'] = "5000"
-default['awslogs_conf_default']['log_stream_name'] = 'current_hostname' ## than set to current hostname
+default['awslogs_conf_default']['log_stream_name'] = current_hostname
 default['awslogs_conf_default']['initial_position'] = "start_of_file"
 default['awslogs_conf_default']['log_group_name'] = "SysLog"
 

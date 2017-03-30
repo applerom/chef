@@ -11,22 +11,11 @@ instance = search("aws_opsworks_instance", "self:true").first
 instance_hostname = instance['hostname']
 Chef::Log.info("********** The instance's hostname is '#{instance_hostname}' **********")
 
+default_aws_log = JSON.parse(JSON.generate(node['awslogs_conf_default']))
 
-file_path = '/root/current_hostname'
-if File.exist?(file_path)
-    current_hostname = File.read(file_path)
+if default_aws_log['log_stream_name'].empty?
+    default_aws_log['log_stream_name'] = instance_hostname
 end
-
-if current_hostname.to_s.empty?
-    current_hostname = instance_hostname
-end
-Chef::Log.info("*** current_hostname = '#{current_hostname}' ***")
-
-if node['awslogs_conf_default']['log_stream_name'] == 'current_hostname'
-    node.default['awslogs_conf_default']['log_stream_name'] = current_hostname
-end
-
-default_aws_log = node['awslogs_conf_default']
 
 if node['awslogs_conf'].to_s.empty?
     Chef::Log.info("*** node['awslogs_conf'] is empty - set awslogs_conf_data to default ***")
