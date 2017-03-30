@@ -51,6 +51,7 @@ bash 'set hostname for current process' do
     ignore_failure = true
     code <<-EOF
         sudo hostname "#{my_site}"
+        echo "#{my_site}" > '/root/current_hostname'
     EOF
 end
 
