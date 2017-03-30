@@ -22,7 +22,7 @@ if current_hostname.to_s.empty?
 end
 Chef::Log.info("*** current_hostname = '#{current_hostname}' ***")
 
-if node['awslogs_conf_default']['log_stream_name'].to_s.empty?
+if node['awslogs_conf_default']['log_stream_name'] == 'current_hostname'
     node.default['awslogs_conf_default']['log_stream_name'] = current_hostname
 end
 
