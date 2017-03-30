@@ -20,7 +20,7 @@
 =begin
 {
     "my": {
-        "domain": "secrom.com",
+        "domain": "linuxcmd.ru",
         "autoname": "turn",
         "prompt": true
     }
