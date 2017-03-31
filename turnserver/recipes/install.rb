@@ -29,9 +29,17 @@ Chef::Log.info("node['turn']['git_repository']  = '#{node['turn']['git_repositor
 Chef::Log.info("node['turn']['git_ssh_wrapper'] = '#{node['turn']['git_ssh_wrapper']}'")
 Chef::Log.info("node['turn']['src_dir']         = '#{node['turn']['src_dir']}'")
 
+file "/tmp/ssh_wrapper.sh" do
+    content "#!/bin/sh\nexec /usr/bin/ssh -i /root/certs/codecommit_rsa -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \"$@\""
+    user "root"
+    group "root"
+    mode "0700"
+    action :create
+end
+
 git node['turn']['src_dir'] do
     repository  node['turn']['git_repository']
-    ssh_wrapper node['turn']['git_ssh_wrapper']
+    ssh_wrapper "/tmp/ssh_wrapper.sh"
 end
 
 
