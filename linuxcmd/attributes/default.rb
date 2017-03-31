@@ -37,6 +37,7 @@ default['my']['cert_dir']       = "/root/certs"
 default['my']['s3_cert_dir']    = '' # s3://cert/dir
 default['my']['cert']           = '' # my_cert.crt
 default['my']['cert_key']       = '' # my_cert_key.pem
+default['my']['git_ssh_key']    = '' # my_git_ssh_rsa_key
 
 =begin
 #Custom JSON to insert:
@@ -48,6 +49,7 @@ default['my']['cert_key']       = '' # my_cert_key.pem
         "s3_cert_dir": "s3://some/dir",
         "cert": "some.domain.com.and.mb.bundle.of.intermediate.in.the.end.crt",
         "cert_key": "some.domain.com.key.pem",
+        "git_ssh_key": "some_git_key_rsa",
         "cert_dir": "/root/certs"
     }
 }

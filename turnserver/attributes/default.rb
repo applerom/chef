@@ -26,8 +26,9 @@ end
 default['turn']['myhome'] = myhome
 
 # TURN-server variables - enter your values here or use custom JSON
-default['turn']['git_repository']   = 'https://github.com/coturn/coturn.git'
-default['turn']['git_ssh_wrapper']  = '' # ssh code - if you use ssh connect to private repo
+default['turn']['git_repository']               = 'https://github.com/coturn/coturn.git'
+default['turn']['git_repository_ssh_key_path']  = '' # if you use ssh connect to private repo (chmod 600)
+default['turn']['git_ssh_wrapper_path']         = '/tmp/git_ssh_wrapper.sh'
 default['turn']['src_dir']          = '/usr/local/src/turnserver'
 
 default['turn']['cert']             = '/path/to/cert_name.crt'

@@ -26,20 +26,22 @@ myhome = node['turn']['myhome']
 end
 
 Chef::Log.info("node['turn']['git_repository']  = '#{node['turn']['git_repository']}'")
-Chef::Log.info("node['turn']['git_ssh_wrapper'] = '#{node['turn']['git_ssh_wrapper']}'")
 Chef::Log.info("node['turn']['src_dir']         = '#{node['turn']['src_dir']}'")
 
-file "/tmp/ssh_wrapper.sh" do
-    content "#!/bin/sh\nexec /usr/bin/ssh -i /root/certs/codecommit_rsa -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \"$@\""
-    user "root"
-    group "root"
-    mode "0700"
-    action :create
+unless node['turn']['git_repository_ssh_key_path'].empty?
+    Chef::Log.info("node['turn']['git_repository_ssh_key_path'] = '#{node['turn']['git_repository_ssh_key_path']}'")
+    Chef::Log.info("node['turn']['git_ssh_wrapper'] = '#{node['turn']['git_ssh_wrapper']}'")
+    file node['turn']['git_ssh_wrapper_path'] do
+        content "#!/bin/sh\nexec /usr/bin/ssh -i #{node['turn']['git_repository_ssh_key_path']} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \"$@\""
+        user "root"
+        group "root"
+        mode "0700"
+    end   
 end
 
 git node['turn']['src_dir'] do
     repository  node['turn']['git_repository']
-    ssh_wrapper "/tmp/ssh_wrapper.sh"
+    ssh_wrapper node['turn']['git_ssh_wrapper_path']
 end
 
 

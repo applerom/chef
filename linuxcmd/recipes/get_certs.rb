@@ -19,11 +19,13 @@
 
 mycert="#{node['my']['cert']}"
 mycert_key="#{node['my']['cert_key']}"
+mygit_ssh_key="#{node['my']['git_ssh_key']}"
 mycert_dir="#{node['my']['cert_dir']}"
 mys3_files="#{node['my']['s3_cert_dir']}"
 
 Chef::Log.info("mycert = '#{mycert}'")
 Chef::Log.info("mycert_key = '#{mycert_key}'")
+Chef::Log.info("mygit_ssh_key = '#{mygit_ssh_key}'")
 Chef::Log.info("mycert_dir = '#{mycert_dir}'")
 Chef::Log.info("mys3_files = '#{mys3_files}'")
 
@@ -34,10 +36,12 @@ bash 'get certs from s3' do
         S3_FILES=#{mys3_files}      ## S3 files directory
         CERT_DIR=#{mycert_dir}      ## local certs directory
 
-        CERT_KEY=#{mycert_key}      ## private key
+        CERT_KEY=#{mycert_key}      ## private key for cert
+        GIT_KEY=#{git_ssh_key}      ## private key for git ssh
         CERT_BUNDLE=#{mycert}       ## bundle for nginx
 
-        aws s3 cp $S3_FILES/certs/$CERT_KEY 	$CERT_DIR/$CERT_KEY		## download private key
+        aws s3 cp $S3_FILES/certs/$CERT_KEY 	$CERT_DIR/$CERT_KEY		## download cert private key
+        aws s3 cp $S3_FILES/certs/$CERT_BUNDLE	$CERT_DIR/$GIT_KEY	    ## download git private
         aws s3 cp $S3_FILES/certs/$CERT_BUNDLE	$CERT_DIR/$CERT_BUNDLE	## download bundle for nginx
     EOF
 end
