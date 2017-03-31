@@ -37,7 +37,7 @@ bash 'get certs from s3' do
         CERT_DIR=#{mycert_dir}      ## local certs directory
 
         CERT_KEY=#{mycert_key}      ## private key for cert
-        GIT_KEY=#{git_ssh_key}      ## private key for git ssh
+        GIT_KEY=#{mygit_ssh_key}    ## private key for git ssh
         CERT_BUNDLE=#{mycert}       ## bundle for nginx
 
         aws s3 cp $S3_FILES/certs/$CERT_KEY 	$CERT_DIR/$CERT_KEY		## download cert private key
