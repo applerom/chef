@@ -25,8 +25,13 @@ myhome = node['turn']['myhome']
     end
 end
 
+Chef::Log.info("node['turn']['git_repository']  = '#{node['turn']['git_repository']}'")
+Chef::Log.info("node['turn']['git_ssh_wrapper'] = '#{node['turn']['git_ssh_wrapper']}'")
+Chef::Log.info("node['turn']['src_dir']         = '#{node['turn']['src_dir']}'")
+
 git node['turn']['src_dir'] do
-    repository 'https://github.com/coturn/coturn.git'
+    repository  node['turn']['git_repository']
+    ssh_wrapper node['turn']['git_ssh_wrapper']
 end
 
 

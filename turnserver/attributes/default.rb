@@ -26,22 +26,24 @@ end
 default['turn']['myhome'] = myhome
 
 # TURN-server variables - enter your values here or use custom JSON
-default['turn']['src_dir']='/usr/local/src/turnserver'
+default['turn']['git_repository']   = 'https://github.com/coturn/coturn.git'
+default['turn']['git_ssh_wrapper']  = '' # ssh code - if you use ssh connect to private repo
+default['turn']['src_dir']          = '/usr/local/src/turnserver'
 
-default['turn']['cert']='/path/to/cert_name.crt'
-default['turn']['cert_key']='/path/to/cert_name_key.pem'
+default['turn']['cert']             = '/path/to/cert_name.crt'
+default['turn']['cert_key']         = '/path/to/cert_name_key.pem'
 
-default['turn']['min-port']='16384'
-default['turn']['max-port']='32768'
+default['turn']['min-port']         = '16384'
+default['turn']['max-port']         = '32768'
 
-default['turn']['user']='static_user'
-default['turn']['password']='static_password'
+default['turn']['user']             = 'static_user'
+default['turn']['password']         = 'static_password'
 
-default['turn']['realm']='my.domain'
+default['turn']['realm']            = 'my.domain'
 
-default['turn']['log']='/var/log/turn.log'
+default['turn']['log']              = '/var/log/turn.log'
 
-default['turn']['symlinks_in_home']=true
+default['turn']['symlinks_in_home'] = true
 
 =begin
 #Custom JSON to insert:
