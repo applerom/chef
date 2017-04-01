@@ -49,6 +49,7 @@ bash 'make coturn' do
     ignore_failure = true
     cwd node['turn']['src_dir']
     code <<-EOF
+        chmod +x configure # otherwise it may be: "bash: ./configure: Permission denied"
         ./configure
         make
         make install
