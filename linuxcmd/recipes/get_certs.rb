@@ -41,7 +41,8 @@ bash 'get certs from s3' do
         CERT_BUNDLE=#{mycert}       ## bundle for nginx
 
         aws s3 cp $S3_FILES/certs/$CERT_KEY 	$CERT_DIR/$CERT_KEY		## download cert private key
-        aws s3 cp $S3_FILES/certs/$CERT_BUNDLE	$CERT_DIR/$GIT_KEY	    ## download git private
         aws s3 cp $S3_FILES/certs/$CERT_BUNDLE	$CERT_DIR/$CERT_BUNDLE	## download bundle for nginx
+        aws s3 cp $S3_FILES/certs/$CERT_BUNDLE	$CERT_DIR/$GIT_KEY	    ## download git private
+        chmod 600 $CERT_DIR/$GIT_KEY	                                ## set permissions to git key
     EOF
 end
