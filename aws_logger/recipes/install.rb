@@ -13,7 +13,7 @@ Chef::Log.info("********** The instance's hostname is '#{instance_hostname}' ***
 
 default_aws_log = JSON.parse(JSON.generate(node['awslogs_conf_default']))
 
-if default_aws_log['log_stream_name'].empty?
+if default_aws_log['log_stream_name'].to_s.empty?
     default_aws_log['log_stream_name'] = instance_hostname
 end
 
