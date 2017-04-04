@@ -17,12 +17,50 @@
 # limitations under the License.
 #
 
-Chef::Log.info("nano_tune = #{node.default['my']['nano_tune']}")
+Chef::Log.info("nano_tune = #{node['my']['nano_tune']}")
 
-myhome="#{node.default['my']['home']}"
+myhome="#{node['my']['home']}"
+myuser="#{node['my']['user']}"
 
+
+{
+"#{myhome}/.selected_editor"    => myuser,
+"/root/.selected_editor"        => 'root'
+}.each do |key, value|
+    file_path = key
+    if File.exist?(file_path)
+        file_content = File.read(file_path)
+        unless file_content ~= /\/bin\/nano/
+            file_content += "SELECTED_EDITOR=/bin/nano"
+        end
+    else
+        file_content = "SELECTED_EDITOR=/bin/nano"
+    end
+    file file_path do
+        content file_content
+        user value
+    end
+end
+
+{ # 'string of file path':  'string of ruby code'
+'/usr/share/nano/sh.nanorc': 'file_content.gsub!(/(cat|cd|chmod|chown|cp|echo|env|export|grep|install|let|ln|make|mkdir|mv|rm|sed|set|tar|touch|umask|unset)/, "(apt-get|awk|cat|cd|chmod|chown|cp|cut|echo|env|export|grep|install|let|ln|make|mkdir|mv|rm|sed|set|tar|touch|umask|unset)")',
+'/usr/share/nano/xml.nanorc': 'file_content.gsub!(/color green/, "color brightgreen")'
+}.each do |file_path_cur,code_string|
+    file_path = file_path_cur.to_s # without to_s ---> TypeError: no implicit conversion of Symbol into String
+    Chef::Log.info("#{file_path} File.exist? = #{ File.exist?(file_path) }")
+
+    if File.exist?(file_path)
+        file_content = File.read(file_path)
+        
+        file file_path do
+            content eval code_string # eval code_string = run code in code_string
+        end
+    end
+end
+
+=begin
 bash 'nano_tune' do
-    only_if { node.default['my']['nano_tune'] }
+    only_if { node['my']['nano_tune'] }
     ignore_failure = true
     code <<-EOF
         sed -i 's|color green|color brightgreen|' /usr/share/nano/xml.nanorc
@@ -36,3 +74,4 @@ bash 'nano_tune' do
         fi
     EOF
 end
+=end

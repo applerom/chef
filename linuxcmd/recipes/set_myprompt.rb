@@ -34,6 +34,10 @@ bashrc_orig = File.read(bashrc)
     end
 end
 
+Chef::Log.info("node['my']['prompt'] = #{node['my']['prompt']}")
+Chef::Log.info("node['my']['nano_editor'] = #{node['my']['nano_editor']}")
+
+
 template bashrc do
     only_if { node['my']['prompt'] && node['my']['nano_editor'] }
     source "bashrc.erb"

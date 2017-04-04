@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-Chef::Log.info("my-log = #{node.default['my']['log']}")
+Chef::Log.info("my-log = #{node['my']['log']}")
 
 directory '/var/www' do
 end
@@ -28,7 +28,7 @@ mylinks=[
     "/usr/local/src",
     "/usr",
     "/var/log",
-    "/var/log/#{node.default['my']['log']}"
+    "/var/log/#{node['my']['log']}"
 ]
 =begin
 bash 'create-useful-links-for-dirs' do # Chef does not support symlinks for dirs → use bash code for that
@@ -47,7 +47,7 @@ mylinks.each do |mylink|
     mylinkname=mylink.scan(/\/([^\/]*)/).last.first
     Chef::Log.info("mylinkname = #{mylinkname}")
 
-    mylinkpath = node.default['my']['home'] + "/" + mylinkname
+    mylinkpath = node['my']['home'] + "/" + mylinkname
     link mylinkpath do
         to mylink
     end
