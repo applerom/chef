@@ -42,21 +42,17 @@ myuser="#{node['my']['user']}"
     end
 end
 
-{ # 'string of file path':  'string of ruby code'
-'/usr/share/nano/sh.nanorc': 'file_content.gsub!(/(cat|cd|chmod|chown|cp|echo|env|export|grep|install|let|ln|make|mkdir|mv|rm|sed|set|tar|touch|umask|unset)/, "(apt-get|awk|cat|cd|chmod|chown|cp|cut|echo|env|export|grep|install|let|ln|make|mkdir|mv|rm|sed|set|tar|touch|umask|unset)")',
-'/usr/share/nano/xml.nanorc': 'file_content.gsub!(/color green/, "color brightgreen")'
-}.each do |file_path_cur,code_string|
-    file_path = file_path_cur.to_s # without to_s ---> TypeError: no implicit conversion of Symbol into String
-    Chef::Log.info("#{file_path} File.exist? = #{ File.exist?(file_path) }")
+file_path = '/usr/share/nano/xml.nanorc'
+Chef::Log.info("#{file_path} File.exist? = #{ File.exist?(file_path) }")
 
-    if File.exist?(file_path)
-        file_content = File.read(file_path)
-        
-        file file_path do
-            content eval code_string # eval code_string = run code in code_string
-        end
+if File.exist?(file_path)
+    file_content = File.read(file_path)
+    
+    file file_path do
+        content file_content.gsub!(/color green/, "color brightgreen")
     end
 end
+
 
 =begin
 bash 'nano_tune' do
