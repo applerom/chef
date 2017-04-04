@@ -28,9 +28,8 @@ bashrc_orig = File.read(bashrc)
 "EDITOR=nano"   => "nano_editor"
 }.each do |key, value|
     if bashrc_orig =~ /#{key}/
-        Chef::Log.info("set #{key}")
-    else
         node.default['my'][value] = false
+        Chef::Log.info("set #{key} to false")
     end
 end
 
