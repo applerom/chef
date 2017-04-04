@@ -17,10 +17,10 @@
 # limitations under the License.
 #
 
-Chef::Log.info("replace_vim_with_nano = #{node.default['my']['replace_vim_with_nano']}")
+Chef::Log.info("replace_vim_with_nano = #{node['my']['replace_vim_with_nano']}")
 
 bash 'vim_nano' do
-    only_if { node.default['my']['replace_vim_with_nano'] }
+    only_if { node['my']['replace_vim_with_nano'] }
     ignore_failure = true
     code <<-EOF
         if [ -f /bin/vi_orig ] ; then # protect from repeated running

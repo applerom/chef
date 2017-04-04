@@ -21,6 +21,26 @@
 #Encoding.default_external = Encoding::UTF_8
 #ENV['LC_ALL'] = 'en_US.UTF-8'
 
+Chef::Log.info("node['platform_family'] = '#{node['platform_family']}'")
+Chef::Log.info("node['platform'] = '#{node['platform']}'")
+Chef::Log.info("node['platform_version'] = '#{node['platform_version']}'")
+
+myuser =
+    case node['platform']
+        when 'ubuntu'
+          'ubuntu'
+        when 'debian'
+          'admin'
+        when 'centos'
+          'centos'
+        when 'amazon'
+          'ec2-user'
+        else
+          'admin'
+    end
+myhome = "/home/#{myuser}"
+
+=begin
 myuser="admin"
 myhome="/home/admin"
 
@@ -30,8 +50,13 @@ node['etc']['passwd'].each do |user, data|
         myhome=data['dir']
     end
 end
+=end
+
 default['my']['user'] = myuser
 default['my']['home'] = myhome
+
+Chef::Log.info("default['my']['user'] = '#{myuser}'")
+Chef::Log.info("default['my']['home'] = '#{myhome}'")
 
 default['my']['cert_dir']       = "/root/certs"
 default['my']['s3_cert_dir']    = '' # s3://cert/dir
