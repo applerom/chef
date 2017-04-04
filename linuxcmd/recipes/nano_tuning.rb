@@ -30,7 +30,7 @@ myuser="#{node['my']['user']}"
     file_path = key
     if File.exist?(file_path)
         file_content = File.read(file_path)
-        unless file_content ~= /\/bin\/nano/
+        unless file_content ~= /SELECTED_EDITOR/
             file_content += "SELECTED_EDITOR=/bin/nano"
         end
     else
