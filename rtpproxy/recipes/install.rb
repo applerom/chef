@@ -19,21 +19,31 @@
 
 myhome = node['rtpproxy']['myhome']
 
-%w(gcc-c++ libevent-devel openssl-devel).each do |mypackage|
-    package mypackage do
-        action :install
-    end
+Chef::Log.info("node['rtpproxy']['git_repository']  = '#{node['rtpproxy']['git_repository']}'")
+Chef::Log.info("node['rtpproxy']['src_dir']         = '#{node['rtpproxy']['src_dir']}'")
+
+unless node['rtpproxy']['git_repository_ssh_key_path'].empty?
+    Chef::Log.info("node['rtpproxy']['git_repository_ssh_key_path'] = '#{node['rtpproxy']['git_repository_ssh_key_path']}'")
+    Chef::Log.info("node['rtpproxy']['git_ssh_wrapper'] = '#{node['rtpproxy']['git_ssh_wrapper']}'")
+    file node['rtpproxy']['git_ssh_wrapper_path'] do
+        content "#!/bin/sh\nexec /usr/bin/ssh -i #{node['rtpproxy']['git_repository_ssh_key_path']} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \"$@\""
+        user "root"
+        group "root"
+        mode "0700"
+    end   
 end
 
 git node['rtpproxy']['src_dir'] do
-    repository 'https://github.com/cortpproxy/cortpproxy.git'
+    repository  node['rtpproxy']['git_repository']
+    ssh_wrapper node['rtpproxy']['git_ssh_wrapper_path']
 end
 
 
-bash 'make cortpproxy' do
+bash 'make rtpproxy' do
     ignore_failure = true
     cwd node['rtpproxy']['src_dir']
     code <<-EOF
+        chmod +x configure # otherwise you can get: "bash: ./configure: Permission denied"
         ./configure
         make
         make install
@@ -41,13 +51,37 @@ bash 'make cortpproxy' do
     EOF
 end
 
-Chef::Log.info("node['rtpproxy']['user']            = '#{node['rtpproxy']['user']}'")
-Chef::Log.info("node['rtpproxy']['password']        = '#{node['rtpproxy']['password']}'")
-Chef::Log.info("node['rtpproxy']['realm']           = '#{node['rtpproxy']['realm']}'")
-Chef::Log.info("node['rtpproxy']['cert']            = '#{node['rtpproxy']['cert']}'")
-Chef::Log.info("node['rtpproxy']['cert_key'] (pkey) = '#{node['rtpproxy']['cert_key']}'")
+Chef::Log.info("node['rtpproxy']['user']                = '#{node['rtpproxy']['user']}'")
+Chef::Log.info("node['rtpproxy']['group']               = '#{node['rtpproxy']['group']}'")
+Chef::Log.info("node['rtpproxy']['min-port']            = '#{node['rtpproxy']['min-port']}'")
+Chef::Log.info("node['rtpproxy']['max-port']            = '#{node['rtpproxy']['max-port']}'")
+Chef::Log.info("node['rtpproxy']['control_sock']        = '#{node['rtpproxy']['control_sock']}'")
+Chef::Log.info("node['rtpproxy']['rttp_notify_socket']  = '#{node['rtpproxy']['rttp_notify_socket']}'")
+Chef::Log.info("node['rtpproxy']['listen_addr']         = '#{node['rtpproxy']['listen_addr']}'")
+Chef::Log.info("node['rtpproxy']['advertised_addr']     = '#{node['rtpproxy']['advertised_addr']}'")
+Chef::Log.info("node['rtpproxy']['extra_opts']          = '#{node['rtpproxy']['extra_opts']}'")
 
-template '/etc/rtpproxy.conf' do
+case node['platform_family']
+    when 'debian'
+        rtpproxy_initd = 'init.d-rtpproxy-deb.erb'
+        rtpproxy_conf = '/etc/default/rtpproxy'
+    when 'suse' ## ToDo
+        rtpproxy_initd = 'init.d-rtpproxy-rpm.erb'
+        rtpproxy_conf = '/etc/sysconfig/rtpproxy'
+    when 'freebsd' ## ToDo
+        rtpproxy_initd = 'init.d-rtpproxy-rpm.erb'
+        rtpproxy_conf = '/etc/sysconfig/rtpproxy'
+    when 'rhel'
+        rtpproxy_initd = 'init.d-rtpproxy-rpm.erb'
+        rtpproxy_conf = '/etc/sysconfig/rtpproxy'
+    else
+        rtpproxy_initd = 'init.d-rtpproxy-rpm.erb'
+        rtpproxy_conf = '/etc/sysconfig/rtpproxy'
+end
+Chef::Log.info("rtpproxy_initd = '#{rtpproxy_initd}'")
+Chef::Log.info("rtpproxy_conf = '#{rtpproxy_conf}'")
+
+template rtpproxy_conf do
     source 'rtpproxy.conf.erb'
     owner 'root'
     group 'root'
@@ -55,7 +89,7 @@ template '/etc/rtpproxy.conf' do
 end
 
 template '/etc/init.d/rtpproxy' do
-    source 'init.d-rtpproxy.erb'
+    source rtpproxy_initd
     owner 'root'
     group 'root'
     mode '0755'
@@ -66,12 +100,12 @@ if node['rtpproxy']['symlinks_in_home']
         to node['rtpproxy']['src_dir']
     end
     link myhome + "/rtpproxy-conf" do
-        to '/etc/rtpproxy.conf'
+        to rtpproxy_conf
     end
 end
 
 service 'rtpproxy' do
-    supports :start => true, :stop => true, :restart => true
+    supports :start => true, :stop => true, :restart => true, :status => true
     action [ :enable, :restart ]
 end
 

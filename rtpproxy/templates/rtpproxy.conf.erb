@@ -1,0 +1,20 @@
+# Defaults for rtpproxy
+USER=<%= node['rtpproxy']['user'] %>
+GROUP=<%= node['rtpproxy']['group'] %>
+
+# The control socket.
+CONTROL_SOCK=<%= node['rtpproxy']['control_sock'] %>
+RTTP_NOTIFY_SOCKET=<%= node['rtpproxy']['rttp_notify_socket'] %>
+LISTEN_ADDR=<%= node['rtpproxy']['listen_addr'] %>
+ADVERTISED_ADDR=<%= node['rtpproxy']['advertised_addr'] %>
+
+USED_PORTS="-m <%= node['rtpproxy']['min-port'] %> -M <%= node['rtpproxy']['max-port'] %>"
+
+NETWORK_SETTINGS="-l $LISTEN_ADDR/$LISTEN_ADDR"
+
+# Additional options that are passed to the daemon.
+##EXTRA_OPTS="$NETWORK_SETTINGS $USED_PORTS -d DBUG -F"
+EXTRA_OPTS="$NETWORK_SETTINGS $USED_PORTS -d INFO -F"
+
+DAEMON_OPTS="$EXTRA_OPTS -n $RTTP_NOTIFY_SOCKET -s $CONTROL_SOCK -u $USER:$GROUP -p $PIDFILE"
+OPTIONS=$DAEMON_OPTS

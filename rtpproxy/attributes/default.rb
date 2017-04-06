@@ -17,44 +17,61 @@
 # limitations under the License.
 #
 
-myhome = '/home/admin'
-node['etc']['passwd'].each do |user, data|
-    if data['dir'].start_with?("/home/")
-        myhome = data['dir']
+myuser =
+    case node['platform']
+        when 'ubuntu'
+          'ubuntu'
+        when 'debian'
+          'admin'
+        when 'centos'
+          'centos'
+        when 'amazon'
+          'ec2-user'
+        else
+          'admin'
     end
-end
+myhome = "/home/#{myuser}"
 default['rtpproxy']['myhome'] = myhome
+Chef::Log.info("node['platform'] = '#{node['platform']}'")
+Chef::Log.info("myhome = '#{myhome}'")
 
-# rtpproxy-server variables - enter your values here or use custom JSON
-default['rtpproxy']['src_dir']='/usr/local/src/rtpproxy'
+# rtpproxy variables - enter your values here or use custom JSON
+default['rtpproxy']['git_repository']               = 'https://github.com/sippy/rtpproxy'
+default['rtpproxy']['git_repository_ssh_key_path']  = '' # if you use ssh connect to private repo (chmod 600)
+default['rtpproxy']['git_ssh_wrapper_path']         = '/tmp/git_ssh_wrapper.sh'
+default['rtpproxy']['src_dir']          = '/usr/local/src/rtpproxy'
 
-default['rtpproxy']['cert']='cert_name_here.crt'
-default['rtpproxy']['cert_key']='cert_name_key_here.pem'
+default['rtpproxy']['user']             = 'root'
+default['rtpproxy']['group']            = 'root'
+default['rtpproxy']['min-port']         = '16384'
+default['rtpproxy']['max-port']         = '32768'
 
-default['rtpproxy']['min-port']='16384'
-default['rtpproxy']['max-port']='32768'
+default['rtpproxy']['control_sock']         = 'udp:`wget -T 10 -O- http://169.254.169.254/latest/meta-data/local-ipv4 2>/dev/null`:11111'
+default['rtpproxy']['rttp_notify_socket']   = 'tcp:10.100.1.85:9999'
+default['rtpproxy']['listen_addr']          = '`wget -T 10 -O- http://169.254.169.254/latest/meta-data/local-ipv4 2>/dev/null`'
+default['rtpproxy']['advertised_addr']      = '`wget -T 10 -O- http://169.254.169.254/latest/meta-data/public-ipv4 2>/dev/null`'
 
-default['rtpproxy']['user']='static_user'
-default['rtpproxy']['password']='static_password'
+default['rtpproxy']['extra_opts']       = ' -d INFO -F'
 
-default['rtpproxy']['realm']='my.domain'
 
-default['rtpproxy']['log']='/var/log/rtpproxy.log'
+default['rtpproxy']['log']              = '/var/log/rtpproxy.log'
 
-default['rtpproxy']['symlinks_in_home']=true
+default['rtpproxy']['symlinks_in_home'] = true
+
+
 
 =begin
 #Custom JSON to insert:
 {
-    "rtpproxy": {
-        "cert": "my.domain.here.and.may.by.bundle.of.intermediate.and.root.in.the.end.crt",
-        "cert_key": "my.domain.key.pem",
+    "turn": {
+        "cert": "/path/to/my.domain.and.may.by.bundle.of.intermediate.and.root.in.the.end.crt",
+        "cert_key": "/path/to/my.domain.key.pem",
         "min-port": "16384",
         "max-port": "32768",
         "user": "my_persistent_user_here",
         "password": "my_persistent_password_here",
         "realm": "my.domain",
-        "log": "/var/log/rtpproxy.log"
+        "log": "/var/log/turn.log"
     }
 }
 =end
