@@ -95,6 +95,16 @@ template '/etc/init.d/rtpproxy' do
     mode '0755'
 end
 
+file node['rtpproxy']['rsyslog'] do
+    content "local5.* #{node['rtpproxy']['log']}"
+    owner 'root'
+    group 'root'
+end
+
+service 'rsyslog' do
+    action [ :restart ]
+end
+
 if node['rtpproxy']['symlinks_in_home']
     link myhome + "/rtpproxy-src" do
         to node['rtpproxy']['src_dir']

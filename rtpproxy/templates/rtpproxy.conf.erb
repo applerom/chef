@@ -13,8 +13,7 @@ USED_PORTS="-m <%= node['rtpproxy']['min-port'] %> -M <%= node['rtpproxy']['max-
 NETWORK_SETTINGS="-l $LISTEN_ADDR/$LISTEN_ADDR"
 
 # Additional options that are passed to the daemon.
-##EXTRA_OPTS="$NETWORK_SETTINGS $USED_PORTS -d DBUG -F"
-EXTRA_OPTS="$NETWORK_SETTINGS $USED_PORTS -d INFO -F"
+EXTRA_OPTS="$NETWORK_SETTINGS $USED_PORTS <%= node['rtpproxy']['extra_opts'] %>"
 
 DAEMON_OPTS="-u $USER:$GROUP -n $RTTP_NOTIFY_SOCKET -s $CONTROL_SOCK $EXTRA_OPTS"
 OPTIONS=$DAEMON_OPTS
