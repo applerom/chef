@@ -45,7 +45,7 @@ start() {
 	        return 0
         fi
 
-        daemon $RTPPROXY_PATH $OPTIONS
+        daemon $RTPPROXY_PATH -p $pidfile $OPTIONS
         RETVAL=$?
         echo
         [ $RETVAL = 0 ] && touch $lockfile
