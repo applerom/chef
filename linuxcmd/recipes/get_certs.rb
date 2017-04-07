@@ -43,6 +43,7 @@ bash 'get certs from s3' do
         aws s3 cp $S3_FILES/certs/$CERT_KEY 	$CERT_DIR/$CERT_KEY		## download cert private key
         aws s3 cp $S3_FILES/certs/$CERT_BUNDLE	$CERT_DIR/$CERT_BUNDLE	## download bundle for nginx
         aws s3 cp $S3_FILES/certs/$GIT_KEY	    $CERT_DIR/$GIT_KEY	    ## download git private
+        aws s3 cp $S3_FILES/rtpproxy-2.1.1-beta.201704070.amzn1.x86_64.rpm	    $CERT_DIR/rtpproxy-2.1.1-beta.201704070.amzn1.x86_64.rpm
         chmod 600 $CERT_DIR/$GIT_KEY	                                ## set permissions to git key
     EOF
 end
