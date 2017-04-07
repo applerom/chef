@@ -19,38 +19,48 @@
 
 myhome = node['rtpproxy']['myhome']
 
-Chef::Log.info("node['rtpproxy']['git_repository']  = '#{node['rtpproxy']['git_repository']}'")
-Chef::Log.info("node['rtpproxy']['src_dir']         = '#{node['rtpproxy']['src_dir']}'")
+if node['rtpproxy']['package_path'].empty?
 
-unless node['rtpproxy']['git_repository_ssh_key_path'].empty?
-    Chef::Log.info("node['rtpproxy']['git_repository_ssh_key_path'] = '#{node['rtpproxy']['git_repository_ssh_key_path']}'")
-    Chef::Log.info("node['rtpproxy']['git_ssh_wrapper'] = '#{node['rtpproxy']['git_ssh_wrapper']}'")
-    file node['rtpproxy']['git_ssh_wrapper_path'] do
-        content "#!/bin/sh\nexec /usr/bin/ssh -i #{node['rtpproxy']['git_repository_ssh_key_path']} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \"$@\""
-        user "root"
-        group "root"
-        mode "0700"
-    end   
+    Chef::Log.info("node['rtpproxy']['git_repository']  = '#{node['rtpproxy']['git_repository']}'")
+    Chef::Log.info("node['rtpproxy']['src_dir']         = '#{node['rtpproxy']['src_dir']}'")
+
+    unless node['rtpproxy']['git_repository_ssh_key_path'].empty?
+        Chef::Log.info("node['rtpproxy']['git_repository_ssh_key_path'] = '#{node['rtpproxy']['git_repository_ssh_key_path']}'")
+        Chef::Log.info("node['rtpproxy']['git_ssh_wrapper'] = '#{node['rtpproxy']['git_ssh_wrapper']}'")
+        file node['rtpproxy']['git_ssh_wrapper_path'] do
+            content "#!/bin/sh\nexec /usr/bin/ssh -i #{node['rtpproxy']['git_repository_ssh_key_path']} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \"$@\""
+            user "root"
+            group "root"
+            mode "0700"
+        end   
+    end
+
+    git node['rtpproxy']['src_dir'] do
+        repository  node['rtpproxy']['git_repository']
+        ssh_wrapper node['rtpproxy']['git_ssh_wrapper_path']
+    end
+
+
+    bash 'make rtpproxy' do
+        ignore_failure = true
+        cwd node['rtpproxy']['src_dir']
+        code <<-EOF
+            chmod +x configure # otherwise you can get: "bash: ./configure: Permission denied"
+            ./configure
+            make
+            make install
+            ldconfig
+        EOF
+    end
+else
+    Chef::Log.info("install from rpm '#{node['rtpproxy']['package_path']}'")
+    
+    rpm_package "rtpproxy-2.1.1" do
+    source node['rtpproxy']['package_path']
+    action :install
+    end
+    
 end
-
-git node['rtpproxy']['src_dir'] do
-    repository  node['rtpproxy']['git_repository']
-    ssh_wrapper node['rtpproxy']['git_ssh_wrapper_path']
-end
-
-
-bash 'make rtpproxy' do
-    ignore_failure = true
-    cwd node['rtpproxy']['src_dir']
-    code <<-EOF
-        chmod +x configure # otherwise you can get: "bash: ./configure: Permission denied"
-        ./configure
-        make
-        make install
-        ldconfig
-    EOF
-end
-
 Chef::Log.info("node['rtpproxy']['user']                = '#{node['rtpproxy']['user']}'")
 Chef::Log.info("node['rtpproxy']['group']               = '#{node['rtpproxy']['group']}'")
 Chef::Log.info("node['rtpproxy']['min-port']            = '#{node['rtpproxy']['min-port']}'")
@@ -89,6 +99,7 @@ template rtpproxy_conf do
 end
 
 template '/etc/init.d/rtpproxy' do
+    only_if { node['rtpproxy']['package_path'].empty? }
     source rtpproxy_initd
     owner 'root'
     group 'root'
