@@ -19,6 +19,10 @@
 
 myhome = node['rtpproxy']['myhome']
 
+Chef::Log.info("create rtpproxy user")
+user 'rtpproxy' do
+end
+
 if node['rtpproxy']['package_path'].empty?
 
     Chef::Log.info("node['rtpproxy']['git_repository']  = '#{node['rtpproxy']['git_repository']}'")

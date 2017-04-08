@@ -52,7 +52,8 @@ default['rtpproxy']['rttp_notify_socket']   = 'tcp:10.100.1.85:9999'
 default['rtpproxy']['listen_addr']          = '`wget -T 10 -O- http://169.254.169.254/latest/meta-data/local-ipv4 2>/dev/null`'
 default['rtpproxy']['advertised_addr']      = '`wget -T 10 -O- http://169.254.169.254/latest/meta-data/public-ipv4 2>/dev/null`'
 
-default['rtpproxy']['extra_opts']       = ' -d INFO:LOG_LOCAL5 -F' # -d DBUG:LOG_LOCAL5 -F
+#default['rtpproxy']['extra_opts']       = ' -d INFO:LOG_LOCAL5 -F' # -d DBUG:LOG_LOCAL5 -F
+default['rtpproxy']['extra_opts']       = ' -d INFO:LOG_LOCAL5'
 
 default['rtpproxy']['rsyslog']          = '/etc/rsyslog.d/50-rtpproxy.conf'
 default['rtpproxy']['log']              = '/var/log/rtpproxy.log'
