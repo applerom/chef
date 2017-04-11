@@ -1,6 +1,6 @@
 # Defaults for rtpproxy
-USER=<%= node['rtpproxy']['user'] %>
-GROUP=<%= node['rtpproxy']['group'] %>
+##USER=<%= node['rtpproxy']['user'] %>
+##GROUP=<%= node['rtpproxy']['group'] %>
 
 # The control socket.
 CONTROL_SOCK=<%= node['rtpproxy']['control_sock'] %>
@@ -16,5 +16,6 @@ NETWORK_SETTINGS="-l $LISTEN_ADDR/$LISTEN_ADDR"
 EXTRA_OPTS="$NETWORK_SETTINGS $USED_PORTS <%= node['rtpproxy']['extra_opts'] %>"
 
 ##DAEMON_OPTS="-u $USER:$GROUP -n $RTTP_NOTIFY_SOCKET -s $CONTROL_SOCK $EXTRA_OPTS"
-DAEMON_OPTS="-u $USER -n $RTTP_NOTIFY_SOCKET -s $CONTROL_SOCK $EXTRA_OPTS"
+##DAEMON_OPTS="-u $USER -n $RTTP_NOTIFY_SOCKET -s $CONTROL_SOCK $EXTRA_OPTS"
+DAEMON_OPTS="-n $RTTP_NOTIFY_SOCKET -s $CONTROL_SOCK $EXTRA_OPTS"
 OPTIONS=$DAEMON_OPTS
