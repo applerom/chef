@@ -59,10 +59,11 @@ Chef::Log.info("default['my']['user'] = '#{myuser}'")
 Chef::Log.info("default['my']['home'] = '#{myhome}'")
 
 default['my']['cert_dir']       = "/root/certs"
-default['my']['s3_cert_dir']    = '' # s3://cert/dir
-default['my']['cert']           = '' # my_cert.crt
-default['my']['cert_key']       = '' # my_cert_key.pem
-default['my']['git_ssh_key']    = '' # my_git_ssh_rsa_key
+default['my']['s3_dir']         = '' # s3://some/dir
+default['my']['s3_file']['cert']        = '' # my_cert.crt
+default['my']['s3_file']['cert_key']    = '' # my_cert_key.pem
+default['my']['s3_file']['git_ssh_key'] = '' # my_git_ssh_rsa_key
+default['my']['s3_file']['rpm_deb']     = '' # compiled rpm or deb package
 
 =begin
 #Custom JSON to insert:
@@ -71,10 +72,14 @@ default['my']['git_ssh_key']    = '' # my_git_ssh_rsa_key
         "domain": "linux.cmd",
         "autoname": "linux.cmd",
         "prompt": true,
-        "s3_cert_dir": "s3://some/dir",
-        "cert": "some.domain.com.and.mb.bundle.of.intermediate.in.the.end.crt",
-        "cert_key": "some.domain.com.key.pem",
-        "git_ssh_key": "some_git_key_rsa",
+        "s3_dir": "s3://some/dir",
+        "s3_file":
+        {
+            "cert": "some.domain.com.and.mb.bundle.of.intermediate.in.the.end.crt",
+            "cert_key": "some.domain.com.key.pem",
+            "git_ssh_key": "some_git_key_rsa",
+            "rpm_deb": "some_rpm_or_deb"
+        },
         "cert_dir": "/root/certs"
     }
 }

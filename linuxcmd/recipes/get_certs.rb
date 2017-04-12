@@ -17,33 +17,36 @@
 # limitations under the License.
 #
 
-mycert="#{node['my']['cert']}"
-mycert_key="#{node['my']['cert_key']}"
-mygit_ssh_key="#{node['my']['git_ssh_key']}"
+mycert="#{node['my']['s3_file']['cert']}"
+mycert_key="#{node['my']['s3_file']['cert_key']}"
+mygit_ssh_key="#{node['my']['s3_file']['git_ssh_key']}"
+my_rpm_deb="#{node['my']['s3_file']['rpm_deb']}"
 mycert_dir="#{node['my']['cert_dir']}"
-mys3_files="#{node['my']['s3_cert_dir']}"
+mys3_dir="#{node['my']['s3_dir']}"
+mys3_file="#{node['my']['s3_file']}"
 
 Chef::Log.info("mycert = '#{mycert}'")
 Chef::Log.info("mycert_key = '#{mycert_key}'")
 Chef::Log.info("mygit_ssh_key = '#{mygit_ssh_key}'")
+Chef::Log.info("my_rpm_deb = '#{my_rpm_deb}'")
 Chef::Log.info("mycert_dir = '#{mycert_dir}'")
-Chef::Log.info("mys3_files = '#{mys3_files}'")
+Chef::Log.info("mys3_dir = '#{mys3_dir}'")
 
 bash 'get certs from s3' do
-    not_if { mys3_files.empty? }
+    not_if { mys3_file.to_s.empty? }
     ignore_failure = true
     code <<-EOF
-        S3_FILES=#{mys3_files}      ## S3 files directory
+        S3_DIR=#{mys3_dir}      ## S3 files directory
         CERT_DIR=#{mycert_dir}      ## local certs directory
 
         CERT_KEY=#{mycert_key}      ## private key for cert
         GIT_KEY=#{mygit_ssh_key}    ## private key for git ssh
         CERT_BUNDLE=#{mycert}       ## bundle for nginx
 
-        aws s3 cp $S3_FILES/certs/$CERT_KEY 	$CERT_DIR/$CERT_KEY		## download cert private key
-        aws s3 cp $S3_FILES/certs/$CERT_BUNDLE	$CERT_DIR/$CERT_BUNDLE	## download bundle for nginx
-        aws s3 cp $S3_FILES/certs/$GIT_KEY	    $CERT_DIR/$GIT_KEY	    ## download git private
-        aws s3 cp $S3_FILES/rtpproxy-2.1.amzn1.x86_64.rpm	    $CERT_DIR/rtpproxy-2.1.amzn1.x86_64.rpm
+        aws s3 cp $S3_DIR/certs/$CERT_KEY 	$CERT_DIR/$CERT_KEY		## download cert private key
+        aws s3 cp $S3_DIR/certs/$CERT_BUNDLE	$CERT_DIR/$CERT_BUNDLE	## download bundle for nginx
+        aws s3 cp $S3_DIR/certs/$GIT_KEY	    $CERT_DIR/$GIT_KEY	    ## download git private
+        aws s3 cp $S3_DIR/#{my_rpm_deb}	    $CERT_DIR/#{my_rpm_deb}
         chmod 600 $CERT_DIR/$GIT_KEY	                                ## set permissions to git key
     EOF
 end

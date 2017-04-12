@@ -19,9 +19,10 @@
 
 myhome = node['rtpproxy']['myhome']
 
+Chef::Log.info("node['platform'] = #{node['platform']}")
+Chef::Log.info("node['rtpproxy']['package_path'] = #{node['rtpproxy']['package_path']}")
 
-
-if node['rtpproxy']['package_path'].empty?
+if node['platform'] != 'amazon' or node['rtpproxy']['package_path'].empty?
 
     Chef::Log.info("create rtpproxy user")
     user 'rtpproxy' do
@@ -61,7 +62,7 @@ if node['rtpproxy']['package_path'].empty?
 else
     Chef::Log.info("install from rpm '#{node['rtpproxy']['package_path']}'")
     
-    rpm_package "rtpproxy-2.1.1" do
+    rpm_package "rtpp_2_1" do
     source node['rtpproxy']['package_path']
     action :install
     end
