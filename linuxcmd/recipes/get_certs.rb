@@ -32,6 +32,14 @@ Chef::Log.info("my_rpm_deb = '#{my_rpm_deb}'")
 Chef::Log.info("mycert_dir = '#{mycert_dir}'")
 Chef::Log.info("mys3_dir = '#{mys3_dir}'")
 
+mys3_file_test="#{node['my']['s3_file']['test']}"
+Chef::Log.info("mys3_file_test = #{mys3_file_test}")
+s3_file "/root/certs/#{mys3_file_test}" do
+	remote_path "/files/#{mys3_file_test}"
+	bucket "nist"
+end
+
+
 bash 'get certs from s3' do
     not_if { mys3_file.to_s.empty? }
     ignore_failure = true
