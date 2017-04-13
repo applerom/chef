@@ -16,12 +16,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-mys3_file_test="#{node['my']['s3_file']['test']}"
 Chef::Log.info("node['my']['s3_file'] = #{node['my']['s3_file']}")
 
-
-node['my']['s3_file'].each |s3_bucket, s3_bucket_files| do
-    s3_bucket_files.each |file_path, s3_path| do
+node['my']['s3_file'].each do |s3_bucket, s3_bucket_files|
+    s3_bucket_files.each do |file_path, s3_path|
         Chef::Log.info("file_path = #{file_path}")
         Chef::Log.info("s3_path = #{s3_path}")
         Chef::Log.info("s3_bucket = #{s3_bucket}")
