@@ -24,7 +24,8 @@ include_recipe 'linuxcmd::useful_packets'
 include_recipe 'linuxcmd::set_myprompt'
 include_recipe 'linuxcmd::useful_links'
 include_recipe 'linuxcmd::certs_dir'
-include_recipe 'linuxcmd::get_certs'
+##include_recipe 'linuxcmd::get_certs'  # bash version for certs only - example purposes
+include_recipe 'linuxcmd::get_files'    # version with 's3_file' recipe for any files
 include_recipe 'linuxcmd::nano_tuning'
 if node['my']['replace_vim_with_nano']
     include_recipe 'linuxcmd::vim_nano'
