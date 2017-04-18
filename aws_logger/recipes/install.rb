@@ -39,7 +39,24 @@ else
 end
 Chef::Log.info("*** awslogs_conf_data = '#{awslogs_conf_data}' ***")
 
-if platform?("amazon")
+unless platform?('amazon')
+    directory "/opt/aws/cloudwatch" do
+        recursive true
+    end
+end
+
+template node['aws_logger']['config_file'] do
+    source "awslogs.conf.erb"
+    variables({
+        :awslogs_conf_data => awslogs_conf_data,
+        :state_file => node['aws_logger']['state_file'],
+    })
+    owner "root"
+    group "root"
+    mode 0644
+end
+
+if platform?('amazon')
     package "awslogs" do
         retries 3
         retry_delay 5
@@ -50,10 +67,6 @@ if platform?("amazon")
         variables :region => cur_region
     end
 else
-    directory "/opt/aws/cloudwatch" do
-        recursive true
-    end
-
     remote_file "/opt/aws/cloudwatch/awslogs-agent-setup.py" do
         source "https://aws-cloudwatch.s3.amazonaws.com/downloads/latest/awslogs-agent-setup.py"
         mode 0700
@@ -67,19 +80,8 @@ else
 
     execute "Install CloudWatch Logs agent" do
         command "/opt/aws/cloudwatch/awslogs-agent-setup.py -n -r '#{cur_region}' -c '#{node['aws_logger']['config_file']}'"
-        not_if { File.exist?(node["aws_logger"]["state_file"]) }
+        not_if { File.exist?(node['aws_logger']['state_file']) }
     end
-end
-
-template node["aws_logger"]["config_file"] do
-    source "awslogs.conf.erb"
-    variables({
-        :awslogs_conf_data => awslogs_conf_data,
-        :state_file => node["aws_logger"]["state_file"],
-    })
-    owner "root"
-    group "root"
-    mode 0644
 end
 
 service "awslogs" do
