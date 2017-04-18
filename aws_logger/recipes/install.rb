@@ -39,18 +39,6 @@ else
 end
 Chef::Log.info("*** awslogs_conf_data = '#{awslogs_conf_data}' ***")
 
-
-template node["aws_logger"]["config_file"] do
-    source "awslogs.conf.erb"
-    variables({
-        :awslogs_conf_data => awslogs_conf_data,
-        :state_file => node["aws_logger"]["state_file"],
-    })
-    owner "root"
-    group "root"
-    mode 0644
-end
-
 if platform?("amazon")
     package "awslogs" do
         retries 3
@@ -81,6 +69,17 @@ else
         command "/opt/aws/cloudwatch/awslogs-agent-setup.py -n -r '#{cur_region}' -c '#{node['aws_logger']['config_file']}'"
         not_if { File.exist?(node["aws_logger"]["state_file"]) }
     end
+end
+
+template node["aws_logger"]["config_file"] do
+    source "awslogs.conf.erb"
+    variables({
+        :awslogs_conf_data => awslogs_conf_data,
+        :state_file => node["aws_logger"]["state_file"],
+    })
+    owner "root"
+    group "root"
+    mode 0644
 end
 
 service "awslogs" do

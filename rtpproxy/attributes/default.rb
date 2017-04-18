@@ -42,8 +42,8 @@ default['rtpproxy']['git_repository_ssh_key_path']  = '' # if you use ssh connec
 default['rtpproxy']['git_ssh_wrapper_path']         = '/tmp/git_ssh_wrapper.sh'
 default['rtpproxy']['src_dir']          = '/usr/local/src/rtpproxy'
 
-default['rtpproxy']['user']             = 'root'
-default['rtpproxy']['group']            = 'root'
+default['rtpproxy']['user']             = 'rtpproxy'
+default['rtpproxy']['group']            = 'rtpproxy'
 default['rtpproxy']['min-port']         = '16384'
 default['rtpproxy']['max-port']         = '32768'
 

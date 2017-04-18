@@ -1,0 +1,28 @@
+#!/bin/sh
+
+# Add the following lines to /etc/rc.conf to enable RTPproxy:
+#
+# opensips_enable="YES"
+
+# PROVIDE: opensips
+# REQUIRE: DAEMON
+# BEFORE: ser openser
+
+prefix=%%PREFIX%%
+
+. %%RC_SUBR%%
+
+name=opensips
+rcvar=`set_rcvar`
+
+command="${prefix}/bin/opensips"
+pidfile="/var/run/opensips.pid"
+
+load_rc_config ${name}
+
+opensips_enable=${opensips_enable:-"NO"}
+opensips_laddr=${opensips_laddr:-"0.0.0.0"}
+
+command_args="-l ${opensips_laddr} -p /var/run/opensips.pid"
+
+run_rc_command "${1}"
