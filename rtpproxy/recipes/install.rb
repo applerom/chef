@@ -22,6 +22,25 @@ myhome = node['rtpproxy']['myhome']
 Chef::Log.info("node['platform'] = #{node['platform']}")
 Chef::Log.info("node['rtpproxy']['package_path'] = #{node['rtpproxy']['package_path']}")
 
+myopenssl =
+    case node['platform']
+        when 'ubuntu'
+          'libssl-dev'
+        when 'debian'
+          'libssl-dev'
+        when 'centos'
+          'openssl-devel'
+        when 'amazon'
+          'openssl-devel'
+        else
+          'openssl-devel'
+    end
+Chef::Log.info("myopenssl = #{myopenssl}")
+
+package myopenssl do
+    action :install
+end
+
 if node['platform'] != 'amazon' or node['rtpproxy']['package_path'].empty?
 
     Chef::Log.info("create rtpproxy user")
@@ -46,7 +65,6 @@ if node['platform'] != 'amazon' or node['rtpproxy']['package_path'].empty?
         repository  node['rtpproxy']['git_repository']
         ssh_wrapper node['rtpproxy']['git_ssh_wrapper_path']
     end
-
 
     bash 'make rtpproxy' do
         ignore_failure = true
