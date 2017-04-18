@@ -1,4 +1,4 @@
-my_site = File.read('/etc/hosts').gsub(/^127.0.0.1(.*)/, "\\1").strip[0]
+my_site = File.read('/etc/hosts').gsub(/^127.0.0.1(.*)/, "\\1").split[0]
 Chef::Log.info("*** my_site = '#{my_site}' ***")
 
 default_aws_log = node['awslogs_conf_default']
