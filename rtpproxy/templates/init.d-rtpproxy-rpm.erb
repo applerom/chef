@@ -21,7 +21,7 @@
 # Source function library.
 . /etc/rc.d/init.d/functions
 
-prog=rtpproxy
+prog=rtpproxy # use $prog as user
 RTPPROXY_PATH=/usr/local/bin/$prog
 
 # set User and Group in /etc/sysconfig/$prog
@@ -45,7 +45,7 @@ start() {
 	        return 0
         fi
 
-        daemon $RTPPROXY_PATH -p $pidfile $OPTIONS
+        daemon $RTPPROXY_PATH -u $prog -p $pidfile $OPTIONS
         RETVAL=$?
         echo
         [ $RETVAL = 0 ] && touch $lockfile
