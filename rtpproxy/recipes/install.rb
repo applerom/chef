@@ -41,6 +41,25 @@ package myopenssl do
     action :install
 end
 
+mylibevent =
+    case node['platform']
+        when 'ubuntu'
+          'libevent-dev'
+        when 'debian'
+          'libevent-dev'
+        when 'centos'
+          'libevent-devel'
+        when 'amazon'
+          'libevent-devel'
+        else
+          'libevent-devel'
+    end
+Chef::Log.info("mylibevent = #{mylibevent}")
+
+package mylibevent do
+    action :install
+end
+
 if node['platform'] != 'amazon' or node['rtpproxy']['package_path'].empty?
 
     Chef::Log.info("create rtpproxy user")
