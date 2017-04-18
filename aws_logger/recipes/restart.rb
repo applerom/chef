@@ -1,4 +1,4 @@
-my_site = File.read('/etc/hosts').match(/^127\.0\.0\.1.*/).split[0]
+my_site = File.read('/etc/hosts').match(/^127\.0\.0\.1.*/)[0]
 Chef::Log.info("*** my_site = '#{my_site}' ***")
 
 my_site_s = File.read('/etc/hosts').match(/^127\.0\.0\.1.*/)
