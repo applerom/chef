@@ -19,13 +19,22 @@
 Chef::Log.info("node['my']['s3_file'] = #{node['my']['s3_file']}")
 
 node['my']['s3_file'].each do |s3_bucket, s3_bucket_files|
-    s3_bucket_files.each do |file_path, s3_path|
+    s3_bucket_files.each do |s3_path, file_path|
         Chef::Log.info("file_path = #{file_path}")
         Chef::Log.info("s3_path = #{s3_path}")
         Chef::Log.info("s3_bucket = #{s3_bucket}")
-        s3_file file_path do
+        cur_file = file_path
+        cur_mode = "0644"
+        if file_path.kind_of?(Array)
+            Chef::Log.info("file_path[0] = #{file_path[0]}")
+            Chef::Log.info("file_path[1] = #{file_path[1]}")
+            cur_file = file_path[0]
+            cur_mode = file_path[1]
+        end
+        s3_file cur_file do
             remote_path s3_path
             bucket s3_bucket
+            mode cur_mode
         end
     end
 end
