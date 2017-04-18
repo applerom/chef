@@ -19,7 +19,37 @@
 
 myhome = node['turn']['myhome']
 
-%w(gcc-c++ libevent-devel openssl-devel).each do |mypackage|
+myopenssl =
+    case node['platform']
+        when 'ubuntu'
+          'libssl-dev'
+        when 'debian'
+          'libssl-dev'
+        when 'centos'
+          'openssl-devel'
+        when 'amazon'
+          'openssl-devel'
+        else
+          'openssl-devel'
+    end
+Chef::Log.info("myopenssl = #{myopenssl}")
+
+mylibevent =
+    case node['platform']
+        when 'ubuntu'
+          'libevent-dev'
+        when 'debian'
+          'libevent-dev'
+        when 'centos'
+          'libevent-devel'
+        when 'amazon'
+          'libevent-devel'
+        else
+          'libevent-devel'
+    end
+Chef::Log.info("mylibevent = #{mylibevent}")
+
+%w(gcc-c++ myopenssl mylibevent).each do |mypackage|
     package mypackage do
         action :install
     end

@@ -38,6 +38,7 @@ Chef::Log.info("myhome = '#{myhome}'")
 # rtpproxy variables - enter your values here or use custom JSON
 default['rtpproxy']['package_path']                 = '' # if install from package - local path here
 default['rtpproxy']['git_repository']               = 'https://github.com/sippy/rtpproxy'
+default['rtpproxy']['branch_name']                  = 'rtpp_2_1' # or to ex. master
 default['rtpproxy']['git_repository_ssh_key_path']  = '' # if you use ssh connect to private repo (chmod 600)
 default['rtpproxy']['git_ssh_wrapper_path']         = '/tmp/git_ssh_wrapper.sh'
 default['rtpproxy']['src_dir']          = '/usr/local/src/rtpproxy'
