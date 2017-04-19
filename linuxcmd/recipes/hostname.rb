@@ -47,6 +47,9 @@ else
 end
 Chef::Log.info("*** my_site = '#{my_site}'")
 
+node.run_state['current_hostname'] = my_site
+Chef::Log.info("********** node.run_state['current_hostname'] (hostname) = '#{node.run_state['current_hostname']}' **********")
+
 bash 'set hostname for current process' do
     ignore_failure = true
     code <<-EOF

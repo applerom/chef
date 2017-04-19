@@ -2,6 +2,7 @@ directory node["aws_logger"]["home_dir"] do
     recursive true
 end
 
+Chef::Log.info("********** node.run_state['current_hostname'] (0) = '#{node.run_state['current_hostname']}' **********")
 ruby_block 'node.run_state' do
     block do
         file_path = '/root/current_hostname'
