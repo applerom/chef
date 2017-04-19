@@ -51,8 +51,11 @@ bash 'set hostname for current process' do
     ignore_failure = true
     code <<-EOF
         sudo hostname "#{my_site}"
-        echo "#{my_site}" > '/root/current_hostname'
     EOF
+end
+# save hostname for other recepies
+file '/root/current_hostname' do
+    content my_site
 end
 
 # 'string of file path':  'string of ruby code'
