@@ -24,9 +24,13 @@ syslog =
     end
 current_syslog = "/var/log/#{syslog}"
 
-file_path = '/root/current_hostname'
-if File.exist?(file_path)
-    current_hostname = File.read(file_path).strip ## strip is here for remove \n
+if node.run_state['current_hostname'].to_s.empty?
+    file_path = '/root/current_hostname'
+    if File.exist?(file_path)
+        current_hostname = File.read(file_path).strip ## strip is here for remove \n
+    end
+else
+    current_hostname = node.run_state['current_hostname']
 end
 
 default['awslogs_conf_default']['datetime_format'] = "%b %d %H:%M:%S"
