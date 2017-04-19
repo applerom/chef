@@ -1,5 +1,12 @@
 ## use part of 'install.rb' code!
 
+file_path = '/root/current_hostname'
+if File.exist?(file_path)
+    current_hostname = File.read(file_path).strip ## strip is here for remove \n
+    Chef::Log.info("********** get current_hostname from '#{file_path}' = '#{current_hostname}' **********")
+end
+node.default['awslogs_conf_default']['log_stream_name'] = current_hostname
+
 stack = search("aws_opsworks_stack").first
 cur_region = stack['region']
 stack_name = stack['name']

@@ -2,7 +2,17 @@ directory node["aws_logger"]["home_dir"] do
     recursive true
 end
 
-Chef::Log.info("********** node.run_state['current_hostname'] (install-awslogger) = '#{node.run_state['current_hostname']}' **********")
+if node.run_state['current_hostname'].to_s.empty?
+    file_path = '/root/current_hostname'
+    if File.exist?(file_path)
+        current_hostname = File.read(file_path).strip ## strip is here for remove \n
+        Chef::Log.info("********** get current_hostname from '#{file_path}' = '#{current_hostname}' **********")
+    end
+else
+    current_hostname = node.run_state['current_hostname']
+    Chef::Log.info("********** current_hostname = node.run_state['current_hostname'] = '#{current_hostname}' **********")
+end
+node.default['awslogs_conf_default']['log_stream_name'] = current_hostname
 
 stack = search("aws_opsworks_stack").first
 cur_region = stack['region']
