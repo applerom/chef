@@ -24,6 +24,7 @@ syslog =
     end
 current_syslog = "/var/log/#{syslog}"
 
+Chef::Log.info("********** node.run_state['current_hostname'] (def-attr-awslogger) = '#{node.run_state['current_hostname']}' **********")
 if node.run_state['current_hostname'].to_s.empty?
     file_path = '/root/current_hostname'
     if File.exist?(file_path)

@@ -2,6 +2,8 @@ directory node["aws_logger"]["home_dir"] do
     recursive true
 end
 
+Chef::Log.info("********** node.run_state['current_hostname'] (install-awslogger) = '#{node.run_state['current_hostname']}' **********")
+
 stack = search("aws_opsworks_stack").first
 cur_region = stack['region']
 stack_name = stack['name']
