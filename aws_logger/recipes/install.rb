@@ -10,7 +10,7 @@ if node.run_state['current_hostname'].to_s.empty?
     end
 else
     current_hostname = node.run_state['current_hostname']
-    Chef::Log.info("********** current_hostname = node.run_state['current_hostname'] = '#{current_hostname}' **********")
+    Chef::Log.info("********** get current_hostname from node.run_state['current_hostname'] = '#{current_hostname}' **********")
 end
 node.default['awslogs_conf_default']['log_stream_name'] = current_hostname
 
