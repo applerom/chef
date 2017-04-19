@@ -28,9 +28,11 @@ if node.run_state['current_hostname'].to_s.empty?
     file_path = '/root/current_hostname'
     if File.exist?(file_path)
         current_hostname = File.read(file_path).strip ## strip is here for remove \n
+        Chef::Log.info("********** get current_hostname from '#{file_path}' = '#{current_hostname}' **********")
     end
 else
     current_hostname = node.run_state['current_hostname']
+    Chef::Log.info("********** current_hostname = node.run_state['current_hostname'] = '#{current_hostname}' **********")
 end
 
 default['awslogs_conf_default']['datetime_format'] = "%b %d %H:%M:%S"
