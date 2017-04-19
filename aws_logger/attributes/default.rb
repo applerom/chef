@@ -26,7 +26,7 @@ current_syslog = "/var/log/#{syslog}"
 
 file_path = '/root/current_hostname'
 if File.exist?(file_path)
-    current_hostname = File.read(file_path)
+    current_hostname = File.read(file_path).strip
 end
 
 default['awslogs_conf_default']['datetime_format'] = "%b %d %H:%M:%S"
