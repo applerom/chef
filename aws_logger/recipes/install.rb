@@ -2,6 +2,19 @@ directory node["aws_logger"]["home_dir"] do
     recursive true
 end
 
+ruby_block 'node.run_state' do
+    block do
+        file_path = '/root/current_hostname'
+        if File.exist?(file_path)
+            node.run_state['current_hostname'] = File.read(file_path).strip ## strip is here for remove \n
+            Chef::Log.info("********** node.run_state['current_hostname'] = '#{node.run_state['current_hostname']}' **********")
+        else
+            node.run_state['current_hostname'] = ''
+            Chef::Log.info("********** node.run_state['current_hostname'] = ''")
+        end
+    end
+end
+
 stack = search("aws_opsworks_stack").first
 cur_region = stack['region']
 stack_name = stack['name']
