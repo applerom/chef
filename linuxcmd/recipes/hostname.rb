@@ -50,7 +50,7 @@ Chef::Log.info("*** my_site = '#{my_site}'")
 bash 'set hostname for current process' do
     ignore_failure = true
     code <<-EOF
-        sudo hostname "#{my_site}"
+        hostname '#{my_site}'
     EOF
 end
 # save hostname for other recepies
