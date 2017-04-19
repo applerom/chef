@@ -33,5 +33,6 @@ end
 include_recipe 'linuxcmd::internal_mcedit'
 include_recipe 'linuxcmd::false_shells'
 include_recipe 'linuxcmd::custom_script'
+include_recipe 'linuxcmd::hostname'
 include_recipe 'linuxcmd::finish_actions'
 
