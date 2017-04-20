@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-%w(mc ftp bzip2 zip nano lynx wget curl telnet git).each do |mypackage|
+%w(mc ftp bzip2 zip nano lynx wget curl telnet git lsof).each do |mypackage|
     package mypackage do
         action :install
     end
