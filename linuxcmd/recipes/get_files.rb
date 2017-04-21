@@ -30,7 +30,7 @@ node['my']['s3_file'].each do |s3_bucket, s3_bucket_files|
             %w(cur_file cur_mode cur_owner cur_group).each_with_index do |x,i|
                 Chef::Log.info("#{x} = file_path[#{i}] = #{file_path[i]}")
                 unless file_path[i].to_s.empty?
-                    eval x = file_path[i]
+                    eval "#{x} = file_path[i]"
                 end
             end
         else
