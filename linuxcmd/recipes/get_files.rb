@@ -23,6 +23,7 @@ node['my']['s3_file'].each do |s3_bucket, s3_bucket_files|
         Chef::Log.info("file_path = #{file_path}")
         Chef::Log.info("s3_path = #{s3_path}")
         Chef::Log.info("s3_bucket = #{s3_bucket}")
+        cur_file = ""
         cur_mode = "0644"
         cur_owner = "root"
         cur_group = "root"
