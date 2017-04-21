@@ -61,15 +61,6 @@ if node['rtpproxy']['package_path'].empty?
         EOF
     end
     
-    if node['rtpproxy']['symlinks_in_home']
-        link myhome + "/rtpproxy-src" do
-            to node['rtpproxy']['src_dir']
-        end
-        link myhome + "/rtpproxy-conf" do
-            to rtpproxy_conf
-        end
-    end
-
 else
     Chef::Log.info("install from rpm '#{node['rtpproxy']['package_path']}'")
     
@@ -128,6 +119,15 @@ file node['rtpproxy']['rsyslog'] do
     content "local5.* #{node['rtpproxy']['log']}"
     owner 'root'
     group 'root'
+end
+
+if node['rtpproxy']['symlinks_in_home'] && node['rtpproxy']['package_path'].empty?
+    link myhome + "/rtpproxy-src" do
+        to node['rtpproxy']['src_dir']
+    end
+    link myhome + "/rtpproxy-conf" do
+        to rtpproxy_conf
+    end
 end
 
 service 'rsyslog' do

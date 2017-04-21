@@ -57,15 +57,6 @@ if node['opensips']['package_path'].empty?
             ldconfig
         EOF
     end
-    
-    if node['opensips']['symlinks_in_home']
-        link myhome + "/opensips-src" do
-            to node['opensips']['src_dir']
-        end
-        link myhome + "/opensips-conf" do
-            to opensips_conf
-        end
-    end
 
 else
     Chef::Log.info("install from rpm '#{node['opensips']['package_path']}'")
@@ -122,6 +113,16 @@ file node['opensips']['rsyslog'] do
     content "local5.* #{node['opensips']['log']}"
     owner 'root'
     group 'root'
+end
+
+    
+if node['opensips']['symlinks_in_home'] && node['opensips']['package_path'].empty?
+    link myhome + "/opensips-src" do
+        to node['opensips']['src_dir']
+    end
+    link myhome + "/opensips-conf" do
+        to opensips_conf
+    end
 end
 
 service 'rsyslog' do
