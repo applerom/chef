@@ -41,6 +41,7 @@ default['rtpproxy']['git_repository']               = 'https://github.com/sippy/
 default['rtpproxy']['branch_name']                  = 'rtpp_2_1' # or to ex. master
 default['rtpproxy']['git_repository_ssh_key_path']  = '' # if you use ssh connect to private repo (chmod 600)
 default['rtpproxy']['git_ssh_wrapper_path']         = '/tmp/git_ssh_wrapper.sh'
+
 default['rtpproxy']['src_dir']          = '/usr/local/src/rtpproxy'
 
 default['rtpproxy']['user']             = 'rtpproxy'
@@ -66,7 +67,7 @@ default['rtpproxy']['symlinks_in_home'] = true
 =begin
 #Custom JSON to insert:
 {
-    "turn": {
+    "rtpproxy": {
         "cert": "/path/to/my.domain.and.may.by.bundle.of.intermediate.and.root.in.the.end.crt",
         "cert_key": "/path/to/my.domain.key.pem",
         "min-port": "16384",
@@ -74,7 +75,7 @@ default['rtpproxy']['symlinks_in_home'] = true
         "user": "my_persistent_user_here",
         "password": "my_persistent_password_here",
         "realm": "my.domain",
-        "log": "/var/log/turn.log"
+        "log": "/var/log/rtpproxy.log"
     }
 }
 =end

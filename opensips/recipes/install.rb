@@ -22,7 +22,7 @@ myhome = node['opensips']['myhome']
 Chef::Log.info("node['platform'] = #{node['platform']}")
 Chef::Log.info("node['opensips']['package_path'] = #{node['opensips']['package_path']}")
 
-if node['platform'] != 'amazon' or node['opensips']['package_path'].empty?
+if node['opensips']['package_path'].empty?
 
     Chef::Log.info("create opensips user")
     user 'opensips' do
@@ -45,24 +45,32 @@ if node['platform'] != 'amazon' or node['opensips']['package_path'].empty?
     git node['opensips']['src_dir'] do
         repository  node['opensips']['git_repository']
         ssh_wrapper node['opensips']['git_ssh_wrapper_path']
+        revision node['opensips']['branch_name']
     end
-
 
     bash 'make opensips' do
         ignore_failure = true
         cwd node['opensips']['src_dir']
         code <<-EOF
-            chmod +x configure # otherwise you can get: "bash: ./configure: Permission denied"
-            ./configure
-            make
+            make all
             make install
             ldconfig
         EOF
     end
+    
+    if node['opensips']['symlinks_in_home']
+        link myhome + "/opensips-src" do
+            to node['opensips']['src_dir']
+        end
+        link myhome + "/opensips-conf" do
+            to opensips_conf
+        end
+    end
+
 else
     Chef::Log.info("install from rpm '#{node['opensips']['package_path']}'")
     
-    rpm_package "rtpp_2_1" do
+    rpm_package "install from RPM-file" do
     source node['opensips']['package_path']
     action :install
     end
@@ -80,26 +88,23 @@ Chef::Log.info("node['opensips']['extra_opts']          = '#{node['opensips']['e
 
 case node['platform_family']
     when 'debian'
-        opensips_initd = 'init.d-opensips-deb.erb'
+        opensips_initd = 'init.d-deb.erb'
         opensips_conf = '/etc/default/opensips'
     when 'suse' ## ToDo
-        opensips_initd = 'init.d-opensips-rpm.erb'
-        opensips_conf = '/etc/sysconfig/opensips'
-    when 'freebsd' ## ToDo
-        opensips_initd = 'init.d-opensips-rpm.erb'
+        opensips_initd = 'init.d-rpm.erb'
         opensips_conf = '/etc/sysconfig/opensips'
     when 'rhel'
-        opensips_initd = 'init.d-opensips-rpm.erb'
+        opensips_initd = 'init.d-rpm.erb'
         opensips_conf = '/etc/sysconfig/opensips'
     else
-        opensips_initd = 'init.d-opensips-rpm.erb'
+        opensips_initd = 'init.d-rpm.erb'
         opensips_conf = '/etc/sysconfig/opensips'
 end
 Chef::Log.info("opensips_initd = '#{opensips_initd}'")
 Chef::Log.info("opensips_conf = '#{opensips_conf}'")
 
 template opensips_conf do
-    source 'opensips.conf.erb'
+    source 'default.conf.erb'
     owner 'root'
     group 'root'
     mode '0755'
@@ -121,15 +126,6 @@ end
 
 service 'rsyslog' do
     action [ :restart ]
-end
-
-if node['opensips']['symlinks_in_home']
-    link myhome + "/opensips-src" do
-        to node['opensips']['src_dir']
-    end
-    link myhome + "/opensips-conf" do
-        to opensips_conf
-    end
 end
 
 service 'opensips' do

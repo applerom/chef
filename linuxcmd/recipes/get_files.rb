@@ -25,16 +25,22 @@ node['my']['s3_file'].each do |s3_bucket, s3_bucket_files|
         Chef::Log.info("s3_bucket = #{s3_bucket}")
         cur_file = file_path
         cur_mode = "0644"
+        cur_owner = "root"
+        cur_group = "root"
         if file_path.kind_of?(Array)
-            Chef::Log.info("file_path[0] = #{file_path[0]}")
-            Chef::Log.info("file_path[1] = #{file_path[1]}")
-            cur_file = file_path[0]
-            cur_mode = file_path[1]
+            %w(cur_file cur_mode cur_owner cur_group).each_with_index do |x,i|
+                Chef::Log.info("file_path[#{i}] = #{file_path[i]}")
+                unless file_path[i].to_s.empty?
+                    x = file_path[i]
+                end
+            end
         end
         s3_file cur_file do
             remote_path s3_path
             bucket s3_bucket
             mode cur_mode
+            owner cur_owner
+            group cur_group
         end
     end
 end

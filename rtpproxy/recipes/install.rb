@@ -60,6 +60,16 @@ if node['rtpproxy']['package_path'].empty?
             ldconfig
         EOF
     end
+    
+    if node['rtpproxy']['symlinks_in_home']
+        link myhome + "/rtpproxy-src" do
+            to node['rtpproxy']['src_dir']
+        end
+        link myhome + "/rtpproxy-conf" do
+            to rtpproxy_conf
+        end
+    end
+
 else
     Chef::Log.info("install from rpm '#{node['rtpproxy']['package_path']}'")
     
@@ -87,7 +97,7 @@ case node['platform_family']
         rtpproxy_initd = 'init.d-rtpproxy-rpm.erb'
         rtpproxy_conf = '/etc/sysconfig/rtpproxy'
     when 'freebsd' ## ToDo
-        rtpproxy_initd = 'init.d-rtpproxy-rpm.erb'
+        rtpproxy_initd = 'init.d-rtpproxy-freebsd.erb'
         rtpproxy_conf = '/etc/sysconfig/rtpproxy'
     when 'rhel'
         rtpproxy_initd = 'init.d-rtpproxy-rpm.erb'
@@ -122,15 +132,6 @@ end
 
 service 'rsyslog' do
     action [ :restart ]
-end
-
-if node['rtpproxy']['symlinks_in_home']
-    link myhome + "/rtpproxy-src" do
-        to node['rtpproxy']['src_dir']
-    end
-    link myhome + "/rtpproxy-conf" do
-        to rtpproxy_conf
-    end
 end
 
 service 'rtpproxy' do

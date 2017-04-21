@@ -38,8 +38,10 @@ Chef::Log.info("myhome = '#{myhome}'")
 # opensips variables - enter your values here or use custom JSON
 default['opensips']['package_path']                 = '' # if install from package - local path here
 default['opensips']['git_repository']               = 'https://github.com/sippy/opensips'
+default['opensips']['branch_name']                  = 'rtpp_2_1' # or to ex. master
 default['opensips']['git_repository_ssh_key_path']  = '' # if you use ssh connect to private repo (chmod 600)
 default['opensips']['git_ssh_wrapper_path']         = '/tmp/git_ssh_wrapper.sh'
+
 default['opensips']['src_dir']          = '/usr/local/src/opensips'
 
 default['opensips']['user']             = 'opensips'
@@ -65,7 +67,7 @@ default['opensips']['symlinks_in_home'] = true
 =begin
 #Custom JSON to insert:
 {
-    "turn": {
+    "opensips": {
         "cert": "/path/to/my.domain.and.may.by.bundle.of.intermediate.and.root.in.the.end.crt",
         "cert_key": "/path/to/my.domain.key.pem",
         "min-port": "16384",
@@ -73,7 +75,7 @@ default['opensips']['symlinks_in_home'] = true
         "user": "my_persistent_user_here",
         "password": "my_persistent_password_here",
         "realm": "my.domain",
-        "log": "/var/log/turn.log"
+        "log": "/var/log/opensips.log"
     }
 }
 =end
