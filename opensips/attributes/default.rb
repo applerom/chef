@@ -37,8 +37,8 @@ Chef::Log.info("myhome = '#{myhome}'")
 
 # opensips variables - enter your values here or use custom JSON
 default['opensips']['package_path']                 = '' # if install from package - local path here
-default['opensips']['git_repository']               = 'https://github.com/sippy/opensips'
-default['opensips']['branch_name']                  = 'rtpp_2_1' # or to ex. master
+default['opensips']['git_repository']               = 'https://github.com/OpenSIPS/opensips'
+default['opensips']['branch_name']                  = '2.2' # or to ex. master
 default['opensips']['git_repository_ssh_key_path']  = '' # if you use ssh connect to private repo (chmod 600)
 default['opensips']['git_ssh_wrapper_path']         = '/tmp/git_ssh_wrapper.sh'
 
