@@ -109,16 +109,21 @@ template '/etc/init.d/opensips' do
     mode '0755'
 end
 
-remote_file '/usr/local/etc/opensips/opensips.cfg' do
-    source '/root/opensips.cfg'
-    owner 'opensips'
-    group 'opensips'
-end
-
-remote_file '/usr/local/etc/opensips/opensipsctlrc' do
-    source '/root/opensipsctlrc'
-    owner 'opensips'
-    group 'opensips'
+{
+'/root/opensips.cfg'    => '/usr/local/etc/opensips/opensips.cfg',
+'/root/opensipsctlrc'   => '/usr/local/etc/opensips/opensipsctlrc'
+}.each do |file_path, to_path|
+    if File.exist?(file_path)
+        Chef::Log.info("*** read file = '#{file_path}'")
+        file_content = File.read(file_path)
+        file to_path do
+            content file_content
+            owner "opensips"
+            group "opensips"
+        end
+    else
+        Chef::Log.info("*** no file = '#{file_path}'")
+    end
 end
 
 file node['opensips']['rsyslog'] do
@@ -126,7 +131,6 @@ file node['opensips']['rsyslog'] do
     owner 'root'
     group 'root'
 end
-
     
 if node['opensips']['symlinks_in_home'] && node['opensips']['package_path'].empty?
     link myhome + "/opensips-src" do
