@@ -19,6 +19,12 @@
 
 myhome = node['opensips']['myhome']
 
+%w(ncurses-devel bison flex mysql mysql-devel libxml2-devel openssl-devel postgresql-libs postgresql-devel pcre-devel libmicrohttpd-devel libmicrohttpd gdb).each do |mypackage|
+    package mypackage do
+        action :install
+    end
+end
+
 Chef::Log.info("node['platform'] = #{node['platform']}")
 Chef::Log.info("node['opensips']['package_path'] = #{node['opensips']['package_path']}")
 
@@ -113,7 +119,8 @@ end
 '/root/opensips.cfg'    => '/usr/local/etc/opensips/opensips.cfg',
 '/root/opensipsctlrc'   => '/usr/local/etc/opensips/opensipsctlrc'
 }.each do |file_path, to_path|
-    if File.exist?(file_path)
+#    if File.exist?(file_path)
+    if true
         Chef::Log.info("*** read file = '#{file_path}'")
         file_content = File.read(file_path)
         file to_path do
