@@ -122,9 +122,9 @@ end
 #    if File.exist?(file_path)
     if true
         Chef::Log.info("*** read file = '#{file_path}'")
-        file_content = File.read(file_path)
+        #file_content = File.read(file_path)
         file to_path do
-            content file_content
+            content lazy { IO.read(file_path, mode: 'rb').read }
             owner "opensips"
             group "opensips"
         end
