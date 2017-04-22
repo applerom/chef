@@ -124,7 +124,7 @@ end
         Chef::Log.info("*** read file = '#{file_path}'")
         #file_content = File.read(file_path)
         file to_path do
-            content lazy { IO.read(file_path, mode: 'rb').read }
+            content lazy { ::File.open(file_path).read }
             owner "opensips"
             group "opensips"
         end
