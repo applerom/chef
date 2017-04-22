@@ -109,6 +109,18 @@ template '/etc/init.d/opensips' do
     mode '0755'
 end
 
+remote_file '/usr/local/etc/opensips/opensips.cfg' do
+    source '/root/opensips.cfg'
+    owner 'opensips'
+    group 'opensips'
+end
+
+remote_file '/usr/local/etc/opensips/opensipsctlrc' do
+    source '/root/opensipsctlrc'
+    owner 'opensips'
+    group 'opensips'
+end
+
 file node['opensips']['rsyslog'] do
     content "local5.* #{node['opensips']['log']}"
     owner 'root'
