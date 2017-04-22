@@ -145,4 +145,3 @@ service 'opensips' do
     supports :start => true, :stop => true, :restart => true, :status => true
     action [ :enable, :restart ]
 end
-
