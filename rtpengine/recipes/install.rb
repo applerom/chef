@@ -77,11 +77,6 @@ Chef::Log.info("node['rtpengine']['user']                = '#{node['rtpengine'][
 Chef::Log.info("node['rtpengine']['group']               = '#{node['rtpengine']['group']}'")
 Chef::Log.info("node['rtpengine']['min-port']            = '#{node['rtpengine']['min-port']}'")
 Chef::Log.info("node['rtpengine']['max-port']            = '#{node['rtpengine']['max-port']}'")
-Chef::Log.info("node['rtpengine']['control_sock']        = '#{node['rtpengine']['control_sock']}'")
-Chef::Log.info("node['rtpengine']['rttp_notify_socket']  = '#{node['rtpengine']['rttp_notify_socket']}'")
-Chef::Log.info("node['rtpengine']['listen_addr']         = '#{node['rtpengine']['listen_addr']}'")
-Chef::Log.info("node['rtpengine']['advertised_addr']     = '#{node['rtpengine']['advertised_addr']}'")
-Chef::Log.info("node['rtpengine']['extra_opts']          = '#{node['rtpengine']['extra_opts']}'")
 
 case node['platform_family']
     when 'debian'
@@ -113,24 +108,6 @@ template '/etc/init.d/rtpengine' do
     owner 'root'
     group 'root'
     mode '0755'
-end
-
-{
-'/root/rtpengine.cfg'    => '/usr/local/etc/rtpengine/rtpengine.cfg',
-'/root/rtpenginectlrc'   => '/usr/local/etc/rtpengine/rtpenginectlrc'
-}.each do |file_path, to_path|
-#    if File.exist?(file_path)
-    if true
-        Chef::Log.info("*** read file = '#{file_path}'")
-        #file_content = File.read(file_path)
-        file to_path do
-            content lazy { ::File.open(file_path).read }
-            owner "rtpengine"
-            group "rtpengine"
-        end
-    else
-        Chef::Log.info("*** no file = '#{file_path}'")
-    end
 end
 
 file node['rtpengine']['rsyslog'] do
