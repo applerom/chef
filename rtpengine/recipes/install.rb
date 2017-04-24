@@ -19,7 +19,7 @@
 
 myhome = node['rtpengine']['myhome']
 
-%w(gcc glib* xmlrpc-c xmlrpc-c-devel libevent-devel zlib-devel openssl-devel pcre-devel libpcap libpcap-devel).each do |mypackage|
+%w(gcc glib2-devel glib2-fam glibc-static glibc-utils xmlrpc-c xmlrpc-c-devel libevent-devel zlib-devel openssl-devel pcre-devel libpcap libpcap-devel).each do |mypackage|
     package mypackage do
         action :install
     end
