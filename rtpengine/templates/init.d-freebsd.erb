@@ -1,0 +1,28 @@
+#!/bin/sh
+
+# Add the following lines to /etc/rc.conf to enable RTPproxy:
+#
+# rtpengine_enable="YES"
+
+# PROVIDE: rtpengine
+# REQUIRE: DAEMON
+# BEFORE: ser openser
+
+prefix=%%PREFIX%%
+
+. %%RC_SUBR%%
+
+name=rtpengine
+rcvar=`set_rcvar`
+
+command="${prefix}/bin/rtpengine"
+pidfile="/var/run/rtpengine.pid"
+
+load_rc_config ${name}
+
+rtpengine_enable=${rtpengine_enable:-"NO"}
+rtpengine_laddr=${rtpengine_laddr:-"0.0.0.0"}
+
+command_args="-l ${rtpengine_laddr} -p /var/run/rtpengine.pid"
+
+run_rc_command "${1}"
