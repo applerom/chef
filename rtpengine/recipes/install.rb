@@ -25,6 +25,20 @@ myhome = node['rtpengine']['myhome']
     end
 end
 
+git '/usr/local/src/hiredis' do
+    repository  'https://github.com/redis/hiredis'
+end
+
+bash 'make hiredis' do
+    ignore_failure = true
+    cwd '/usr/local/src/hiredis'
+    code <<-EOF
+        PREFIX=/usr/local make
+        PREFIX=/usr/local make install
+        ldconfig
+    EOF
+end
+
 Chef::Log.info("node['platform'] = #{node['platform']}")
 Chef::Log.info("node['rtpengine']['package_path'] = #{node['rtpengine']['package_path']}")
 
