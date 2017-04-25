@@ -70,11 +70,10 @@ if node['rtpengine']['package_path'].empty?
 
     bash 'make rtpengine' do
         ignore_failure = true
-        cwd node['rtpengine']['src_dir']
+        cwd "#{node['rtpengine']['src_dir']}/daemon"
         code <<-EOF
             make
-            make install
-            ldconfig
+            cp rtpengine /usr/sbin/rtpengine
         EOF
     end
 

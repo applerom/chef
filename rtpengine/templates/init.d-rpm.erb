@@ -1,114 +1,291 @@
 #!/bin/bash
 #
-# Startup script for OpenSIPS
+# rtpengine		Startup script for NGCP rtpengine
 #
-# chkconfig: 345 85 15
-# description: OpenSIPS is a fast SIP Server.
+# chkconfig: 345 84 16
+# description: NGCP rtpengine
 #
 # processname: rtpengine
+# config: /etc/sysconfig/rtpengine
 # pidfile: /var/run/rtpengine.pid
-# config: /etc/rtpengine/rtpengine.cfg
+#
+### BEGIN INIT INFO
+# Provides: rtpengine
+# Required-Start: $local_fs $network
+# Short-Description: NGCP rtpengine
+# Description: NGCP rtpengine 
+### END INIT INFO
 
 # Source function library.
 . /etc/rc.d/init.d/functions
 
-OSER=/usr/sbin/rtpengine
-PROG=rtpengine
-PID_FILE=/var/run/rtpengine.pid
-LOCK_FILE=/var/lock/subsys/rtpengine
+if [ -f /etc/sysconfig/rtpengine ]
+then
+        . /etc/sysconfig/rtpengine
+else
+	echo "Error: /etc/sysconfig/rtpengine not present"
+	exit -1
+fi
+
+rtpengine=/usr/sbin/rtpengine
+prog=rtpengine
+pidfile=${PIDFILE-/var/run/rtpengine.pid}
+lockfile=${LOCKFILE-/var/lock/subsys/rtpengine}
+cachefile=/var/lib/rtpengine/rtpengine.cfg
 RETVAL=0
-DEFAULTS=/etc/default/rtpengine
-RUN_OPENSIPS=no
 
+OPTS="--pidfile $pidfile"
+MODULE=0
 
-check_rtpengine_config ()
-{
-        # Check if rtpengine configuration is valid before starting the server
-        out=$($OSER -c 2>&1 > /dev/null)
-        retcode=$?
-        if [ "$retcode" != '0' ]; then
-            echo "Not starting $DESC: invalid configuration file!"
-            echo -e "\n$out\n"
-            exit 1
+build_opts() {
+	shopt -s nocasematch
+	RPMS=`rpm -qa | grep rtpengine-kernel`
+	if [[ "$KERNEL" == "yes" && -n "$TABLE" && -n "$RPMS" ]]
+	then
+		MODULE=1
+		OPTS+=" --table=$TABLE"
+	else
+		MODULE=0
+		OPTS+=" --table=-1"
+	fi
+
+	if [[ "$FALLBACK" != "yes" ]]
+	then
+		OPTS+=" --no-fallback"
+	fi
+	shopt -u nocasematch
+
+        if [[ -n "$RTP_IP" ]]
+        then
+                for IP in "${RTP_IP[@]}"
+                do
+                        OPTS+=" --interface=$IP"
+                done
+        fi
+
+	if [[ -n "$LISTEN_TCP" ]]
+	then
+		OPTS+=" --listen-tcp=$LISTEN_TCP"
+	fi
+
+	if [[ -n "$LISTEN_UDP" ]]
+	then
+		OPTS+=" --listen-udp=$LISTEN_UDP"
+	fi
+
+	if [[ -n "$LISTEN_NG" ]]
+	then
+		OPTS+=" --listen-ng=$LISTEN_NG"
+	fi
+
+	if [[ -n "$LISTEN_CLI" ]]
+	then
+	    OPTS+=" --listen-cli=$LISTEN_CLI"
+	fi
+
+	if [[ -n "$TOS" ]]
+	then
+		OPTS+=" --tos=$TOS"
+	fi
+
+	if [[ -n "$TIMEOUT" ]]
+	then
+		OPTS+=" --timeout=$TIMEOUT"
+	fi
+
+	if [[ -n "$SILENT_TIMEOUT" ]]
+	then
+		OPTS+=" --silent-timeout=$SILENT_TIMEOUT"
+	fi
+
+	if [[ -n "$PORT_MIN" ]]
+	then
+		OPTS+=" --port-min=$PORT_MIN"
+	fi
+
+	if [[ -n "$PORT_MAX" ]]
+	then
+		OPTS+=" --port-max=$PORT_MAX"
+	fi
+
+	if [ -n "$REDIS" -a -n "$REDIS_DB" ]
+	then
+		OPTS+=" --redis=$REDIS/$REDIS_DB"
+	fi
+
+	if [[ -n "$B2B_URL" ]]
+	then
+		OPTS+=" --b2b-url=$B2B_URL"
+	fi
+
+	if [[ -n "$LOG_LEVEL" ]]
+	then
+		OPTS+=" --log-level=$LOG_LEVEL"
+	fi
+
+	if [[ -n "$LOG_FACILITY" ]]
+        then
+                OPTS+=" --log-facility=$LOG_FACILITY"
+        fi
+
+	if [[ -n "$NUM_THREADS" ]]
+        then
+                OPTS+=" --num-threads=$NUM_THREADS"
+        fi
+
+        if [[ -n "$DELETE_DELAY" ]]
+         then
+                 OPTS+=" --delete-delay=$DELETE_DELAY"
+        fi
+
+        if [[ -n "$GRAPHITE" ]]
+         then
+                 OPTS+=" --graphite=$GRAPHITE"
+        fi
+
+        if [[ -n "$GRAPHITE_INTERVAL" ]]
+         then
+                 OPTS+=" --graphite-interval=$GRAPHITE_INTERVAL"
+        fi
+
+	if [[ -n "$GRAPHITE_PREFIX" ]]
+	then
+		OPTS+=" --graphite-prefix=$GRAPHITE_PREFIX"
+	fi
+
+	if [[ -n "$LOG_FACILITY_CDR" ]]
+        then
+                OPTS+=" --log-facility-cdr=$LOG_FACILITY_CDR"
+        fi
+
+	if [[ -n "$LOG_FACILITY_RTCP" ]]
+        then
+                OPTS+=" --log-facility-rtcp=$LOG_FACILITY_RTCP"
+        fi
+
+	if [[ -n "$MAX_SESSIONS" ]]
+        then
+                OPTS+=" --max-sessions=$MAX_SESSIONS"
         fi
 }
 
-
 start() {
-	check_rtpengine_config
-	echo -n $"Starting $PROG: "
-	daemon $OSER $OPTIONS >/dev/null 2>/dev/null
-	RETVAL=$?
-	echo
-	[ $RETVAL = 0 ] && touch $LOCK_FILE
-	return $RETVAL
+	build_opts
+	if [[ $MODULE == 1 ]]
+	then
+		echo "Loading module for in-kernel packet forwarding"
+		rmmod xt_RTPENGINE 2> /dev/null
+		if [[ -n "$RE_USER" ]]
+		then
+			if [[ -n "$RE_GROUP" ]]
+			then
+				proc_gid=$(grep ^$RE_GROUP: /etc/group | cut -f3 -d:)
+			else
+				proc_gid=$(id $RE_USER -g)
+			fi
+			modprobe xt_RTPENGINE proc_uid=$(id $RE_USER -u) proc_gid=$proc_gid
+		else
+			modprobe xt_RTPENGINE
+		fi
+		temp=`firewall-cmd --state 2>/dev/null`
+		if [[ $? == 0 ]]
+		then
+			# Using firewalld
+			# Need to check if the INPUT_prefilter chain is present (permanently)
+			firewall-cmd --permanent --direct --query-chain ipv4 filter INPUT_prefilter > /dev/null
+			if [[ $? != 0 ]]
+			then
+				firewall-cmd --permanent --direct --add-chain ipv4 filter INPUT_prefilter
+				firewall-cmd --permanent --direct --passthrough ipv4 -t filter -I INPUT -j INPUT_prefilter
+				firewall-cmd --reload
+			fi
+				
+			firewall-cmd --direct --add-chain ipv4 filter rtpengine
+			firewall-cmd --direct --add-rule ipv4 filter INPUT_prefilter 0 -j rtpengine
+			firewall-cmd --direct --add-rule ipv4 filter rtpengine 0 -p udp -j RTPENGINE --id $TABLE
+			firewall-cmd --direct --add-rule ipv6 filter rtpengine 0 -p udp -j RTPENGINE --id $TABLE
+  			firewall-cmd --reload
+		else
+			iptables -N rtpengine
+			# We insert the rtpengine rule at the top of the input chain
+			iptables -t filter -I INPUT_prefilter -j rtpengine
+			iptables -I rtpengine -p udp -j RTPENGINE --id $TABLE
+			ip6tables -I rtpengine -p udp -j RTPENGINE --id $TABLE
+		fi
+
+		cat <<EOF > "$cachefile"
+CUR_TABLE=$TABLE
+EOF
+	fi
+        echo -n $"Starting $prog: "
+	if [[ -n "$RE_USER" ]]
+	then
+		daemon --user $RE_USER --pidfile=${pidfile} $rtpengine $OPTS
+	else
+		daemon --pidfile=${pidfile} $rtpengine $OPTS
+	fi
+        RETVAL=$?
+        echo
+        [ $RETVAL = 0 ] && touch ${lockfile}
+        return $RETVAL
 }
 
 stop() {
-	echo -n $"Stopping $PROG: "
-	killproc $OSER
+	echo -n $"Stopping $prog: "
+	killproc -p ${pidfile} $rtpengine
 	RETVAL=$?
 	echo
-	[ $RETVAL = 0 ] && rm -f $LOCK_FILE $PID_FILE
+	if [ -f "$cachefile" ]
+	then
+		. "$cachefile"
+		echo "Unloading module for in-kernel packet forwarding"
+		echo "del $TABLE" > /proc/rtpengine/control
+		temp=`firewall-cmd --state 2>/dev/null`
+		if [[ $? == 0 ]]
+		then
+			firewall-cmd --direct --remove-rules ipv4 filter rtpengine
+			firewall-cmd --direct --remove-rules ipv6 filter rtpengine
+			firewall-cmd --direct --remove-rule ipv4 filter INPUT_prefilter 0 -j rtpengine
+			firewall-cmd --direct --remove-chain ipv4 filter rtpengine
+			firewall-cmd --reload
+		else
+			iptables -D rtpengine -p udp -j RTPENGINE --id $CUR_TABLE
+			ip6tables -D rtpengine -p udp -j RTPENGINE --id $CUR_TABLE
+			iptables -t filter -D INPUT -j rtpengine
+			iptables -X rtpengine
+		fi
+		rmmod xt_RTPENGINE
+		rm -f $cachefile	
+	fi
+ 
+	[ $RETVAL = 0 ] && rm -f ${lockfile} ${pidfile}
 }
-
-# Load startup options if available
-if [ -f $DEFAULTS ]; then
-   . $DEFAULTS || true
-fi
-
-if [ "$RUN_OPENSIPS" != "yes" ]; then
-    echo "OpenSIPS not yet configured. Edit /etc/default/rtpengine first."
-    exit 0
-fi
-
-
-S_MEMORY=$((`echo $S_MEMORY | sed -e 's/[^0-9]//g'`))
-P_MEMORY=$((`echo $P_MEMORY | sed -e 's/[^0-9]//g'`))
-[ -z "$USER" ]  && USER=rtpengine
-[ -z "$GROUP" ] && GROUP=rtpengine
-[ $S_MEMORY -le 0 ] && S_MEMORY=32
-[ $P_MEMORY -le 0 ] && P_MEMORY=4
-
-if test "$DUMP_CORE" = "yes" ; then
-    # set proper ulimit
-    ulimit -c unlimited
-
-    # directory for the core dump files
-    # COREDIR=/home/corefiles
-    # [ -d $COREDIR ] || mkdir $COREDIR
-    # chmod 777 $COREDIR
-    # echo "$COREDIR/core.%e.sig%s.%p" > /proc/sys/kernel/core_pattern
-fi
-
-OPTIONS="-P $PID_FILE -m $S_MEMORY -M $P_MEMORY -u $USER -g $GROUP"
-
 
 # See how we were called.
 case "$1" in
-	start)
-		start
-		;;
-	stop)
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  status)
+        status -p ${pidfile} $rtpengine
+	RETVAL=$?
+	;;
+  restart)
+	stop
+	start
+	;;
+  condrestart|try-restart)
+	if status -p ${pidfile} $rtpengine >&/dev/null; then
 		stop
-		;;
-	status)
-		status $OSER
-		RETVAL=$?
-		;;
-	restart)
-		stop
 		start
-		;;
-	condrestart)
-		if [ -f $PID_FILE ] ; then
-			stop
-			start
-		fi
-		;;
-	*)
-		echo $"Usage: $PROG {start|stop|restart|condrestart|status|help}"
-		exit 1
+	fi
+	;;
+  *)
+	echo $"Usage: $prog {start|stop|restart|condrestart|try-restart|status}"
+	RETVAL=2
 esac
 
 exit $RETVAL
