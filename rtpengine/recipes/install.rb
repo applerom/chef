@@ -16,7 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
+rtpengine_service_name = "rtpengine"
 myhome = node['rtpengine']['myhome']
 
 %w(gcc glib2-devel glib2-fam glibc-static glibc-utils xmlrpc-c xmlrpc-c-devel libevent-devel zlib-devel openssl-devel pcre-devel libpcap libpcap-devel).each do |mypackage|
@@ -88,6 +88,7 @@ if node['rtpengine']['package_path'].empty?
 
 else
     Chef::Log.info("install from rpm '#{node['rtpengine']['package_path']}'")
+    rtpengine_service_name = 'ngcp-rtpengine'
     
     rpm_package "install from RPM-file" do
         source node['rtpengine']['package_path']
@@ -151,7 +152,9 @@ service 'rsyslog' do
     action [ :restart ]
 end
 
-service 'rtpengine' do
+
+
+service rtpengine_service_name do
     supports :start => true, :stop => true, :restart => true, :status => true
     action [ :enable, :restart ]
 end
