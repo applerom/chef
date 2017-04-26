@@ -1,8 +1,8 @@
 ##[rtpengine]
-PIDFILE=/var/run/rtpengine.pid
+RE_USER=<%= node['rtpengine']['service_user'] %>       # Run rtpengine as this specific user
+RE_GROUP=<%= node['rtpengine']['service_user'] %>      # allow this group to control rtpengine in kernel mode
+PIDFILE=<%= node['rtpengine']['service_pid_dir'] %>/rtpengine.pid
 
-RE_USER=rtpengine       # Run rtpengine as this specific user
-RE_GROUP=rtpengine      # allow this group to control rtpengine in kernel mode
 
 #NUM_THREADS=5          # How many worker threads to launch
 #DELETE_DELAY=30        # Delay to delete session from memory
@@ -15,10 +15,7 @@ TIMEOUT=60              # (o) Number of seconds after which a media stream is
 SILENT_TIMEOUT=3600     # (o) Number of seconds after which a muted or inactive
                         #     stream is considered dead. Default: 3600
 
-#LISTEN_TCP=45060
-#LISTEN_UDP=42222
-LISTEN_NG=44444
-#LISTEN_CLI=9900
+<%= node['rtpengine']['listen_address'] %> 
 
 #RTP_IP[0]=127.0.0.1    # (m) Local IPv4/6 address for RTP. The format of the value is [NAME/]IP[!IP].
 
@@ -32,8 +29,8 @@ RTP_IP[1]="external/${ADDRESS}!${ADV_ADDRESS}"
 # FINAL_TIMEOUT=10800
 ##TABLE=0
 # NO_FALLBACK=yes
-PORT_MIN=16384
-PORT_MAX=32768
+PORT_MIN=<%= node['rtpengine']['min-port'] %>
+PORT_MAX=<%= node['rtpengine']['max-port'] %>
 # B2B_URL=http://127.0.0.1:8090/
-LOG_LEVEL=3 # 0-7
-LOG_FACILITY=local5
+LOG_LEVEL=<%= node['rtpengine']['log_level'] %> # 0-7
+LOG_FACILITY=<%= node['rtpengine']['log_facility'] %>

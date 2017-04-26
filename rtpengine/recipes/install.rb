@@ -52,7 +52,11 @@ Chef::Log.info("node['platform'] = #{node['platform']}")
 Chef::Log.info("node['rtpengine']['package_path'] = #{node['rtpengine']['package_path']}")
 
 Chef::Log.info("create rtpengine user")
-user 'rtpengine' do
+user node['rtpengine']['service_user'] do
+end
+
+directory node['rtpengine']['service_pid_dir'] do
+    owner node['rtpengine']['service_user']
 end
 
 if node['rtpengine']['package_path'].empty?
