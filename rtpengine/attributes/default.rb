@@ -36,7 +36,9 @@ Chef::Log.info("node['platform'] = '#{node['platform']}'")
 Chef::Log.info("myhome = '#{myhome}'")
 
 # rtpengine variables - enter your values here or use custom JSON
-default['rtpengine']['package_path']                 = '' # if install from package - local path here
+default['rtpengine']['package_path']                 = '' # if install rtpengine from package - local path here
+default['rtpengine']['hiredis_package_path']         = '' # if install hiredis from package - local path here
+
 default['rtpengine']['git_repository']               = 'https://github.com/sipwise/rtpengine'
 default['rtpengine']['branch_name']                  = 'master' # or to ex. '2.2'
 default['rtpengine']['git_repository_ssh_key_path']  = '' # if you use ssh connect to private repo (chmod 600)

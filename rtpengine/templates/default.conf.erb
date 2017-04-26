@@ -1,34 +1,36 @@
-[rtpengine]
+##[rtpengine]
 PIDFILE=/var/run/rtpengine.pid
 
-RE_USER=rtpengine	# Run rtpengine as this specific user
-RE_GROUP=rtpengine	# allow this group to control rtpengine in kernel mode
+RE_USER=rtpengine       # Run rtpengine as this specific user
+RE_GROUP=rtpengine      # allow this group to control rtpengine in kernel mode
 
-#NUM_THREADS=5		# How many worker threads to launch
+#NUM_THREADS=5          # How many worker threads to launch
 #DELETE_DELAY=30        # Delay to delete session from memory
 #LISTEN_CLI=127.0.0.1:9900
 
-#TOS=184		# (o) TOS value to use in outgoing packets
-TIMEOUT=60		# (o) Number of seconds after which a media stream is
-			#     considered dead if there is no traffic.
-			#     Default: 60
-SILENT_TIMEOUT=3600	# (o) Number of seconds after which a muted or inactive
-			#     stream is considered dead. Default: 3600
-            
+#TOS=184                # (o) TOS value to use in outgoing packets
+TIMEOUT=60              # (o) Number of seconds after which a media stream is
+                        #     considered dead if there is no traffic.
+                        #     Default: 60
+SILENT_TIMEOUT=3600     # (o) Number of seconds after which a muted or inactive
+                        #     stream is considered dead. Default: 3600
+
 #LISTEN_TCP=45060
 #LISTEN_UDP=42222
 LISTEN_NG=44444
 #LISTEN_CLI=9900
 
-ADDRESS=internal/`wget -T 10 -O- http://169.254.169.254/latest/meta-data/local-ipv4 2>/dev/null`
+#RTP_IP[0]=127.0.0.1    # (m) Local IPv4/6 address for RTP. The format of the value is [NAME/]IP[!IP].
+
+ADDRESS=`wget -T 10 -O- http://169.254.169.254/latest/meta-data/local-ipv4 2>/dev/null`
 #ADV_ADDRESS=54.84.75.99
 ADV_ADDRESS=`wget -T 10 -O- http://169.254.169.254/latest/meta-data/public-ipv4 2>/dev/null`
 
-#RTP_IP[0]=127.0.0.1	# (m) Local IPv4/6 address for RTP. The format of the value is [NAME/]IP[!IP].
-RTP_IP[0]="$ADDRESS/$ADV_ADDRESS"
+RTP_IP[0]="internal/${ADDRESS}"
+RTP_IP[1]="external/${ADDRESS}!${ADV_ADDRESS}"
 
 # FINAL_TIMEOUT=10800
-TABLE=0
+##TABLE=0
 # NO_FALLBACK=yes
 PORT_MIN=16384
 PORT_MAX=32768

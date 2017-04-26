@@ -25,28 +25,37 @@ myhome = node['rtpengine']['myhome']
     end
 end
 
-git '/usr/local/src/hiredis' do
-    repository  'https://github.com/redis/hiredis'
+
+if node['rtpengine']['hiredis_package_path'].empty?
+    Chef::Log.info("*** install hiredis from git")
+    git '/usr/local/src/hiredis' do
+        repository  'https://github.com/redis/hiredis'
+    end
+    bash 'make hiredis' do
+        ignore_failure = true
+        cwd '/usr/local/src/hiredis'
+        code <<-EOF
+            PREFIX=/usr/local make
+            PREFIX=/usr/local make install
+            ldconfig
+        EOF
+    end
+else
+    rpm_package "install hiredis from RPM-file" do
+        source node['rtpengine']['hiredis_package_path']
+        action :install
+    end
 end
 
-bash 'make hiredis' do
-    ignore_failure = true
-    cwd '/usr/local/src/hiredis'
-    code <<-EOF
-        PREFIX=/usr/local make
-        PREFIX=/usr/local make install
-        ldconfig
-    EOF
-end
 
 Chef::Log.info("node['platform'] = #{node['platform']}")
 Chef::Log.info("node['rtpengine']['package_path'] = #{node['rtpengine']['package_path']}")
 
-if node['rtpengine']['package_path'].empty?
+Chef::Log.info("create rtpengine user")
+user 'rtpengine' do
+end
 
-    Chef::Log.info("create rtpengine user")
-    user 'rtpengine' do
-    end
+if node['rtpengine']['package_path'].empty?
     
     Chef::Log.info("node['rtpengine']['git_repository']  = '#{node['rtpengine']['git_repository']}'")
     Chef::Log.info("node['rtpengine']['src_dir']         = '#{node['rtpengine']['src_dir']}'")
@@ -81,8 +90,8 @@ else
     Chef::Log.info("install from rpm '#{node['rtpengine']['package_path']}'")
     
     rpm_package "install from RPM-file" do
-    source node['rtpengine']['package_path']
-    action :install
+        source node['rtpengine']['package_path']
+        action :install
     end
     
 end
