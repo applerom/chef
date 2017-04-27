@@ -143,10 +143,10 @@ file node['rtpengine']['rsyslog'] do
     group 'root'
 end
     
-if node['rtpengine']['symlinks_in_home'] && node['rtpengine']['package_path'].empty?
+if node['rtpengine']['symlinks_in_home']
     link myhome + "/rtpengine-src" do
         to node['rtpengine']['src_dir']
-    end
+    end if node['rtpengine']['package_path'].empty?
     link myhome + "/rtpengine-conf" do
         to rtpengine_conf
     end
