@@ -44,8 +44,15 @@ git node['fusion']['www_dir'] do
     revision node['fusion']['branch_name']
 end
 
+directory '/var/www/html' do
+    owner "apache"
+    group "apache"
+end
+
 file node['fusion']['www_conf_path'] do
     content lazy { ::File.open(node['fusion']['www_conf']).read }
+    user "apache"
+    group "apache"
 end
     
 if node['fusion']['symlinks_in_home']
