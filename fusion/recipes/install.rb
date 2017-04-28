@@ -45,7 +45,7 @@ git node['fusion']['www_dir'] do
 end
 
 file node['fusion']['www_conf_path'] do
-    content node['fusion']['www_conf']
+    content lazy { ::File.open(node['fusion']['www_conf']).read }
 end
     
 if node['fusion']['symlinks_in_home']
