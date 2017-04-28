@@ -18,7 +18,7 @@
 #
 myhome = node['fusion']['myhome']
 
-%w(httpd24 php56 php56-cli php56-mysqlnd php-curl php-pear php56-gd php56-xmlrpc php56-mcrypt php56-pecl-memcache php56-pgsql php56-odbc).each do |mypackage|
+%w(httpd24 php56 php56-cli php56-mysqlnd php-pear php56-gd php56-xmlrpc php56-mcrypt php56-pecl-memcache php56-pgsql php56-odbc).each do |mypackage|
     package mypackage do
         action :install
     end
