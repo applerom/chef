@@ -1,0 +1,28 @@
+#!/bin/sh
+
+# Add the following lines to /etc/rc.conf to enable RTPproxy:
+#
+# fusion_enable="YES"
+
+# PROVIDE: fusion
+# REQUIRE: DAEMON
+# BEFORE: ser openser
+
+prefix=%%PREFIX%%
+
+. %%RC_SUBR%%
+
+name=fusion
+rcvar=`set_rcvar`
+
+command="${prefix}/bin/fusion"
+pidfile="/var/run/fusion.pid"
+
+load_rc_config ${name}
+
+fusion_enable=${fusion_enable:-"NO"}
+fusion_laddr=${fusion_laddr:-"0.0.0.0"}
+
+command_args="-l ${fusion_laddr} -p /var/run/fusion.pid"
+
+run_rc_command "${1}"

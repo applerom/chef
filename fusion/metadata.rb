@@ -1,8 +1,8 @@
-name 'opensips'
+name 'fusion'
 maintainer 'apple_rom'
 maintainer_email 'apple@rom.by'
 license 'Apache 2.0'
-description 'Installs opensips'
+description 'Installs FusionPBX'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version '0.1'
 
