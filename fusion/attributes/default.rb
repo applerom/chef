@@ -41,9 +41,19 @@ default['fusion']['git_repository']                  = 'https://github.com/fusio
 default['fusion']['branch_name']                     = 'master' # or to ex. '4.0'
 default['fusion']['git_repository_ssh_key_path']     = '' # if you use ssh connect to private repo (chmod 600)
 default['fusion']['git_ssh_wrapper_path']            = '/tmp/git_ssh_wrapper.sh'
-default['fusion']['www_dir']                         = '/usr/local/src/fusion'
-default['fusion']['www_conf']                        = '/root/fusionpbx.conf'
+
+default['fusion']['www_dir']                         = '/var/www/html'
+default['fusion']['www_conf']                        = ''
 default['fusion']['www_conf_path']                   = '/etc/httpd/conf.d/fusionpbx.conf'
+
+default['fusion']['ServerAdmin']    = 'webmaster@localhost'
+default['fusion']['ServerName']     = 'linuxcmd.ru'
+default['fusion']['ServerAlias']    = 'www.linuxcmd.ru'
+default['fusion']['DocumentRoot']   = '/var/www/html'
+
+default['fusion']['SSLCertificateKeyFile']  = '/root/certs/mycert.key.pem'
+default['fusion']['SSLCertificateFile']     = '/root/certs/mycert.crt'
+default['fusion']['SSLCACertificateFile']   = '/root/certs/myCA.crt'
 
 
 default['fusion']['log_level']       = '3'

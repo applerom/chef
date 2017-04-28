@@ -49,10 +49,16 @@ directory '/var/www/html' do
     group "apache"
 end
 
-file node['fusion']['www_conf_path'] do
-    content lazy { ::File.open(node['fusion']['www_conf']).read }
-    user "apache"
-    group "apache"
+if node['fusion']['www_conf'].empty?
+    template node['fusion']['www_conf_path'] do
+        source 'default.conf.erb'
+    end
+else
+    file node['fusion']['www_conf_path'] do
+        content lazy { ::File.open(node['fusion']['www_conf']).read }
+        user "apache"
+        group "apache"
+    end
 end
     
 if node['fusion']['symlinks_in_home']
