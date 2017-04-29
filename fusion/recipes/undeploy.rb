@@ -18,6 +18,7 @@
 #
 
 mount node['fusion']['www_dir'] do
+    device node['fusion']['nfs_path']
     action [:umount, :disable]
 end
 
