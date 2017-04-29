@@ -1,6 +1,6 @@
 #
 # Cookbook:: fusion
-# Recipe:: install
+# Recipe:: deploy
 #
 # Copyright:: 2017, apple_rom
 #
@@ -35,9 +35,10 @@ unless node['fusion']['nfs_path'].empty?
     end
 
     mount node['fusion']['www_dir'] do
-      device node['fusion']['nfs_path']
-      fstype 'nfs'
-      action [:mount, :enable]
+        device node['fusion']['nfs_path']
+        fstype node['fusion']['nfs_type']
+        options node['fusion']['nfs_options']
+        action [:mount, :enable]
     end
 end
 
