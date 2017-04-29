@@ -17,6 +17,12 @@
 # limitations under the License.
 #
 
+search("aws_opsworks_app").each do |app|
+    Chef::Log.info("********** The app's short name is '#{app['shortname']}' **********")
+    Chef::Log.info("********** The app's URL is '#{app['app_source']['url']}' **********")
+    Chef::Log.info("********** The app is '#{app}' **********")
+end
+
 unless node['fusion']['nfs_path'].empty?
     aws_nfs =
         case node['platform_family']
