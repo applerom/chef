@@ -27,23 +27,6 @@ end
 Chef::Log.info("node['fusion']['git_repository']  = '#{node['fusion']['git_repository']}'")
 Chef::Log.info("node['fusion']['www_dir']         = '#{node['fusion']['www_dir']}'")
 
-unless node['fusion']['git_repository_ssh_key_path'].empty?
-    Chef::Log.info("node['fusion']['git_repository_ssh_key_path'] = '#{node['fusion']['git_repository_ssh_key_path']}'")
-    Chef::Log.info("node['fusion']['git_ssh_wrapper'] = '#{node['fusion']['git_ssh_wrapper']}'")
-    file node['fusion']['git_ssh_wrapper_path'] do
-        content "#!/bin/sh\nexec /usr/bin/ssh -i #{node['fusion']['git_repository_ssh_key_path']} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \"$@\""
-        user "root"
-        group "root"
-        mode "0700"
-    end   
-end
-
-git node['fusion']['www_dir'] do
-    repository  node['fusion']['git_repository']
-    ssh_wrapper node['fusion']['git_ssh_wrapper_path']
-    revision node['fusion']['branch_name']
-end
-
 directory '/var/www/html' do
     owner "apache"
     group "apache"

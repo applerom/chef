@@ -42,6 +42,8 @@ default['fusion']['branch_name']                     = 'master' # or to ex. '4.0
 default['fusion']['git_repository_ssh_key_path']     = '' # if you use ssh connect to private repo (chmod 600)
 default['fusion']['git_ssh_wrapper_path']            = '/tmp/git_ssh_wrapper.sh'
 
+default['fusion']['nfs_path']                        = ''
+
 default['fusion']['www_dir']                         = '/var/www/html'
 default['fusion']['www_conf']                        = ''
 default['fusion']['www_conf_path']                   = '/etc/httpd/conf.d/fusionpbx.conf'
