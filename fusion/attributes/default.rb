@@ -45,6 +45,7 @@ default['fusion']['git_ssh_wrapper_path']            = '/tmp/git_ssh_wrapper.sh'
 default['fusion']['nfs_path']                        = ''
 default['fusion']['nfs_type']                        = 'nfs4'
 default['fusion']['nfs_options']                     = ['nfsvers=4.1','rsize=1048576','wsize=1048576','hard','timeo=600','retrans=2']
+default['fusion']['nfs_pass_fsck']                   = 0 # default in Chef is 2
 
 default['fusion']['www_dir']                         = '/var/www/html'
 default['fusion']['www_conf']                        = ''

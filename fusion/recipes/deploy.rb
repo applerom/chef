@@ -38,6 +38,7 @@ unless node['fusion']['nfs_path'].empty?
         device node['fusion']['nfs_path']
         fstype node['fusion']['nfs_type']
         options node['fusion']['nfs_options']
+        pass node['fusion']['nfs_pass_fsck']
         action [:mount, :enable]
     end
 end
