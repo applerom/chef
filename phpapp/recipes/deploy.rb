@@ -57,17 +57,26 @@ search("aws_opsworks_app").each do |app|
     Chef::Log.info("********** The app's type is '#{app['type']}' **********")
 end
 
+=begin
 s3_path     = search("aws_opsworks_app").first['app_source']['url'].split('.s3.amazonaws.com')[1]
 s3_bucket   = search("aws_opsworks_app").first['app_source']['url'].split('.s3.amazonaws.com')[0].split('://')[1]
 
 Chef::Log.info("s3_path = '#{s3_path}' **********")
 Chef::Log.info("s3_bucket = '#{s3_bucket}' **********")
 
-s3_file '/tmp/app_source.tar.gz' do
+s3_file node['phpapp']['tmp_deploy_zip_path'] do
     remote_path s3_path
     bucket s3_bucket
 end
 
+bash 'deploy_processing' do
+    ignore_failure = true
+    code <<-EOF
+        rm -Rf /var/www/html/*
+        unzip #{node['phpapp']['tmp_deploy_zip_path']} -d /var/www/html
+    EOF
+end
+=end
 
 unless node['phpapp']['git_repository_ssh_key_path'].empty?
     Chef::Log.info("node['phpapp']['git_repository_ssh_key_path'] = '#{node['phpapp']['git_repository_ssh_key_path']}'")
@@ -84,6 +93,8 @@ git node['phpapp']['www_dir'] do
     repository  node['phpapp']['git_repository']
     ssh_wrapper node['phpapp']['git_ssh_wrapper_path']
     revision node['phpapp']['branch_name']
+    user "apache"
+    group "apache"
 end
 
 service 'httpd' do

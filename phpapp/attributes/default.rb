@@ -58,6 +58,8 @@ default['phpapp']['SSLCACertificateFile']   = '/root/certs/myCA.crt'
 
 default['phpapp']['symlinks_in_home'] = true
 
+default['phpapp']['tmp_deploy_zip_path'] = '/tmp/app_source.zip'
+
 
 =begin
 #Custom JSON to insert:
