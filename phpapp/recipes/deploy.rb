@@ -83,7 +83,7 @@ unless node['phpapp']['git_repository_ssh_key_path'].empty?
     Chef::Log.info("node['phpapp']['git_ssh_wrapper'] = '#{node['phpapp']['git_ssh_wrapper']}'")
     file node['phpapp']['git_ssh_wrapper_path'] do
         content "#!/bin/sh\nexec /usr/bin/ssh -i #{node['phpapp']['git_repository_ssh_key_path']} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \"$@\""
-        user "apache"
+        user "root"
         group "apache"
         mode "0700"
     end   
@@ -93,7 +93,7 @@ git node['phpapp']['www_dir'] do
     repository  node['phpapp']['git_repository']
     ssh_wrapper node['phpapp']['git_ssh_wrapper_path']
     revision node['phpapp']['branch_name']
-    user "apache"
+    user "root"
     group "apache"
 end
 
