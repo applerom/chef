@@ -6,6 +6,8 @@ description 'Installs PHP app'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version '0.1'
 
+depends 's3_file'
+
 %w(debian ubuntu arch redhat centos fedora scientific oracle amazon suse opensuse opensuseleap).each do |os|
   supports os
 end
