@@ -18,27 +18,3 @@ DocumentRoot <%= node['phpapp']['DocumentRoot'] %>
     Deny from all
     Allow from 10.100.0.0/16
 </FilesMatch>
-
-</VirtualHost>
-<VirtualHost *:443>
-ServerName <%= node['phpapp']['ServerName'] %>
-ServerAlias <%= node['phpapp']['ServerAlias'] %>
-DocumentRoot <%= node['phpapp']['DocumentRoot'] %>
-<Directory <%= node['phpapp']['DocumentRoot'] %> >
-    Options Indexes FollowSymLinks MultiViews
-    AllowOverride All
-    Require all granted
-</Directory>
-                ErrorLog /var/log/httpd/<%= node['phpapp']['ServerName'] %>-ssl-error.log
-                LogLevel warn
-                CustomLog /var/log/httpd/<%= node['phpapp']['ServerName'] %>-ssl-access.log combined
-        SSLEngine on
-SSLCertificateKeyFile   "<%= node['phpapp']['SSLCertificateKeyFile'] %>"
-SSLCertificateFile      "<%= node['phpapp']['SSLCertificateFile'] %>"
-SSLCACertificateFile    "<%= node['phpapp']['SSLCACertificateFile'] %>"
-<FilesMatch "tracer\.php$">
-    Order deny,allow
-    Deny from all
-    Allow from 10.100.0.0/16
-</FilesMatch>
-</VirtualHost>
