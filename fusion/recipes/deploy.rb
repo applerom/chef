@@ -17,10 +17,37 @@
 # limitations under the License.
 #
 
+myhome = node['fusion']['myhome']
+
+if node['fusion']['www_conf'].empty?
+    template node['fusion']['www_conf_path'] do
+        source 'default.conf.erb'
+    end
+else
+    file node['fusion']['www_conf_path'] do
+        content lazy { ::File.open(node['fusion']['www_conf']).read }
+        user "apache"
+        group "apache"
+    end
+end
+    
+if node['fusion']['symlinks_in_home']
+    link myhome + "/fusion-conf" do
+        to node['fusion']['www_conf_path']
+    end
+end
+
+
 search("aws_opsworks_app").each do |app|
-    Chef::Log.info("********** The app's short name is '#{app['shortname']}' **********")
-    Chef::Log.info("********** The app's URL is '#{app['app_source']['url']}' **********")
     Chef::Log.info("********** The app is '#{app}' **********")
+    Chef::Log.info("********** The app app_id is '#{app['app_id']}' **********")
+    Chef::Log.info("********** The app's URL is '#{app['app_source']['url']}' **********")
+    Chef::Log.info("********** The app deploy is '#{app['deploy']}' **********")
+    Chef::Log.info("********** The app enable_ssl is '#{app['enable_ssl']}' **********")
+    Chef::Log.info("********** The app environment is '#{app['environment']}' **********")
+    Chef::Log.info("********** The app name is '#{app['name']}' **********")
+    Chef::Log.info("********** The app's short name is '#{app['shortname']}' **********")
+    Chef::Log.info("********** The app's type is '#{app['type']}' **********")
 end
 
 unless node['fusion']['nfs_path'].empty?

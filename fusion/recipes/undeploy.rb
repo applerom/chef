@@ -17,9 +17,11 @@
 # limitations under the License.
 #
 
-mount node['fusion']['www_dir'] do
-    device node['fusion']['nfs_path']
-    action [:umount, :disable]
+unless node['fusion']['nfs_path'].empty?
+    mount node['fusion']['www_dir'] do
+        device node['fusion']['nfs_path']
+        action [:umount, :disable]
+    end
 end
 
 service 'httpd' do

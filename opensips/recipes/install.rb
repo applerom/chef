@@ -146,6 +146,9 @@ if node['opensips']['symlinks_in_home'] && node['opensips']['package_path'].empt
     link myhome + "/opensips-conf" do
         to opensips_conf
     end
+    link myhome + "/opensips.cfg" do
+        to '/usr/local/etc/opensips/opensips.cfg'
+    end
 end
 
 service 'rsyslog' do
