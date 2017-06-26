@@ -45,12 +45,10 @@ search("aws_opsworks_app").each do |app|
     Chef::Log.info("********** The app is '#{app}' **********")
     Chef::Log.info("********** The app app_id is '#{app['app_id']}' **********")
     Chef::Log.info("********** The app's URL is '#{app['app_source']['url']}' **********")
-    
     s3_path     = app['app_source']['url'].split('.s3.amazonaws.com')[1]
     s3_bucket   = app['app_source']['url'].split('.s3.amazonaws.com')[0].split('://')[1]
     Chef::Log.info("*** s3_path = '#{s3_path}' **********")
     Chef::Log.info("*** s3_bucket = '#{s3_bucket}' **********")
-    
     Chef::Log.info("********** The app deploy is '#{app['deploy']}' **********")
     Chef::Log.info("********** The app enable_ssl is '#{app['enable_ssl']}' **********")
     Chef::Log.info("********** The app environment is '#{app['environment']}' **********")
