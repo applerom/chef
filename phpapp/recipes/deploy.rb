@@ -97,6 +97,15 @@ git node['phpapp']['www_dir'] do
     group "apache"
 end
 
+=begin
+bash 'deploy_processing' do
+    ignore_failure = true
+    code <<-EOF
+        chmod -R apache:apache /var/www/html
+    EOF
+end
+=end
+
 service 'httpd' do
     action [ :restart ]
 end

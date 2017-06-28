@@ -3,7 +3,7 @@
 ServerName <%= node['phpapp']['ServerName'] %>
 ServerAlias <%= node['phpapp']['ServerAlias'] %>
 DocumentRoot <%= node['phpapp']['DocumentRoot'] %>
-<Directory <%= node['phpapp']['DocumentRoot'] %> >
+<Directory <%= node['phpapp']['DocumentRoot'] %>>
                 Options Indexes FollowSymLinks MultiViews
                 AllowOverride All
                 Require all granted
